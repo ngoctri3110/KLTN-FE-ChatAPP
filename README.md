@@ -2,8 +2,8 @@
 
 ## Cách chạy
 
-npm install
-npm start
+- npm install
+- npm start
 
 Chạy trên cổng 3000
 

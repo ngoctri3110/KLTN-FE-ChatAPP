@@ -5,11 +5,18 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import 'antd/dist/antd.min.css';
+import { Provider } from 'react-redux';
+import store from 'app/store';
+import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.render(
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>,
+    <BrowserRouter>
+        <React.StrictMode>
+            <Provider store={store}>
+                <App />
+            </Provider>
+        </React.StrictMode>
+    </BrowserRouter>,
     document.getElementById('root')
 );
 

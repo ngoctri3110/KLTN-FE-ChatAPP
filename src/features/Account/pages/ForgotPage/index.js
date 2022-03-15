@@ -20,7 +20,7 @@ function ForgotPage(props) {
                     <Title level={2} style={{ textAlign: 'center' }}>
                         <Text style={{ color: '#4d93ff' }}>TALO</Text>
                     </Title>
-                    <Divider>Quên mật khẩu?</Divider>
+                    <Divider>Tìm tài khoản của bạn</Divider>
                     <div className="form-account">
                         <Formik
                             initialValues={{ ...forgotValues.initial }}

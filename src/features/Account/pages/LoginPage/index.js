@@ -1,18 +1,47 @@
-import React from 'react';
-import { Button, Col, Divider, Row, Typography } from 'antd';
+import React, { useState } from 'react';
+import { Button, Col, Divider, Row, Tag, Typography } from 'antd';
 import { FastField, Form, Formik } from 'formik';
 import UserNameField from 'customfield/UserNameField';
 import PasswordField from 'customfield/PasswordField';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { loginValues } from 'features/Account/initValues';
+import { useDispatch } from 'react-redux';
+import loginApi from 'api/loginAPI';
+import { fetchUserProfile, setLogin } from 'app/globalSlice';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { setLoadingAccount } from 'features/Account/accountSlice';
+import { CloseCircleOutlined } from '@ant-design/icons';
 
 const { Text, Title } = Typography;
 
 LoginPage.propTypes = {};
 
 function LoginPage(props) {
-    const handleSubmit = (values) => {
-        console.log(values);
+    const [isError, setError] = useState(false);
+    const dispatch = useDispatch();
+
+    const navigate = useNavigate();
+
+    const handleSubmit = async (values) => {
+        const { username, password } = values;
+        try {
+            dispatch(setLoadingAccount(true));
+            const { token, refreshToken } = await loginApi.login(
+                username,
+                password
+            );
+            localStorage.setItem('token', token);
+            localStorage.setItem('refreshToken', refreshToken);
+            dispatch(setLogin(true));
+            const { isAdmin } = unwrapResult(
+                await dispatch(fetchUserProfile())
+            );
+            if (isAdmin) navigate('/admin');
+            else navigate('/chat');
+        } catch (error) {
+            setError(true);
+        }
+        dispatch(setLoadingAccount(false));
     };
     return (
         <div className="account-common-page">
@@ -58,6 +87,23 @@ function LoginPage(props) {
                                                     inputCol={24}
                                                 />
                                             </Col>
+                                            {isError ? (
+                                                <Col span={24}>
+                                                    <Tag
+                                                        color="error"
+                                                        style={{
+                                                            fontWeight: 'bold',
+                                                        }}
+                                                        icon={
+                                                            <CloseCircleOutlined />
+                                                        }
+                                                    >
+                                                        Tài khoản không hợp lệ
+                                                    </Tag>
+                                                </Col>
+                                            ) : (
+                                                ''
+                                            )}
                                             <Col span={24}>
                                                 <br />
                                                 <Button
