@@ -1,18 +1,22 @@
 import { Col, Row, Spin } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import FilterContainer from './components/FilterContainer';
 import ConversationContainer from './containers/ConversationContainer';
 import FooterChatContainer from './containers/FooterChatContainer';
 import HeaderChatContainer from './containers/HeaderChatContainer';
 import SearchContainer from './containers/SearchContainer';
-// import { useRouteMatch } from 'react-router';
 
 import './style.scss';
 
 function Chat() {
-    // const { path } = useRouteMatch();
-
+    //store
+    const { conversations, isLoading } = useSelector((state) => state.chat);
+    // filter search
+    const [visibleFilter, setVisbleFilter] = useState(false);
+    const [valueClassify, setValueClassify] = useState('0');
     return (
-        <Spin spinning={false}>
+        <Spin spinning={isLoading}>
             <div id="main-chat-wrapper">
                 <Row gutter={[0, 0]}>
                     <Col
@@ -24,19 +28,30 @@ function Chat() {
                         xs={{ span: 9 }}
                     >
                         <div className="main-conversation">
-                            <div>
+                            <div
+                                className={`main-conversation_search-bar ${
+                                    visibleFilter ? 'fillter' : ''
+                                }`}
+                            >
                                 <SearchContainer />
                             </div>
-                        </div>
-                        <>
-                            <div className="divider-layout">
-                                <div />
-                            </div>
 
-                            <div className="main-conversation_list-conversation">
-                                <ConversationContainer />
-                            </div>
-                        </>
+                            {visibleFilter ? (
+                                <FilterContainer />
+                            ) : (
+                                <>
+                                    <div className="divider-layout">
+                                        <div />
+                                    </div>
+
+                                    <div className="main-conversation_list-conversation">
+                                        <ConversationContainer
+                                            valueClassify={valueClassify}
+                                        />
+                                    </div>
+                                </>
+                            )}
+                        </div>
                     </Col>
                     <>
                         <Col

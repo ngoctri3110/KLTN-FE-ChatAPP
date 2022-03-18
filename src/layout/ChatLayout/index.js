@@ -2,11 +2,19 @@ import { Col, Row } from 'antd';
 import NotFoundPage from 'components/NotFoundPage';
 import NavbarContainer from 'features/Chat/containers/NavbarContainer';
 import Chat from 'features/Chat';
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Friend from 'features/Friend';
 
 const ChatLayout = () => {
+    const [codeRevoke, setCodeRevoke] = useState('');
+    const codeRevokeRef = useRef();
+
+    const handleSetCodeRevoke = (code) => {
+        setCodeRevoke(code);
+        codeRevokeRef.current = code;
+    };
+    console.log(codeRevoke);
     return (
         <div>
             <Row gutter={[0, 0]}>
@@ -18,7 +26,7 @@ const ChatLayout = () => {
                     sm={{ span: 3 }}
                     xs={{ span: 4 }}
                 >
-                    <NavbarContainer />
+                    <NavbarContainer onSaveCodeRevoke={handleSetCodeRevoke} />
                 </Col>
 
                 <Col

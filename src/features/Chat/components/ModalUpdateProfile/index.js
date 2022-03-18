@@ -25,7 +25,7 @@ ModalUpdateProfile.defaultProps = {
     onOk: null,
     loading: false,
 };
-function ModalUpdateProfile({ isVisible, onCancel, onOk, loading }) {
+function ModalUpdateProfile({ isVisible, onCancel }) {
     const formRef = useRef();
     const { user } = useSelector((state) => state.global);
     const dispatch = useDispatch();

@@ -40,6 +40,7 @@ function LoginPage(props) {
             else navigate('/chat');
         } catch (error) {
             setError(true);
+            // console.log(error);
         }
         dispatch(setLoadingAccount(false));
     };

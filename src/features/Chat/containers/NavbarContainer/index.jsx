@@ -16,6 +16,7 @@ import './style.scss';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import ModalUpdateProfile from 'features/Chat/components/ModalUpdateProfile';
+import ModalChangePassword from 'components/ModalChangePassword';
 
 NavbarContainer.propTypes = {
     onSaveCodeRevoke: PropTypes.func,
@@ -24,14 +25,15 @@ NavbarContainer.propTypes = {
 NavbarContainer.defaultProps = {
     onSaveCodeRevoke: null,
 };
-function NavbarContainer() {
+function NavbarContainer({ onSaveCodeRevoke }) {
     const { user } = useSelector((state) => state.global);
     const location = useLocation();
     const navigate = useNavigate();
     //model
     const [isModalUpdateProfileVisible, setIsModalUpdateProfileVisible] =
         useState(false);
-    const [confirmLoading, setConfirmLoading] = useState(false);
+    const [isModalChangePasswordVisible, setIsModalChangePasswordVisible] =
+        useState(false);
 
     const checkCurrentPage = (iconName) => {
         if (iconName === 'MESSAGE' && location.pathname === '/chat') {
@@ -42,17 +44,12 @@ function NavbarContainer() {
         }
         return false;
     };
-    // --- HANDLE UPDATE PROFILE
+    // --- Hangle update profile
     const handleUpdateProfile = () => {
         setIsModalUpdateProfileVisible(true);
     };
     const handleCancelModalUpdateProfile = (value) => {
         setIsModalUpdateProfileVisible(value);
-    };
-    const handleOklModalUpdateProfile = (value) => {
-        setConfirmLoading(true);
-        setConfirmLoading(false);
-        setIsModalUpdateProfileVisible(false);
     };
     //Logout
     const handleLogout = () => {
@@ -84,9 +81,15 @@ function NavbarContainer() {
         </div>
     );
 
+    const handleChangePassword = () => {
+        setIsModalChangePasswordVisible(true);
+    };
     const setting = (
         <div className="pop_up-personal">
-            <div className="pop_up-personal--item">
+            <div
+                className="pop_up-personal--item"
+                onClick={handleChangePassword}
+            >
                 <div className="pop_up-personal--item-icon">
                     <LockOutlined />
                 </div>
@@ -170,8 +173,12 @@ function NavbarContainer() {
             <ModalUpdateProfile
                 isVisible={isModalUpdateProfileVisible}
                 onCancel={handleCancelModalUpdateProfile}
-                onOk={handleOklModalUpdateProfile}
-                loading={confirmLoading}
+            />
+
+            <ModalChangePassword
+                visible={isModalChangePasswordVisible}
+                onCancel={() => setIsModalChangePasswordVisible(false)}
+                onSaveCodeRevoke={onSaveCodeRevoke}
             />
         </div>
     );
