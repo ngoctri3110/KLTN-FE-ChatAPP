@@ -2,7 +2,7 @@ import { Spin } from 'antd';
 
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import ForgotPage from './pages/ForgotPage';
 import LoginPage from './pages/LoginPage';
 import RegistryPage from './pages/RegistryPage';
@@ -21,9 +21,10 @@ function Account(props) {
         <Spin spinning={isLoadingAccount}>
             <div id="account_page">
                 <Routes>
-                    <Route index path="" element={<LoginPage />} />
-                    <Route path="account/registry" element={<RegistryPage />} />
-                    <Route path="account/forgot" element={<ForgotPage />} />
+                    <Route path="" element={<LoginPage />} />
+                    <Route path="registry" element={<RegistryPage />} />
+                    <Route path="forgot" element={<ForgotPage />} />
+                    <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
             </div>
         </Spin>

@@ -1,13 +1,15 @@
 import { fetchUserProfile } from 'app/globalSlice';
+import ProtectedRoute from 'components/ProtectedRoute';
 import Account from 'features/Account';
 
 import ChatLayout from 'layout/ChatLayout';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Routes, Route } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Routes, Route, Navigate } from 'react-router-dom';
 function App() {
     const [isFetch, setIsFetch] = useState(false);
     const dispatch = useDispatch();
+    const { user } = useSelector((state) => state.global);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -28,7 +30,14 @@ function App() {
         <div className="App">
             <Routes>
                 <Route path="/*" element={<Account />} />
-                <Route path="chat/*" element={<ChatLayout />} />
+                <Route
+                    path="chat/*"
+                    element={
+                        <ProtectedRoute isAllowed={user && !user.isAdmin}>
+                            <ChatLayout />
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
         </div>
     );

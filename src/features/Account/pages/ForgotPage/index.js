@@ -80,7 +80,7 @@ function ForgotPage(props) {
                         <Link to="/">Đăng nhập</Link>
                         <Text>
                             Bạn chưa có tài khoản?
-                            <Link to="/account/registry">
+                            <Link to="/registry">
                                 {' '}
                                 <u>Đăng ký ngay!</u>
                             </Link>

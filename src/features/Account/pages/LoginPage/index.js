@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Col, Divider, Row, Tag, Typography } from 'antd';
-import { FastField, Form, Formik } from 'formik';
+import { FastField, Form, Formik, replace } from 'formik';
 import UserNameField from 'customfield/UserNameField';
 import PasswordField from 'customfield/PasswordField';
 import { Link, useNavigate } from 'react-router-dom';
@@ -37,7 +37,7 @@ function LoginPage(props) {
                 await dispatch(fetchUserProfile())
             );
             if (isAdmin) navigate('/admin');
-            else navigate('/chat');
+            else navigate('/chat', { replace: true });
         } catch (error) {
             setError(true);
             // console.log(error);
@@ -123,10 +123,10 @@ function LoginPage(props) {
                     </div>
                     <Divider>Hoặc</Divider>
                     <div className="addtional-link">
-                        <Link to="/account/forgot">Quên mật khẩu?</Link>
+                        <Link to="/forgot">Quên mật khẩu?</Link>
                         <Text>
                             Bạn chưa có tài khoản?
-                            <Link to="/account/registry">
+                            <Link to="/registry">
                                 {' '}
                                 <u>Đăng ký ngay!</u>
                             </Link>
