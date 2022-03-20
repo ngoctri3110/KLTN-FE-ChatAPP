@@ -7,7 +7,6 @@ import {
     Modal,
     notification,
     Row,
-    Tag,
     Typography,
 } from 'antd';
 import { FastField, Form, Formik } from 'formik';
@@ -19,7 +18,6 @@ import InputField from 'customfield/InputField';
 import { useDispatch } from 'react-redux';
 import { setLoadingAccount } from 'features/Account/accountSlice';
 import loginApi from 'api/loginAPI';
-import { CloseCircleOutlined } from '@ant-design/icons';
 
 const { Text, Title } = Typography;
 
@@ -33,7 +31,6 @@ function RegistryPage(props) {
     const [isSubmit, setIsSubmit] = useState(false);
     //set time counter
     const [counter, setCounter] = useState(0);
-    const [isError, setError] = useState('');
     const navigate = useNavigate();
 
     const openNotification = (mes) => {
@@ -255,23 +252,7 @@ function RegistryPage(props) {
                                                     </Col>
                                                 </>
                                             )}
-                                            {isError ? (
-                                                <Col span={24}>
-                                                    <Tag
-                                                        color="error"
-                                                        style={{
-                                                            fontWeight: 'bold',
-                                                        }}
-                                                        icon={
-                                                            <CloseCircleOutlined />
-                                                        }
-                                                    >
-                                                        {isError}
-                                                    </Tag>
-                                                </Col>
-                                            ) : (
-                                                ''
-                                            )}
+
                                             <Col span={24}>
                                                 <Button
                                                     htmlType="submit"

@@ -21,7 +21,7 @@ function Account(props) {
         <Spin spinning={isLoadingAccount}>
             <div id="account_page">
                 <Routes>
-                    <Route path="" element={<LoginPage />} />
+                    <Route path="" index element={<LoginPage />} />
                     <Route path="registry" element={<RegistryPage />} />
                     <Route path="forgot" element={<ForgotPage />} />
                     <Route path="*" element={<Navigate to="/" />} />

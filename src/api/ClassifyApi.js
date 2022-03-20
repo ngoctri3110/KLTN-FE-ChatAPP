@@ -2,7 +2,7 @@ import axiosClient from './axiosClient';
 
 const API_URL = '/classify';
 
-const ClassifyApi = {
+const classifyApi = {
     getClassifies: () => {
         return axiosClient.get(`${API_URL}`);
     },
@@ -14,4 +14,4 @@ const ClassifyApi = {
     },
 };
 
-export default ClassifyApi;
+export default classifyApi;

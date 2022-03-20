@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Divider, Menu, Tag } from 'antd';
+import { Divider, Menu } from 'antd';
 import { TagFilled } from '@ant-design/icons';
-import ClassifyApi from 'api/ClassifyApi';
+import classifyApi from 'api/classifyApi';
 import { useDispatch } from 'react-redux';
 import { fetchListClassify } from 'features/Chat/slice/chatSlice';
 
@@ -20,7 +20,7 @@ function SubMenuClassify({ data, idConver }) {
     const dispatch = useDispatch();
 
     const handleClickClassify = async (id) => {
-        await ClassifyApi.addClassifyForConversation(id, idConver);
+        await classifyApi.addClassifyForConversation(id, idConver);
         dispatch(fetchListClassify());
     };
     return (

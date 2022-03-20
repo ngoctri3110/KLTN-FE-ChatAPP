@@ -37,7 +37,6 @@ function PersonalIcon(props) {
         name,
         color,
         noneUser,
-        gender,
     } = props;
     return (
         <div

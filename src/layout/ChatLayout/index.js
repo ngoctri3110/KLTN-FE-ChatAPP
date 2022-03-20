@@ -5,10 +5,14 @@ import Chat from 'features/Chat';
 import React, { useRef, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Friend from 'features/Friend';
+import { useSelector } from 'react-redux';
 
 const ChatLayout = () => {
     const [codeRevoke, setCodeRevoke] = useState('');
     const codeRevokeRef = useRef();
+    const [idNewMessage, setIdNewMessage] = useState('');
+    const { user } = useSelector((state) => state.global);
+    const { conversations } = useSelector((state) => state.chat);
 
     const handleSetCodeRevoke = (code) => {
         setCodeRevoke(code);
@@ -38,8 +42,15 @@ const ChatLayout = () => {
                     xs={{ span: 20 }}
                 >
                     <Routes>
-                        <Route index path="" element={<Chat />} />
-                        <Route path="friends" element={<Friend />} />
+                        <Route
+                            index
+                            path=""
+                            element={<Chat idNewMessage={idNewMessage} />}
+                        />
+                        <Route
+                            path="friends"
+                            element={<Friend authed={true} />}
+                        />
 
                         <Route path="*" element={<NotFoundPage />} />
                     </Routes>

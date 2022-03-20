@@ -5,7 +5,7 @@ import Account from 'features/Account';
 import ChatLayout from 'layout/ChatLayout';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 function App() {
     const [isFetch, setIsFetch] = useState(false);
     const dispatch = useDispatch();

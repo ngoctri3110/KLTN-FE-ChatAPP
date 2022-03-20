@@ -3,7 +3,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 const ProtectedRoute = ({ isAllowed, children }) => {
     if (!isAllowed) {
-        return <Navigate to="/" state={children.state} />;
+        return <Navigate to="/" state={children.state} replace />;
     }
     return children ? children : <Outlet />;
 };

@@ -123,7 +123,7 @@ function ModalChangePassword({ visible, onCancel, onSaveCodeRevoke }) {
                     <Input.Password />
                 </Form.Item>
                 <Form.Item
-                    label="Mật khẩu"
+                    label="Mật khẩu mới"
                     name="password"
                     rules={[
                         {

@@ -1,6 +1,8 @@
 import { Col, Row, Spin } from 'antd';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
+
 import FilterContainer from './components/FilterContainer';
 import ConversationContainer from './containers/ConversationContainer';
 import FooterChatContainer from './containers/FooterChatContainer';
@@ -9,7 +11,15 @@ import SearchContainer from './containers/SearchContainer';
 
 import './style.scss';
 
-function Chat() {
+Chat.propTypes = {
+    idNewMessage: PropTypes.string,
+};
+
+Chat.defaultProps = {
+    idNewMessage: '',
+};
+
+function Chat({ idNewMessage }) {
     //store
     const { conversations, isLoading } = useSelector((state) => state.chat);
     // filter search
