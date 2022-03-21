@@ -22,7 +22,7 @@ function ConversationContainer({ valueClassify }) {
     const dispatch = useDispatch();
 
     const tempClassify =
-        classifies.find((ele) => ele._id === valueClassify) || 0;
+        classifies.find((ele) => ele.id === valueClassify) || 0;
 
     const checkConverInClassify = (idMember) => {
         if (tempClassify === 0) return true;
@@ -33,7 +33,7 @@ function ConversationContainer({ valueClassify }) {
     };
 
     const converFilter = [...conversations].filter((ele) => {
-        if (checkConverInClassify(ele._id)) return true;
+        if (checkConverInClassify(ele.id)) return true;
     });
 
     return (
@@ -52,10 +52,10 @@ function ConversationContainer({ valueClassify }) {
                                                 <SubMenuClassify
                                                     data={classifies}
                                                     idConver={
-                                                        conversationEle._id
+                                                        conversationEle.id
                                                     }
                                                 />
-                                                {user._id ===
+                                                {user.id ===
                                                     conversationEle.leaderId && (
                                                     <Menu.Item
                                                         danger

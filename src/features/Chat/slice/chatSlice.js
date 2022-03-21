@@ -1,8 +1,7 @@
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import classifyApi from 'api/classifyApi';
 import conversationApi from 'api/conversationApi';
 import friendApi from 'api/friendApi';
-
-const { createSlice, createAsyncThunk } = require('@reduxjs/toolkit');
 
 const KEY = 'chat';
 
@@ -15,7 +14,6 @@ export const fetchListConversations = createAsyncThunk(
             name,
             type
         );
-
         return conversations;
     }
 );
@@ -53,6 +51,7 @@ const chatSlice = createSlice({
         },
     },
     extraReducers: {
+        // conversation
         [fetchListConversations.pending]: (state, action) => {
             state.isLoading = true;
         },

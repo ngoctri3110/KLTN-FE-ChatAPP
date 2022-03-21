@@ -8,12 +8,16 @@ import './style.scss';
 import HeaderFriend from './components/HeaderFriend';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchListRequestFriend } from './friendSlice';
+import { fetchFriends, fetchListRequestFriend } from './friendSlice';
 import ListRequestFriend from './components/ListRequestFriend';
+import ListFriend from './components/ListFriend';
+import { fetchListFriends } from 'features/Chat/slice/chatSlice';
 
 function Friend() {
     const { user } = useSelector((state) => state.global);
-    const { requestFriends, isLoading } = useSelector((state) => state.friend);
+    const { requestFriends, isLoading, friends } = useSelector(
+        (state) => state.friend
+    );
     const dispatch = useDispatch();
 
     const [subTab, setSubTab] = useState(0);
@@ -25,6 +29,12 @@ function Friend() {
 
     useEffect(() => {
         dispatch(fetchListRequestFriend());
+        dispatch(
+            fetchFriends({
+                name: '',
+            })
+        );
+        //eslint-disable-next-line
     }, []);
     return (
         <Spin spinning={isLoading}>
@@ -90,9 +100,9 @@ function Friend() {
                                         </div>
                                         <div className="main-friend_sidebar_list-friend">
                                             <div className="main-friend_sidebar_list-friend_title">
-                                                Bạn bè
+                                                Bạn bè ({friends.length})
                                             </div>
-                                            component list friend
+                                            <ListFriend data={friends} />
                                         </div>
                                     </div>
                                 </>

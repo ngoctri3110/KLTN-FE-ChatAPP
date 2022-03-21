@@ -2,17 +2,31 @@ import { Col, Row } from 'antd';
 import NotFoundPage from 'components/NotFoundPage';
 import NavbarContainer from 'features/Chat/containers/NavbarContainer';
 import Chat from 'features/Chat';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Friend from 'features/Friend';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchListConversations } from 'features/Chat/slice/chatSlice';
 
 const ChatLayout = () => {
     const [codeRevoke, setCodeRevoke] = useState('');
     const codeRevokeRef = useRef();
     const [idNewMessage, setIdNewMessage] = useState('');
+    const dispatch = useDispatch();
     const { user } = useSelector((state) => state.global);
     const { conversations } = useSelector((state) => state.chat);
+
+    useEffect(() => {
+        dispatch(fetchListConversations({}));
+    }, []);
+
+    useEffect(() => {
+        if (conversations.length === 0) return;
+
+        const conversationIds = conversations.map(
+            (conversationEle) => conversationEle.id
+        );
+    }, [conversations]);
 
     const handleSetCodeRevoke = (code) => {
         setCodeRevoke(code);

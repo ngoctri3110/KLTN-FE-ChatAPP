@@ -13,22 +13,15 @@ ConversationSingle.propTypes = {
     onClick: PropTypes.func,
 };
 function ConversationSingle({ conversation, onClick }) {
-    const {
-        _id,
-        name,
-        avatar,
-        numberUnread,
-        lastMessage,
-        totalMembers,
-        avatarColor,
-    } = conversation;
+    const { id, name, avatar, numberUnread, lastMessage, totalMembers } =
+        conversation;
     const { type, createdAt } = lastMessage;
     const { conversations, classifies } = useSelector((state) => state.chat);
     const [classify, setClassify] = useState(null);
 
     useEffect(() => {
         if (classifies.length > 0) {
-            const temp = classifyUtils.getClassifyOfObject(_id, classifies);
+            const temp = classifyUtils.getClassifyOfObject(id, classifies);
             if (temp) {
                 setClassify(temp);
             }
@@ -37,7 +30,7 @@ function ConversationSingle({ conversation, onClick }) {
     }, [conversation, conversations, classifies]);
 
     const handleClick = () => {
-        if (onClick) onClick(_id);
+        if (onClick) onClick(id);
     };
     return (
         <div className="conversation-item_box" onClick={handleClick}>
@@ -45,10 +38,9 @@ function ConversationSingle({ conversation, onClick }) {
                 <div className="icon-users">
                     <ConversationAvatar
                         totalMembers={totalMembers}
-                        avatar={avatar}
+                        avatar={avatar.url}
                         type={conversation.type}
                         name={name}
-                        avatarColor={avatarColor}
                     />
                 </div>
             </div>

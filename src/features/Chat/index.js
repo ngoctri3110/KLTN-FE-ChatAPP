@@ -43,7 +43,7 @@ function Chat({ idNewMessage }) {
                                     visibleFilter ? 'fillter' : ''
                                 }`}
                             >
-                                <SearchContainer />
+                                <SearchContainer valueClassify={''} />
                             </div>
 
                             {visibleFilter ? (

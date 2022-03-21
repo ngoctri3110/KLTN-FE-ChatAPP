@@ -23,7 +23,7 @@ PersonalIcon.defaultProps = {
     common: true,
     isHost: false,
     name: '',
-    color: 'green',
+    color: '',
     noneUser: false,
 };
 
@@ -83,7 +83,7 @@ function PersonalIcon(props) {
                 ) : (
                     <Avatar
                         size={demention}
-                        style={{ backgroundColor: color ? color : '#4c92ff' }}
+                        style={{ backgroundColor: color ? color : '#1E90FF' }}
                     >
                         {getSummaryName(name)}
                     </Avatar>

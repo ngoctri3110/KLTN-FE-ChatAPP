@@ -26,7 +26,7 @@ ConversationAvatar.defaultProps = {
     avatar: '',
     sizeAvatar: 48,
     frameSize: 48,
-    avatarColor: '',
+    avatarColor: '#1E90FF',
 };
 
 function ConversationAvatar({
@@ -149,7 +149,6 @@ function ConversationAvatar({
     return (
         <div className="avatar_conversation">
             {typeof avatar === 'string' ? (
-                // <Avatar size={48} src={avatar ? avatar : DEFAULT_AVATAR} />
                 <Badge dot={isActived} offset={[-5, 40]} color="green">
                     <AvatarCustom
                         size={sizeAvatar}
@@ -240,7 +239,6 @@ function ConversationAvatar({
                             <Avatar
                                 size={sizeAvatar}
                                 src={avatar[0] ? avatar[0] : DEFAULT_AVATAR}
-                                //     { width: `${frameSize}px`, height: `${frameSize}px` }
                             />
                         </div>
                     )}
