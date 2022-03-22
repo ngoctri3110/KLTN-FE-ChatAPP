@@ -15,7 +15,6 @@ const ListRequestFriend = ({ data }) => {
     const dispatch = useDispatch();
 
     const handeDenyRequest = async (value) => {
-        console.log(value);
         await friendApi.deleteRequestFriend(value.id);
         dispatch(setAmountNotify(amountNotify - 1));
         dispatch(fetchListRequestFriend());

@@ -28,10 +28,17 @@ function FriendItem({ data, onClickMenu }) {
 
     const menu = (
         <Menu onClick={handleClickMenu}>
-            <Menu.Item key="1" icon={<InfoCircleOutlined />}>
+            <Menu.Item
+                key="1"
+                // icon={<InfoCircleOutlined />}
+            >
                 <span className="menu-item--highlight">Xem thông tin</span>
             </Menu.Item>
-            <Menu.Item key="2" danger icon={<DeleteOutlined />}>
+            <Menu.Item
+                key="2"
+                danger
+                // icon={<DeleteOutlined />}
+            >
                 <span className="menu-item--highlight">Xóa bạn</span>
             </Menu.Item>
         </Menu>

@@ -7,7 +7,7 @@ const friendApi = {
     },
 
     deleteRequestFriend: (userId) => {
-        return axiosClient.delete(`${API_URL}/requests`, { userId });
+        return axiosClient.delete(`${API_URL}/requests/${userId}`);
     },
 
     acceptRequestFriend: (userId) => {
@@ -19,6 +19,9 @@ const friendApi = {
                 name,
             },
         });
+    },
+    deleteFriend: (userId) => {
+        return axiosClient.delete(`${API_URL}/${userId}`);
     },
 };
 

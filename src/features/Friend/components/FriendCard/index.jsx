@@ -46,7 +46,6 @@ function FriendCard({ isMyRequest, data, onAccept, onDeny, onCancel }) {
                         avatar={data.avatar.url}
                         demention={72}
                         name={data.name}
-                        color={data.avatarColor}
                     />
                 </div>
                 <div className="friend-card_name">
