@@ -11,6 +11,16 @@ const conversationApi = {
             },
         });
     },
+    createConversationIndividual: (userId) => {
+        console.log('createConversationIndividual', userId);
+        return axiosClient.post(`${API_URL}/dual/${userId}`);
+    },
+    getConversationById: (id) => {
+        return axiosClient.get(`${API_URL}/${id}`);
+    },
+    getLastViewOfMembers: (conversationId) => {
+        return axiosClient.get(`${API_URL}/${conversationId}/view-last`);
+    },
 };
 
 export default conversationApi;

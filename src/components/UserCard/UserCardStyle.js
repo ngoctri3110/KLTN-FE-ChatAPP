@@ -1,12 +1,5 @@
 const UserCardStyle = {
-    styleModal: {
-        paddingLeft: '0',
-        paddingRight: '0',
-        paddingTop: '0',
-        paddingBottom: '0',
-    },
-
-    CoverImageStyle: {
+    CoverPhotoStyle: {
         width: '100%',
         height: '180px',
         backgroundPosition: 'center center',
@@ -25,10 +18,10 @@ const UserCardStyle = {
     buttonFullSize: {
         width: '100%',
     },
-    buttonStyle_1: {
-        width: '124px',
+    buttonStyle_NOT_FOLLOWER: {
+        width: '126px',
     },
-    buttonStyle_2: {
+    buttonStyle_FOLLOWER: {
         maxWidth: '110px',
     },
 };

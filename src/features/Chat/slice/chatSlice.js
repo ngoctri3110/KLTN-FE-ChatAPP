@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import classifyApi from 'api/classifyApi';
 import conversationApi from 'api/conversationApi';
 import friendApi from 'api/friendApi';
+import messageApi from 'api/messageApi';
 
 const KEY = 'chat';
 
@@ -18,12 +19,41 @@ export const fetchListConversations = createAsyncThunk(
     }
 );
 
+export const getLastViewOfMembers = createAsyncThunk(
+    `${KEY}/getLastViewOfMembers`,
+    async (params, _) => {
+        const { conversationId } = params;
+        const lastViews = await conversationApi.getLastViewOfMembers(
+            conversationId
+        );
+
+        return lastViews;
+    }
+);
 // Classify
 export const fetchListClassify = createAsyncThunk(
     `${KEY}/fetchListClassify`,
     async (params, thunkApi) => {
         const classifies = await classifyApi.getClassifies();
         return classifies;
+    }
+);
+// Message
+export const fetchListMessages = createAsyncThunk(
+    `${KEY}/fetchListMessages`,
+    async (params, thunkApi) => {
+        const { conversationId, page, size } = params;
+
+        const messages = await messageApi.fetchListMessages(
+            conversationId,
+            page,
+            size
+        );
+
+        return {
+            messages,
+            conversationId,
+        };
     }
 );
 
@@ -42,12 +72,25 @@ const chatSlice = createSlice({
     initialState: {
         isLoading: false,
         conversations: [],
+        currentConversation: '',
         classifies: [],
         friends: [],
+        lastViewOfMember: [],
+        messages: [],
+        currentPage: '',
+        totalPages: '',
+        toTalUnread: 0,
     },
     reducers: {
         setLoading: (state, action) => {
             state.isLoading = true;
+        },
+        setConversations: (state, action) => {
+            const conversation = action.payload;
+            state.conversations = [conversation, ...state.conversations];
+        },
+        setCurrentConversation: (state, action) => {
+            state.currentConversation = action.payload;
         },
     },
     extraReducers: {
@@ -59,7 +102,32 @@ const chatSlice = createSlice({
             state.isLoading = false;
             state.conversations = action.payload;
         },
+        [getLastViewOfMembers.fulfilled]: (state, action) => {
+            state.lastViewOfMember = action.payload;
+        },
+        [fetchListMessages.pending]: (state, action) => {
+            state.isLoading = true;
+        },
+        [fetchListMessages.fulfilled]: (state, action) => {
+            state.isLoading = false;
 
+            // xét currentConversation
+            const conversationId = action.payload.conversationId;
+            const conversationIndex = state.conversations.findIndex(
+                (conversationEle) => conversationEle.id === conversationId
+            );
+
+            state.conversations[conversationIndex] = {
+                ...state.conversations[conversationIndex],
+                numberUnread: 0,
+            };
+
+            // state.currentConversation = conversationId;
+
+            state.messages = action.payload.messages.data;
+            state.currentPage = action.payload.messages.page;
+            state.totalPages = action.payload.messages.totalPages;
+        },
         // classify
         [fetchListClassify.pending]: (state, action) => {
             state.isLoading = true;
@@ -87,6 +155,6 @@ const chatSlice = createSlice({
 });
 
 const { reducer, actions } = chatSlice;
-export const { setLoading } = actions;
+export const { setLoading, setConversations, setCurrentConversation } = actions;
 
 export default reducer;
