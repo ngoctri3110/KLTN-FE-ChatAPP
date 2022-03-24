@@ -21,6 +21,9 @@ const conversationApi = {
     getLastViewOfMembers: (conversationId) => {
         return axiosClient.get(`${API_URL}/${conversationId}/view-last`);
     },
+    leaveGroup: (conversationId) => {
+        return axiosClient.delete(`${API_URL}/${conversationId}/members`);
+    },
 };
 
 export default conversationApi;

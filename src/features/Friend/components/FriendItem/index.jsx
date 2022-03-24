@@ -1,13 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import { MoreOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Menu } from 'antd';
 import PersonalIcon from 'features/Chat/components/PersonalIcon';
+import PropTypes from 'prop-types';
 import dateUtils from 'utils/dateUtils';
-import {
-    DashOutlined,
-    DeleteOutlined,
-    InfoCircleOutlined,
-} from '@ant-design/icons';
 import './style.scss';
 
 FriendItem.propTypes = {
@@ -28,17 +23,10 @@ function FriendItem({ data, onClickMenu }) {
 
     const menu = (
         <Menu onClick={handleClickMenu}>
-            <Menu.Item
-                key="1"
-                // icon={<InfoCircleOutlined />}
-            >
+            <Menu.Item key="1">
                 <span className="menu-item--highlight">Xem thông tin</span>
             </Menu.Item>
-            <Menu.Item
-                key="2"
-                danger
-                // icon={<DeleteOutlined />}
-            >
+            <Menu.Item key="2" danger>
                 <span className="menu-item--highlight">Xóa bạn</span>
             </Menu.Item>
         </Menu>
@@ -72,7 +60,12 @@ function FriendItem({ data, onClickMenu }) {
                         <Dropdown overlay={menu} trigger={['click']}>
                             <Button
                                 type="text"
-                                icon={<DashOutlined />}
+                                icon={
+                                    <MoreOutlined
+                                        rotate={90}
+                                        style={{ fontSize: '20px' }}
+                                    />
+                                }
                                 style={{ background: 'eeeff2' }}
                             />
                         </Dropdown>

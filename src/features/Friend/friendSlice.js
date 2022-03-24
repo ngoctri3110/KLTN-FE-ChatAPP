@@ -1,4 +1,5 @@
 import contactsApi from 'api/contactsApi';
+import conversationApi from 'api/conversationApi';
 import friendApi from 'api/friendApi';
 
 const { createSlice, createAsyncThunk } = require('@reduxjs/toolkit');
@@ -38,15 +39,34 @@ export const fetchListMyRequestFriend = createAsyncThunk(
     }
 );
 
+export const fetchSuggestFriend = createAsyncThunk(
+    `${KEY}/fetchSuggestFriend`,
+    async (params, thunkApi) => {
+        const data = await friendApi.fetchSuggestFriend();
+        return data;
+    }
+);
+
+export const fetchListGroup = createAsyncThunk(
+    `${KEY}/fetchListGroup`,
+    async (params, thunkApi) => {
+        const { name, type } = params;
+        const data = await conversationApi.fetchListConversations(name, type);
+        return data;
+    }
+);
+
 const friendSlice = createSlice({
     name: KEY,
     initialState: {
         isLoading: false,
         requestFriends: [],
         myRequestFriend: [],
+        suggestFriends: [],
         friends: [],
         amountNotify: 0,
         contacts: [],
+        groups: [],
     },
     reducers: {
         setLoading: (state, action) => {
@@ -83,12 +103,10 @@ const friendSlice = createSlice({
         [fetchContacts.pending]: (state, action) => {
             state.isLoading = true;
         },
-
         [fetchContacts.fulfilled]: (state, action) => {
-            state.contacts = action.payload;
             state.isLoading = false;
+            state.contacts = action.payload;
         },
-
         [fetchContacts.rejected]: (state, action) => {
             state.isLoading = false;
         },
@@ -101,6 +119,28 @@ const friendSlice = createSlice({
             state.myRequestFriend = action.payload;
         },
         [fetchListMyRequestFriend.rejected]: (state, action) => {
+            state.isLoading = false;
+        },
+
+        [fetchSuggestFriend.pending]: (state, action) => {
+            state.isLoading = true;
+        },
+        [fetchSuggestFriend.fulfilled]: (state, action) => {
+            state.isLoading = false;
+            state.suggestFriends = action.payload;
+        },
+        [fetchSuggestFriend.rejected]: (state, action) => {
+            state.isLoading = false;
+        },
+
+        [fetchListGroup.pending]: (state, action) => {
+            state.isLoading = true;
+        },
+        [fetchListGroup.fulfilled]: (state, action) => {
+            state.isLoading = false;
+            state.groups = action.payload;
+        },
+        [fetchListGroup.rejected]: (state, action) => {
             state.isLoading = false;
         },
     },
