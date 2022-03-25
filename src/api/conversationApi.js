@@ -22,6 +22,7 @@ const conversationApi = {
         return axiosClient.get(`${API_URL}/${conversationId}/view-last`);
     },
     leaveGroup: (conversationId) => {
+        // console.log('API conversationId', conversationId);
         return axiosClient.delete(`${API_URL}/${conversationId}/members`);
     },
 };

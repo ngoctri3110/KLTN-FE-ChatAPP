@@ -91,14 +91,14 @@ function GroupCard({ data, onRemove }) {
                 <div className="group-card__total-member">
                     {`${data.totalMembers} thành viên`}
                 </div>
-                <div className="group-card__to-chat" onClick={handleOnClick}>
-                    <Button>Mở cuộc trò chuyện</Button>
+                <div className="group-card__to-chat">
+                    <Button onClick={handleOnClick}>Mở cuộc trò chuyện</Button>
                 </div>
             </div>
         </Dropdown>
     );
     return (
-        <div>
+        <>
             {classify ? (
                 <Badge.Ribbon
                     text={classify.name}
@@ -110,7 +110,7 @@ function GroupCard({ data, onRemove }) {
             ) : (
                 mainCard
             )}
-        </div>
+        </>
     );
 }
 

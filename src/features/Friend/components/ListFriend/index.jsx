@@ -59,7 +59,7 @@ function ListFriend({ data }) {
         try {
             await friendApi.deleteFriend(id);
             dispatch(fetchFriends({ name: '' }));
-            message.success('Xóa thành công');
+            message.success('Xóa bạn bè thành công');
             setIsVisible(false);
         } catch (error) {
             message.error('Xóa thất bại');

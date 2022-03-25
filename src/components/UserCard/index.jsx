@@ -146,11 +146,11 @@ function UserCard({ title, isVisible, user, onCancel }) {
         try {
             await friendApi.deleteFriend(user.id);
             dispatch(fetchFriends({ name: '' }));
-            message.success('Xóa thành công');
+            message.success('Hủy kết bạn thành công');
             handleOnCancle();
             dispatch(fetchContacts());
         } catch (error) {
-            message.error('Xóa thất bại');
+            message.error('Hủy kết bạn thất bại');
         }
     };
 

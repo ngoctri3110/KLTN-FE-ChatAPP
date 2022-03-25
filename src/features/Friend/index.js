@@ -143,10 +143,10 @@ function Friend() {
                     >
                         <div className="main-friend_sidebar">
                             <div className="main-friend_sidebar_search-bar">
-                                {/* <SearchContainer
+                                <SearchContainer
                                     valueText={valueInput}
                                     isFriendPage={true}
-                                /> */}
+                                />
                             </div>
 
                             {visibleFilter ? (

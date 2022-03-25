@@ -12,7 +12,7 @@ const ListGroup = ({ data }) => {
         try {
             await conversationApi.leaveGroup(id);
             message.success(`Rời nhóm thành công`);
-            dispatch(fetchListGroup({ name: '', type: 2 }));
+            dispatch(fetchListGroup({ name: '', type: 'GROUP' }));
         } catch (error) {
             message.error(`Rời nhóm thất bại`);
         }
