@@ -27,6 +27,10 @@
         cursor: pointer;
     }
 
+    &__to-chat {
+        margin-top: 2rem;
+    }
+
     &__interact {
         position: absolute;
         right: 5%;
@@ -38,5 +42,6 @@
     &:hover &__interact {
         opacity: 1;
         display: block;
+        z-index: 1000;
     }
 }

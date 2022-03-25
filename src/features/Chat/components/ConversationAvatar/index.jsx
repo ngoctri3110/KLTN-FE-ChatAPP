@@ -10,7 +10,7 @@ ConversationAvatar.propTypes = {
     demension: PropTypes.number,
     isGroupCard: PropTypes.bool,
     totalMembers: PropTypes.number.isRequired,
-    type: PropTypes.bool.isRequired,
+    type: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     isActived: PropTypes.bool,
     avatar: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),

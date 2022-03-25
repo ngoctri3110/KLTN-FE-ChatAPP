@@ -46,12 +46,13 @@ function Friend() {
     const { Panel } = Collapse;
     const [currentFilterLeft, setCurrentFilterLeft] = useState('1');
     const [currentFilterRight, setCurrentFilterRight] = useState('1');
-
     const [groupCurrent, setGroupCurrent] = useState([]);
+    const [keySort, setKeySort] = useState(1);
     const refFiller = useRef();
     // filter search
     const [visibleFilter, setVisbleFilter] = useState(false);
     const [valueInput, setValueInput] = useState('');
+
     const [isActiveTab, setActiveTab] = useState(false);
 
     useEffect(() => {
@@ -76,7 +77,26 @@ function Friend() {
         }
     }, [groups]);
 
-    const handleMenuLeftSelect = () => {};
+    const handleMenuLeftSelect = ({ _, key }) => {
+        if (groups.length > 0) {
+            setCurrentFilterLeft(key);
+
+            if (key === '2') {
+                const newListGroup = groupCurrent.filter(
+                    (ele) => ele.leaderId === user.id
+                );
+                console.log('leader', newListGroup);
+                console.log('groupCurrent', groupCurrent);
+                console.log('id', user.id);
+
+                setGroupCurrent(newListGroup);
+            }
+            if (key === '1') {
+                console.log('refFiller current', refFiller.current);
+                setGroupCurrent(sortGroup(refFiller.current, keySort));
+            }
+        }
+    };
 
     const menuLeft = (
         <Menu onClick={handleMenuLeftSelect}>
@@ -85,7 +105,22 @@ function Friend() {
         </Menu>
     );
 
-    const handleMenuRightSelect = () => {};
+    const handleMenuRightSelect = ({ key }) => {
+        if (groups.length > 0) {
+            setCurrentFilterRight(key);
+            let newListGroup = [];
+            if (key === '1') {
+                newListGroup = sortGroup(groupCurrent, 1);
+                setKeySort(1);
+            }
+            if (key === '2') {
+                newListGroup = sortGroup(groupCurrent, 0);
+                setKeySort(0);
+            }
+
+            setGroupCurrent(newListGroup);
+        }
+    };
 
     const menuRight = (
         <Menu onClick={handleMenuRightSelect}>
@@ -103,6 +138,8 @@ function Friend() {
                         xl={{ span: 5 }}
                         lg={{ span: 6 }}
                         md={{ span: 7 }}
+                        sm={{ span: isActiveTab ? 0 : 24 }}
+                        sx={{ span: isActiveTab ? 0 : 24 }}
                     >
                         <div className="main-friend_sidebar">
                             <div className="main-friend_sidebar_search-bar">
@@ -173,6 +210,8 @@ function Friend() {
                         xl={{ span: 19 }}
                         lg={{ span: 18 }}
                         md={{ span: 17 }}
+                        sm={{ span: isActiveTab ? 24 : 0 }}
+                        xs={{ span: isActiveTab ? 24 : 0 }}
                     >
                         <div className="main-friend_body">
                             <div className="main-friend_body__header">

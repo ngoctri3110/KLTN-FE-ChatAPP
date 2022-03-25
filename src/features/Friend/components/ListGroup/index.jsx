@@ -8,9 +8,6 @@ import GroupCard from '../GroupCard';
 const ListGroup = ({ data }) => {
     const dispatch = useDispatch();
 
-    const handleOnRemoveGroup = (id) => {
-        confirm(id);
-    };
     const handleOkModal = async (id) => {
         try {
             await conversationApi.leaveGroup(id);
@@ -19,6 +16,10 @@ const ListGroup = ({ data }) => {
         } catch (error) {
             message.error(`Rời nhóm thất bại`);
         }
+    };
+
+    const handleOnRemoveGroup = (key, id) => {
+        confirm(id);
     };
 
     function confirm(id) {
@@ -35,7 +36,7 @@ const ListGroup = ({ data }) => {
         <Row gutter={[16, 16]}>
             {data &&
                 data.length > 0 &&
-                data.map((item, index) => (
+                data.map((item) => (
                     <Col
                         span={6}
                         xl={{ span: 6 }}
@@ -45,7 +46,7 @@ const ListGroup = ({ data }) => {
                         xs={{ span: 24 }}
                     >
                         <GroupCard
-                            key={index}
+                            key={item.id}
                             data={item}
                             onRemove={handleOnRemoveGroup}
                         />
