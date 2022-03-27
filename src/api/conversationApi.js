@@ -25,6 +25,12 @@ const conversationApi = {
         // console.log('API conversationId', conversationId);
         return axiosClient.delete(`${API_URL}/${conversationId}/members`);
     },
+    createGroup: (name, userIds) => {
+        return axiosClient.post(`${API_URL}`, {
+            name,
+            userIds,
+        });
+    },
 };
 
 export default conversationApi;

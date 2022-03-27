@@ -1,6 +1,6 @@
 import { Col, Row, Spin } from 'antd';
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import FilterContainer from './components/FilterContainer';
@@ -11,6 +11,7 @@ import SearchContainer from './containers/SearchContainer';
 
 import './style.scss';
 import conversationApi from 'api/conversationApi';
+import { fetchListFriends } from './slice/chatSlice';
 
 Chat.propTypes = {
     idNewMessage: PropTypes.string,
@@ -21,6 +22,8 @@ Chat.defaultProps = {
 };
 
 function Chat({ idNewMessage }) {
+    const dispatch = useDispatch();
+
     //store
     const { conversations, isLoading } = useSelector((state) => state.chat);
     // filter search
@@ -69,6 +72,15 @@ function Chat({ idNewMessage }) {
             console.log(error);
         }
     };
+    //fetch friends
+    useEffect(() => {
+        dispatch(
+            fetchListFriends({
+                name: '',
+            })
+        );
+        //eslint-disable-next-line
+    }, []);
 
     const handleOnFilterClassfiy = () => {};
     return (

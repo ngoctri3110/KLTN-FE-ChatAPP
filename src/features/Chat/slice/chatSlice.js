@@ -67,6 +67,17 @@ export const fetchListFriends = createAsyncThunk(
         return friends;
     }
 );
+
+// Create a group chat
+export const createGroup = createAsyncThunk(
+    `${KEY}/createGroup`,
+    async (params, thunkApi) => {
+        const { name, userIds } = params;
+        const idNewGroup = await conversationApi.createGroup(name, userIds);
+        return idNewGroup;
+    }
+);
+
 const chatSlice = createSlice({
     name: KEY,
     initialState: {

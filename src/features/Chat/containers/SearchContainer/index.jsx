@@ -10,13 +10,15 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ModalAddFriend from 'components/ModalAddFriend';
 
 import './style.scss';
 import userApi from 'api/userApi';
 import UserCard from 'components/UserCard';
 import ModalCreateGroup from 'components/ModalCreateGroup';
+import { createGroup } from 'features/Chat/slice/chatSlice';
+import conversationApi from 'api/conversationApi';
 // const { TabPane } = Tabs;
 
 SearchContainer.propTypes = {
@@ -54,6 +56,7 @@ function SearchContainer({
         useState(false);
     const [visibleUserCard, setVisbleUserCard] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
+    const dispatch = useDispatch();
 
     // Handle add friend===========================================
     const handleOpenModalAddFriend = () => {
@@ -92,7 +95,19 @@ function SearchContainer({
         setIsModalCreateGroupVisible(value);
     };
 
-    const handleOklModalCreatGroup = () => {};
+    const handleOklModalCreatGroup = (value) => {
+        try {
+            // console.log(value.name);
+            setConfirmLoading(true);
+            // await conversationApi.createGroup(value.name, value.userIds);
+            dispatch(createGroup(value));
+            setConfirmLoading(false);
+            setIsModalCreateGroupVisible(false);
+        } catch (error) {
+            message.error('Tạo nhóm không thành công');
+        }
+    };
+
     // handle input search===========================================
     const handleInputChange = (event) => {
         const value = event.target.value;
