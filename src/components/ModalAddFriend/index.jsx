@@ -1,35 +1,65 @@
-import { Modal } from 'antd';
-import React from 'react';
+import { UserOutlined } from '@ant-design/icons';
+import { Input, Modal } from 'antd';
 import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 
+import './style.scss';
 ModalAddFriend.propTypes = {
-    title: PropTypes.string,
-    user: PropTypes.object.isRequired,
     isVisible: PropTypes.bool.isRequired,
     onCancel: PropTypes.func,
+    onSearch: PropTypes.func,
 };
 
 ModalAddFriend.defaultProps = {
-    title: 'Thông tin',
     onCancel: null,
+    onSearch: null,
 };
 
-function ModalAddFriend({ title, isVisible, user, onCancel }) {
-    const handleOnCancle = () => {
+function ModalAddFriend({ isVisible, onCancel, onSearch, onEnter }) {
+    const [value, setValue] = useState('');
+
+    const handleOk = () => {
+        if (onSearch) {
+            onSearch(value);
+        }
+    };
+
+    const handleInputChange = (e) => {
+        const value = e.target.value;
+        console.log(value);
+        setValue(value);
+    };
+    const handleOnPressSearch = () => {
+        if (onEnter) {
+            onEnter(value);
+        }
+    };
+    const handleCancel = () => {
         if (onCancel) {
             onCancel();
         }
     };
     return (
         <Modal
-            className="modalStyle"
-            title={title}
-            width={380}
+            title="Thêm bạn"
             visible={isVisible}
-            footer={null}
-            onCancel={handleOnCancle}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            width={360}
+            okText="Tìm kiếm"
+            cancelText="Hủy"
+            okButtonProps={{ disabled: !(value.trim().length > 0) }}
         >
-            Modal add Friend
+            <div className="input-add-friend_wrapper">
+                <Input
+                    placeholder="Nhập số điện thoại hoặc email"
+                    allowClear
+                    prefix={<UserOutlined />}
+                    value={value}
+                    onChange={handleInputChange}
+                    onPressSearch={handleOnPressSearch}
+                />
+            </div>
         </Modal>
     );
 }

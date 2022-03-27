@@ -29,7 +29,7 @@ import {
 } from 'features/Chat/slice/chatSlice';
 import conversationApi from 'api/conversationApi';
 import { useNavigate } from 'react-router-dom';
-import ModalAddFriend from 'components/ModalAddFriend';
+import ModalSendAddFriend from 'components/ModalSendAddFriend';
 
 UserCard.propTypes = {
     title: PropTypes.string,
@@ -69,10 +69,10 @@ function UserCard({ title, isVisible, user, onCancel }) {
     };
 
     const handleClickMessage = async () => {
-        console.log('userid', user.id);
+        // console.log('userid', user.id);
         const res = await conversationApi.createConversationIndividual(user.id);
         const { conversationId, isExists } = res;
-        console.log('response', res);
+        // console.log('response', res);
 
         if (!isExists) {
             const conver = await conversationApi.getConversationById(
@@ -344,7 +344,7 @@ function UserCard({ title, isVisible, user, onCancel }) {
                     </div>
                 </div>
             </div>
-            <ModalAddFriend
+            <ModalSendAddFriend
                 isVisible={isVisibleModal}
                 onCancel={handleCancelModalAddFriend}
             />

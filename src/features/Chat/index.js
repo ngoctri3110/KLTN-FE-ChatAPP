@@ -10,6 +10,7 @@ import HeaderChatContainer from './containers/HeaderChatContainer';
 import SearchContainer from './containers/SearchContainer';
 
 import './style.scss';
+import conversationApi from 'api/conversationApi';
 
 Chat.propTypes = {
     idNewMessage: PropTypes.string,
@@ -25,6 +26,51 @@ function Chat({ idNewMessage }) {
     // filter search
     const [visibleFilter, setVisbleFilter] = useState(false);
     const [valueClassify, setValueClassify] = useState('0');
+    const [valueInput, setValueInput] = useState('');
+    const [allConverFilter, setAllConverFilter] = useState([]);
+    const [dualConverFilter, setDualConverFilter] = useState([]);
+    const [groupConverFilter, setGroupConverFilter] = useState([]);
+
+    //=========================================
+    const handleOnVisibleFilter = (value) => {
+        if (value.trim().length > 0) {
+            setVisbleFilter(true);
+        } else {
+            setVisbleFilter(false);
+        }
+    };
+    const handleOnSearchChange = (value) => {
+        setValueInput(value);
+        handleOnVisibleFilter(value);
+    };
+    const handleOnSubmitSearch = async () => {
+        try {
+            // const all = await searchApi.searchConversations(valueInput);
+
+            const all = await conversationApi.fetchListConversations(
+                valueInput
+            );
+            // console.log(all);
+            setAllConverFilter(all);
+
+            const dual = await conversationApi.fetchListConversations(
+                valueInput,
+                'DUAL'
+            );
+            setDualConverFilter(dual);
+
+            const group = await conversationApi.fetchListConversations(
+                valueInput,
+                'GROUP'
+            );
+
+            setGroupConverFilter(group);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleOnFilterClassfiy = () => {};
     return (
         <Spin spinning={isLoading}>
             <div id="main-chat-wrapper">
@@ -43,11 +89,21 @@ function Chat({ idNewMessage }) {
                                     visibleFilter ? 'fillter' : ''
                                 }`}
                             >
-                                <SearchContainer valueClassify={''} />
+                                <SearchContainer
+                                    onSearchChange={handleOnSearchChange}
+                                    valueText={valueInput}
+                                    onSubmitSearch={handleOnSubmitSearch}
+                                    onFilterClasify={handleOnFilterClassfiy}
+                                    valueClassify={valueClassify}
+                                />
                             </div>
 
                             {visibleFilter ? (
-                                <FilterContainer />
+                                <FilterContainer
+                                    dataAll={allConverFilter}
+                                    dataDual={dualConverFilter}
+                                    dataGroup={groupConverFilter}
+                                />
                             ) : (
                                 <>
                                     <div className="divider-layout">

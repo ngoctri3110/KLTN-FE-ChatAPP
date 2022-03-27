@@ -29,6 +29,9 @@ import FRIEND_STYLE from './friendStyle';
 import { getValueFromKey } from 'constants/filterFriend';
 import ListGroup from './components/ListGroup';
 import { sortGroup } from 'utils/groupUtils';
+import FilterContainer from 'features/Chat/components/FilterContainer';
+import conversationApi from 'api/conversationApi';
+import searchApi from 'api/searchApi';
 
 function Friend() {
     const { user } = useSelector((state) => state.global);
@@ -49,9 +52,13 @@ function Friend() {
     const [groupCurrent, setGroupCurrent] = useState([]);
     const [keySort, setKeySort] = useState(1);
     const refFiller = useRef();
+
     // filter search
     const [visibleFilter, setVisbleFilter] = useState(false);
     const [valueInput, setValueInput] = useState('');
+    const [dualConverFilter, setDualConverFilter] = useState([]);
+    const [groupConverFilter, setGroupConverFilter] = useState([]);
+    const [allConverFilter, setAllConverFilter] = useState([]);
 
     const [isActiveTab, setActiveTab] = useState(false);
 
@@ -129,6 +136,46 @@ function Friend() {
         </Menu>
     );
 
+    const handleOnVisibleFilter = (value) => {
+        if (value.trim().length > 0) {
+            setVisbleFilter(true);
+        } else {
+            setVisbleFilter(false);
+        }
+    };
+
+    const handleOnSearchChange = (value) => {
+        setValueInput(value);
+        handleOnVisibleFilter(value);
+    };
+
+    const handleOnSubmitSearch = async () => {
+        try {
+            // const all = await searchApi.searchConversations(valueInput);
+
+            const all = await conversationApi.fetchListConversations(
+                valueInput
+            );
+
+            setAllConverFilter(all);
+
+            const dual = await conversationApi.fetchListConversations(
+                valueInput,
+                'DUAL'
+            );
+            setDualConverFilter(dual);
+
+            const group = await conversationApi.fetchListConversations(
+                valueInput,
+                'GROUP'
+            );
+
+            setGroupConverFilter(group);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <Spin spinning={isLoading}>
             <div id="main-friend_wrapper">
@@ -146,11 +193,18 @@ function Friend() {
                                 <SearchContainer
                                     valueText={valueInput}
                                     isFriendPage={true}
+                                    onSearchChange={handleOnSearchChange}
+                                    onSubmitSearch={handleOnSubmitSearch}
                                 />
                             </div>
 
                             {visibleFilter ? (
-                                <FilterFilled />
+                                <FilterContainer
+                                    valueText={valueInput}
+                                    dataAll={allConverFilter}
+                                    dataDual={dualConverFilter}
+                                    dataGroup={groupConverFilter}
+                                />
                             ) : (
                                 <>
                                     <div className="main-friend_sidebar_bottom">
