@@ -18,11 +18,11 @@ ItemsSelected.defaultProps = {
 function ItemsSelected({ items, onRemove }) {
     const handleRemoveSelect = (id) => {
         if (onRemove) {
-            console.log('onremove', id);
+            // console.log('onremove', id);
             onRemove(id);
         }
     };
-    console.log('itemsselect', items);
+    // console.log('itemsselect', items);
     return (
         <>
             {items &&

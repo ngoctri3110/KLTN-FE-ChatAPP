@@ -18,7 +18,6 @@ import userApi from 'api/userApi';
 import UserCard from 'components/UserCard';
 import ModalCreateGroup from 'components/ModalCreateGroup';
 import { createGroup } from 'features/Chat/slice/chatSlice';
-import conversationApi from 'api/conversationApi';
 // const { TabPane } = Tabs;
 
 SearchContainer.propTypes = {
@@ -97,12 +96,12 @@ function SearchContainer({
 
     const handleOklModalCreatGroup = (value) => {
         try {
-            // console.log(value.name);
+            // console.log(value);
             setConfirmLoading(true);
-            // await conversationApi.createGroup(value.name, value.userIds);
             dispatch(createGroup(value));
             setConfirmLoading(false);
             setIsModalCreateGroupVisible(false);
+            message.success('Tạo nhóm thành công');
         } catch (error) {
             message.error('Tạo nhóm không thành công');
         }
@@ -124,12 +123,13 @@ function SearchContainer({
             if (onSubmitSearch) {
                 onSubmitSearch();
             }
-        }, 10);
+        }, 100);
     };
 
     //Handle User Card
     const handleCancelModalUserCard = () => {
         setVisbleUserCard(false);
+        setIsShowModalAddFriend(false);
     };
     const handleOnChangeClassify = () => {};
     const handleCreateClasify = () => {};

@@ -64,10 +64,6 @@ function UserCard({ title, isVisible, user, onCancel }) {
         }
     };
 
-    const handleAddFriend = async () => {
-        setIsVisibleModal(true);
-    };
-
     const handleClickMessage = async () => {
         // console.log('userid', user.id);
         const res = await conversationApi.createConversationIndividual(user.id);
@@ -154,9 +150,31 @@ function UserCard({ title, isVisible, user, onCancel }) {
         }
     };
 
+    const handleAddFriend = () => {
+        setIsVisibleModal(true);
+    };
+
     const handleCancelModalAddFriend = () => {
         if (onCancel) {
-            onCancel();
+            // onCancel();
+            setIsVisibleModal(false);
+        }
+    };
+    const handleOkAddFriend = async (value) => {
+        try {
+            const { userAddFriend, messageInput } = value;
+            console.log(userAddFriend);
+            await friendApi.sendRequestFriend(userAddFriend, messageInput);
+            dispatch(fetchListMyRequestFriend());
+            // if (onCancel) {
+            //     setIsVisibleModal(false);
+            //     onCancel();
+            // }
+            handleOnCancle();
+
+            message.success('Gửi lời mời kết bạn thành công');
+        } catch (error) {
+            message.error('Gửi lời mời kết bạn thất bại');
         }
     };
     return (
@@ -345,8 +363,10 @@ function UserCard({ title, isVisible, user, onCancel }) {
                 </div>
             </div>
             <ModalSendAddFriend
+                userAddFriend={user}
                 isVisible={isVisibleModal}
                 onCancel={handleCancelModalAddFriend}
+                onOk={handleOkAddFriend}
             />
         </Modal>
     );

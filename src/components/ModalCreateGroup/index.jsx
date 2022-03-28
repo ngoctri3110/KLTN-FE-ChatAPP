@@ -52,7 +52,7 @@ function ModalCreateGroup({ loading, isVisible, onCancel, onOk }) {
         const userIds = itemSelected.map((item) => item.id);
 
         if (onOk) {
-            onOk({ name: nameGroup, userIds });
+            onOk({ name: nameGroup, userIds: userIds });
         }
     };
 
@@ -109,7 +109,7 @@ function ModalCreateGroup({ loading, isVisible, onCancel, onOk }) {
     const handleOnChangeCheckBox = (e) => {
         const value = e.target.value;
 
-        console.log(value);
+        // console.log('value', value);
         // check checklist co data chua
         const index = checkListFriend.findIndex((item) => item === value);
         let checkListFriendTemp = [...checkListFriend];
@@ -129,7 +129,8 @@ function ModalCreateGroup({ loading, isVisible, onCancel, onOk }) {
             checkListFriendTemp.push(value);
 
             const index = initialFriend.findIndex((item) => item.id === value);
-            if (index !== 1) {
+
+            if (index !== -1) {
                 itemSelectedTemp.push(initialFriend[index]);
             }
         }

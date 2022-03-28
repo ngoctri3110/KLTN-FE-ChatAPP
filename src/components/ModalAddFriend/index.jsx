@@ -26,10 +26,10 @@ function ModalAddFriend({ isVisible, onCancel, onSearch, onEnter }) {
 
     const handleInputChange = (e) => {
         const value = e.target.value;
-        console.log(value);
+        // console.log(value);
         setValue(value);
     };
-    const handleOnPressSearch = () => {
+    const handleOnPressEnter = () => {
         if (onEnter) {
             onEnter(value);
         }
@@ -57,7 +57,7 @@ function ModalAddFriend({ isVisible, onCancel, onSearch, onEnter }) {
                     prefix={<UserOutlined />}
                     value={value}
                     onChange={handleInputChange}
-                    onPressSearch={handleOnPressSearch}
+                    onPressEnter={handleOnPressEnter}
                 />
             </div>
         </Modal>
