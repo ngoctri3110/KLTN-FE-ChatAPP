@@ -91,6 +91,9 @@ const chatSlice = createSlice({
         currentPage: '',
         totalPages: '',
         toTalUnread: 0,
+        memberInConversation: [],
+        currentChannel: '',
+        channels: [],
     },
     reducers: {
         setLoading: (state, action) => {

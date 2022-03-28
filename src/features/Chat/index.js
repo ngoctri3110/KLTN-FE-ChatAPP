@@ -1,8 +1,7 @@
 import { Col, Row, Spin } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-
 import FilterContainer from './components/FilterContainer';
 import ConversationContainer from './containers/ConversationContainer';
 import FooterChatContainer from './containers/FooterChatContainer';
@@ -12,6 +11,8 @@ import SearchContainer from './containers/SearchContainer';
 import './style.scss';
 import conversationApi from 'api/conversationApi';
 import { fetchListFriends } from './slice/chatSlice';
+import { useLocation } from 'react-router-dom';
+import useWindowSize from 'hooks/useWindowSize';
 
 Chat.propTypes = {
     idNewMessage: PropTypes.string,
@@ -25,8 +26,21 @@ function Chat({ idNewMessage }) {
     const dispatch = useDispatch();
 
     //store
-    const { conversations, isLoading } = useSelector((state) => state.chat);
-    // filter search
+    const { conversations, isLoading, currentConversation } = useSelector(
+        (state) => state.chat
+    );
+    //=========================================
+
+    const location = useLocation();
+    const [isOpenInfo, setIsOpenInfo] = useState(true);
+    const [openDrawerInfo, setOpenDrawerInfo] = useState(false);
+
+    const refCurrentConversation = useRef();
+    const refConversations = useRef();
+    const refCurrentChannel = useRef();
+    const { width } = useWindowSize();
+
+    // filter search=====================================
     const [visibleFilter, setVisbleFilter] = useState(false);
     const [valueClassify, setValueClassify] = useState('0');
     const [valueInput, setValueInput] = useState('');
@@ -35,6 +49,13 @@ function Chat({ idNewMessage }) {
     const [groupConverFilter, setGroupConverFilter] = useState([]);
 
     //=========================================
+
+    useEffect(() => {
+        if (width > 1199) {
+            setOpenDrawerInfo(false);
+        }
+    }, [width]);
+
     const handleOnVisibleFilter = (value) => {
         if (value.trim().length > 0) {
             setVisbleFilter(true);
@@ -92,8 +113,8 @@ function Chat({ idNewMessage }) {
                         xl={{ span: 5 }}
                         lg={{ span: 6 }}
                         md={{ span: 7 }}
-                        sm={{ span: 8 }}
-                        xs={{ span: 9 }}
+                        sm={{ span: currentConversation ? 0 : 24 }}
+                        xs={{ span: currentConversation ? 0 : 24 }}
                     >
                         <div className="main-conversation">
                             <div
@@ -131,28 +152,71 @@ function Chat({ idNewMessage }) {
                             )}
                         </div>
                     </Col>
-                    <>
+                    {location.pathname === '/chat' && currentConversation ? (
+                        <>
+                            <Col
+                                span={isOpenInfo ? 13 : 19}
+                                xl={{ span: isOpenInfo ? 13 : 19 }}
+                                lg={{ span: 18 }}
+                                md={{ span: 17 }}
+                                sm={{ span: currentConversation ? 24 : 0 }}
+                                xs={{ span: currentConversation ? 24 : 0 }}
+                            >
+                                <div className="main_chat">
+                                    <div className="main_chat-header">
+                                        <HeaderChatContainer
+                                            onPopUpInfo={() =>
+                                                setIsOpenInfo(!isOpenInfo)
+                                            }
+                                            onOpenDrawer={() =>
+                                                setOpenDrawerInfo(true)
+                                            }
+                                        />
+                                    </div>
+                                    <div className="main_chat-body">
+                                        <div id="main_chat-body--view">
+                                            <p>Body chat</p>
+                                        </div>
+                                        <div className="main_chat-body--input">
+                                            <FooterChatContainer />
+                                        </div>
+                                    </div>
+                                </div>
+                            </Col>
+                        </>
+                    ) : (
                         <Col
-                            span={19}
-                            xl={{ span: 19 }}
+                            span={18}
+                            xl={{ span: 18 }}
                             lg={{ span: 18 }}
                             md={{ span: 17 }}
+                            sm={{ span: 0 }}
+                            xs={{ span: 0 }}
                         >
-                            <div className="main_chat">
-                                <div className="main_chat-header">
-                                    <HeaderChatContainer />
-                                </div>
-                                <div className="main_chat-body">
-                                    <div id="main_chat-body--view">
-                                        <p>Body chat</p>
+                            <div className="landing-app">
+                                <div className="title-welcome">
+                                    <div className="title-welcome-heading">
+                                        <span>
+                                            Chào mừng đến với <b>Talo</b>
+                                        </span>
                                     </div>
-                                    <div className="main_chat-body--input">
-                                        <FooterChatContainer />
+
+                                    <div className="title-welcome-detail">
+                                        <span>
+                                            Khám phá những tiện ích hỗ trợ làm
+                                            việc và trò chuyện cùng người thân,
+                                            bạn bè được tối ưu hoá cho máy tính
+                                            của bạn.
+                                        </span>
                                     </div>
                                 </div>
+
+                                {/* <div className="carousel-slider">
+                                    <Slider />
+                                </div> */}
                             </div>
                         </Col>
-                    </>
+                    )}
                 </Row>
             </div>
         </Spin>
