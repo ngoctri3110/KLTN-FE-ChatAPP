@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import channelApi from 'api/channelApi';
 import classifyApi from 'api/classifyApi';
 import conversationApi from 'api/conversationApi';
 import friendApi from 'api/friendApi';
@@ -21,7 +22,7 @@ export const fetchListConversations = createAsyncThunk(
 
 export const getLastViewOfMembers = createAsyncThunk(
     `${KEY}/getLastViewOfMembers`,
-    async (params, _) => {
+    async (params, thunkApi) => {
         const { conversationId } = params;
         const lastViews = await conversationApi.getLastViewOfMembers(
             conversationId
@@ -30,6 +31,7 @@ export const getLastViewOfMembers = createAsyncThunk(
         return lastViews;
     }
 );
+
 // Classify
 export const fetchListClassify = createAsyncThunk(
     `${KEY}/fetchListClassify`,
@@ -78,6 +80,27 @@ export const createGroup = createAsyncThunk(
     }
 );
 
+export const getMembersConversation = createAsyncThunk(
+    `${KEY}/getMembersConversation`,
+    async (params, thunkApi) => {
+        const { conversationId } = params;
+        const members = await conversationApi.getMemberInConversation(
+            conversationId
+        );
+        return members;
+    }
+);
+
+// =============== Channel ===============
+
+export const fetchChannels = createAsyncThunk(
+    `${KEY}/fetchChannels`,
+    async (params, thunkApi) => {
+        const { conversationId } = params;
+        const data = await channelApi.fetchChannel(conversationId);
+        return data;
+    }
+);
 const chatSlice = createSlice({
     name: KEY,
     initialState: {
@@ -94,6 +117,7 @@ const chatSlice = createSlice({
         memberInConversation: [],
         currentChannel: '',
         channels: [],
+        type: false,
     },
     reducers: {
         setLoading: (state, action) => {
@@ -105,6 +129,18 @@ const chatSlice = createSlice({
         },
         setCurrentConversation: (state, action) => {
             state.currentConversation = action.payload;
+        },
+        setCurrentChannel: (state, action) => {
+            state.currentChannel = action.payload;
+        },
+        setTypeOfConversation: (state, action) => {
+            const conversationId = action.payload;
+            const conversation = state.conversations.find(
+                (ele) => ele.id === conversationId
+            );
+            if (conversation) {
+                state.type = conversation.type;
+            }
         },
     },
     extraReducers: {
@@ -142,6 +178,23 @@ const chatSlice = createSlice({
             state.currentPage = action.payload.messages.page;
             state.totalPages = action.payload.messages.totalPages;
         },
+        [getMembersConversation.fulfilled]: (state, action) => {
+            const tempMembers = [...action.payload];
+            console.log('tempMembers', tempMembers);
+            const temp = [];
+
+            tempMembers.forEach((member) => {
+                state.friends.forEach((friend) => {
+                    if (member.id === friend.id) {
+                        member = { ...member, isFriend: true };
+                        return;
+                    }
+                });
+                temp.push(member);
+            });
+
+            state.memberInConversation = temp;
+        },
         // classify
         [fetchListClassify.pending]: (state, action) => {
             state.isLoading = true;
@@ -154,7 +207,7 @@ const chatSlice = createSlice({
             state.classifies = action.payload;
             state.isLoading = false;
         },
-        // FRIEND
+        // Friend
         [fetchListFriends.pending]: (state, action) => {
             state.isLoading = true;
         },
@@ -165,10 +218,27 @@ const chatSlice = createSlice({
         [fetchListFriends.rejected]: (state, action) => {
             state.isLoading = false;
         },
+        // Channel
+        [fetchChannels.pending]: (state, action) => {
+            state.isLoading = true;
+        },
+        [fetchChannels.fulfilled]: (state, action) => {
+            state.isLoading = false;
+            state.channels = action.payload;
+        },
+        [fetchChannels.rejected]: (state, action) => {
+            state.isLoading = false;
+        },
     },
 });
 
 const { reducer, actions } = chatSlice;
-export const { setLoading, setConversations, setCurrentConversation } = actions;
+export const {
+    setLoading,
+    setConversations,
+    setCurrentConversation,
+    setCurrentChannel,
+    setTypeOfConversation,
+} = actions;
 
 export default reducer;

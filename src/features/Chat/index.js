@@ -13,6 +13,7 @@ import conversationApi from 'api/conversationApi';
 import { fetchListFriends } from './slice/chatSlice';
 import { useLocation } from 'react-router-dom';
 import useWindowSize from 'hooks/useWindowSize';
+import BodyChatContainer from './containers/BodyChatContainer';
 
 Chat.propTypes = {
     idNewMessage: PropTypes.string,
@@ -26,9 +27,8 @@ function Chat({ idNewMessage }) {
     const dispatch = useDispatch();
 
     //store
-    const { conversations, isLoading, currentConversation } = useSelector(
-        (state) => state.chat
-    );
+    const { conversations, isLoading, currentConversation, currentChannel } =
+        useSelector((state) => state.chat);
     //=========================================
 
     const location = useLocation();
@@ -39,6 +39,9 @@ function Chat({ idNewMessage }) {
     const refConversations = useRef();
     const refCurrentChannel = useRef();
     const { width } = useWindowSize();
+    const [hasMessage, setHasMessage] = useState('');
+    const [isShow, setIsShow] = useState(false);
+    const [isScroll, setIsScroll] = useState(false);
 
     // filter search=====================================
     const [visibleFilter, setVisbleFilter] = useState(false);
@@ -49,12 +52,27 @@ function Chat({ idNewMessage }) {
     const [groupConverFilter, setGroupConverFilter] = useState([]);
 
     //=========================================
-
+    console.log('path', location.pathname);
+    console.log('currentconver', currentConversation);
+    //=============
     useEffect(() => {
         if (width > 1199) {
             setOpenDrawerInfo(false);
         }
     }, [width]);
+
+    //Get Clientwidth
+
+    useEffect(() => {
+        refCurrentConversation.current = currentConversation;
+    }, [currentConversation]);
+
+    useEffect(() => {
+        refConversations.current = conversations;
+    }, [conversations]);
+    useEffect(() => {
+        refCurrentChannel.current = currentChannel;
+    }, [currentChannel]);
 
     const handleOnVisibleFilter = (value) => {
         if (value.trim().length > 0) {
@@ -103,6 +121,17 @@ function Chat({ idNewMessage }) {
         //eslint-disable-next-line
     }, []);
 
+    const handleBackToBottom = (value, message) => {
+        if (message) {
+            setHasMessage(message);
+        } else {
+            setHasMessage('');
+        }
+        setIsShow(value);
+    };
+    const hanldeResetScrollButton = (value) => {
+        setIsScroll(value);
+    };
     const handleOnFilterClassfiy = () => {};
     return (
         <Spin spinning={isLoading}>
@@ -175,7 +204,14 @@ function Chat({ idNewMessage }) {
                                     </div>
                                     <div className="main_chat-body">
                                         <div id="main_chat-body--view">
-                                            <p>Body chat</p>
+                                            <BodyChatContainer
+                                                onBackToBottom={
+                                                    handleBackToBottom
+                                                }
+                                                onResetScrollButton={
+                                                    hanldeResetScrollButton
+                                                }
+                                            />
                                         </div>
                                         <div className="main_chat-body--input">
                                             <FooterChatContainer />
@@ -211,9 +247,9 @@ function Chat({ idNewMessage }) {
                                     </div>
                                 </div>
 
-                                {/* <div className="carousel-slider">
-                                    <Slider />
-                                </div> */}
+                                <div className="carousel-slider">
+                                    {/* <Slider /> */}
+                                </div>
                             </div>
                         </Col>
                     )}

@@ -1,8 +1,8 @@
 import HeaderOptional from 'features/Chat/components/HeaderOptional';
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import './style.scss';
 import { useSelector } from 'react-redux';
+import './style.scss';
 
 HeaderChatContainer.propTypes = {
     onPopUpInfo: PropTypes.func,
@@ -29,10 +29,11 @@ function HeaderChatContainer({ onPopUpInfo, onOpenDrawer }) {
         }
     }, [currentConversation, conversations]);
 
+    console.log('detailConver', detailConver);
     return (
         <div id="header-main">
             <HeaderOptional
-                avatar={detailConver.avatar.url}
+                avatar={detailConver.avatar?.url}
                 totalMembers={memberInConversation.length}
                 name={detailConver.name}
                 typeConver={detailConver.type}

@@ -8,6 +8,15 @@ import { Dropdown, Menu } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
 import ConversationSingle from 'features/Chat/components/ConversationSingle';
 import SubMenuClassify from 'components/SubMenuClassify';
+import {
+    fetchChannels,
+    fetchListMessages,
+    getLastViewOfMembers,
+    getMembersConversation,
+    setCurrentChannel,
+    setCurrentConversation,
+    setTypeOfConversation,
+} from 'features/Chat/slice/chatSlice';
 
 ConversationContainer.propTypes = {
     valueClassify: PropTypes.string.isRequired,
@@ -35,6 +44,17 @@ function ConversationContainer({ valueClassify }) {
     const converFilter = [...conversations].filter((ele) => {
         if (checkConverInClassify(ele.id)) return true;
     });
+    const handleConversationClick = async (conversationId) => {
+        dispatch(setCurrentConversation(conversationId));
+
+        dispatch(setCurrentChannel(''));
+        dispatch(getLastViewOfMembers({ conversationId }));
+        dispatch(fetchListMessages({ conversationId, size: 10 }));
+
+        dispatch(getMembersConversation({ conversationId }));
+        dispatch(setTypeOfConversation(conversationId));
+        dispatch(fetchChannels({ conversationId }));
+    };
 
     return (
         <>
@@ -79,6 +99,9 @@ function ConversationContainer({ valueClassify }) {
                                         >
                                             <ConversationSingle
                                                 conversation={conversationEle}
+                                                onClick={
+                                                    handleConversationClick
+                                                }
                                             />
                                         </li>
                                     </Dropdown>
