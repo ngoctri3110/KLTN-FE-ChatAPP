@@ -1,4 +1,5 @@
 import {
+    ExclamationCircleOutlined,
     LeftOutlined,
     NumberOutlined,
     RollbackOutlined,
@@ -6,7 +7,7 @@ import {
     UsergroupAddOutlined,
     UserOutlined,
 } from '@ant-design/icons';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import ConversationAvatar from '../ConversationAvatar';
 import useWindowSize from 'hooks/useWindowSize';
@@ -19,6 +20,7 @@ import {
 } from 'features/Chat/slice/chatSlice';
 import { useDispatch } from 'react-redux';
 import './style.scss';
+import { Tooltip } from 'antd';
 
 HeaderOptional.propTypes = {
     avatar: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
@@ -205,11 +207,20 @@ function HeaderOptional(props) {
                     )}
 
                     <div className="icon-header pop-up-layout">
-                        <SplitCellsOutlined onClick={handlePopUpInfo} />
+                        <Tooltip
+                            title="Thông tin về cuộc trò chuyện"
+                            placement={'bottomRight'}
+                        >
+                            <ExclamationCircleOutlined
+                                onClick={handlePopUpInfo}
+                            />
+                        </Tooltip>
                     </div>
 
                     <div className="icon-header pop-up-responsive">
-                        <SplitCellsOutlined onClick={handleOpenDraweer} />
+                        <ExclamationCircleOutlined
+                            onClick={handleOpenDraweer}
+                        />
                     </div>
                 </div>
             </div>

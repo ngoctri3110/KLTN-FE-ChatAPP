@@ -29,6 +29,9 @@ function Chat({ idNewMessage }) {
     //store
     const { conversations, isLoading, currentConversation, currentChannel } =
         useSelector((state) => state.chat);
+    const { isJoinChatLayout, isJoinFriendLayout, user } = useSelector(
+        (state) => state.global
+    );
     //=========================================
 
     const location = useLocation();
@@ -42,6 +45,10 @@ function Chat({ idNewMessage }) {
     const [hasMessage, setHasMessage] = useState('');
     const [isShow, setIsShow] = useState(false);
     const [isScroll, setIsScroll] = useState(false);
+    const [scrollId, setScrollId] = useState('');
+    const [replyMessage, setReplyMessage] = useState({});
+    const [userMention, setUserMention] = useState({});
+    const [usersTyping, setUsersTyping] = useState([]);
 
     // filter search=====================================
     const [visibleFilter, setVisbleFilter] = useState(false);
@@ -133,6 +140,28 @@ function Chat({ idNewMessage }) {
         setIsScroll(value);
     };
     const handleOnFilterClassfiy = () => {};
+
+    const handleScrollWhenSent = (value) => {
+        setScrollId(value);
+    };
+    const handleCloseReply = () => {};
+
+    const handleOnRemoveMention = () => {
+        setUserMention({});
+    };
+
+    const handleViewVotes = () => {};
+    useEffect(() => {
+        setUsersTyping([]);
+        setReplyMessage(null);
+        setUserMention({});
+    }, [currentConversation]);
+
+    const handleOnMention = (userMent) => {
+        if (user.id !== userMent.id) {
+            setUserMention(userMent);
+        }
+    };
     return (
         <Spin spinning={isLoading}>
             <div id="main-chat-wrapper">
@@ -211,10 +240,25 @@ function Chat({ idNewMessage }) {
                                                 onResetScrollButton={
                                                     hanldeResetScrollButton
                                                 }
+                                                onMention={handleOnMention}
                                             />
                                         </div>
                                         <div className="main_chat-body--input">
-                                            <FooterChatContainer />
+                                            <FooterChatContainer
+                                                onScrollWhenSentText={
+                                                    handleScrollWhenSent
+                                                }
+                                                replyMessage={replyMessage}
+                                                onCloseReply={handleCloseReply}
+                                                userMention={userMention}
+                                                onRemoveMention={
+                                                    handleOnRemoveMention
+                                                }
+                                                onViewVotes={handleViewVotes}
+                                                onOpenInfoBlock={() =>
+                                                    setIsOpenInfo(true)
+                                                }
+                                            />
                                         </div>
                                     </div>
                                 </div>

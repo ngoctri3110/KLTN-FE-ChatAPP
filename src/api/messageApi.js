@@ -11,5 +11,9 @@ const messageApi = {
             },
         });
     },
+
+    sendTextMessage: (conversationId, message) => {
+        return axiosClient.post(`${API_URL}/${conversationId}/text`, message);
+    },
 };
 export default messageApi;

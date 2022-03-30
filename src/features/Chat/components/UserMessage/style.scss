@@ -1,0 +1,81 @@
+@import '../../../../scss/variables';
+
+.user-message {
+    padding: 0 2rem;
+}
+
+.user-message.top {
+    margin-top: 4rem;
+}
+
+.user-message.bottom {
+    margin-bottom: 4rem;
+}
+.user-message {
+    transition: visibility 0.4s;
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.4s;
+    .interact-conversation {
+        display: flex;
+        flex-direction: row;
+        .avatar-user.hidden {
+            visibility: hidden;
+        }
+    }
+    .reverse {
+        flex-direction: row-reverse !important;
+    }
+    .list-conversation {
+        display: flex;
+        flex-direction: column;
+        width: calc(100% - 60px);
+
+        .message {
+            .sub-message.same-user {
+                margin-top: 0;
+            }
+            .sub-message {
+                display: flex;
+                flex-direction: row;
+                margin: 0.5rem;
+                align-items: center;
+                position: relative;
+
+                .content-message.my-message-bg {
+                    background: $blue-700;
+                }
+                .content-message.content-media {
+                    padding: 0;
+                    background: none;
+                    box-shadow: none;
+                }
+                .content-message {
+                    background: $white-color;
+                    max-width: 75%;
+                    display: flex;
+                    flex-direction: column;
+                    padding: 1.4rem 1.4rem;
+                    position: relative;
+
+                    white-space: pre;
+                    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.18);
+                    border-radius: 0.6rem;
+
+                    &-description {
+                        .undo-message {
+                            color: $silver;
+                        }
+
+                        white-space: normal;
+                        word-break: break-word;
+                        .messsage-image-wrapper,
+                        .message-video-wrapper {
+                            position: relative;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -54,7 +54,7 @@ function BodyChatContainer(
     const handleOnStop = () => {};
     const handleOpenModalShare = () => {};
 
-    console.log('57, message', messages);
+    console.log('row 57, message', messages);
 
     const renderMessages = (messages) => {
         const result = [];
@@ -66,7 +66,7 @@ function BodyChatContainer(
             const senderId = currentMessage.user.id;
             const isMyMessage = senderId === user.id ? true : false;
 
-            // chổ này có thể sai
+            // =============
             if (i === 0) {
                 result.push(
                     <UserMessage
