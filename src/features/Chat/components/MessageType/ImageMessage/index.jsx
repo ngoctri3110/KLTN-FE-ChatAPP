@@ -5,7 +5,8 @@ import './style.scss';
 import { Image } from 'antd';
 import { fallback } from 'assets/images/fallbackImage';
 import MESSAGE_STYLE from 'constants/messageStyle';
-import OverlayImage from '../OverlayImage';
+import OverlayImage from '../../OverlayImage';
+
 ImageMessage.propTypes = {
     content: PropTypes.string,
     dateAt: PropTypes.object,

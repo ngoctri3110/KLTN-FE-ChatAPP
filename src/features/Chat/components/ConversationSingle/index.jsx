@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { TagFilled } from '@ant-design/icons';
 import ShortMessage from '../ShortMessage';
 import classifyUtils from 'utils/classifyUtils';
+import dateUtils from 'utils/dateUtils';
 
 ConversationSingle.propTypes = {
     conversation: PropTypes.object,
@@ -64,7 +65,9 @@ function ConversationSingle({ conversation, onClick }) {
                     </div>
 
                     <div className="right-side-box">
-                        <span className="lastest-time">{createdAt}</span>
+                        <span className="lastest-time">
+                            {dateUtils.toTime(createdAt)}
+                        </span>
 
                         <span className="message-count">{numberUnread}</span>
                     </div>

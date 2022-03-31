@@ -3,7 +3,8 @@ import { Avatar, Badge, Tooltip } from 'antd';
 import DEFAULT_AVATAR from 'assets/images/user/talo_user_default.jpg';
 import AvatarCustom from 'components/AvatarCustom';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import COVERSATION_STYLE from './ConversationAvatarStyle';
 import './style.scss';
 ConversationAvatar.propTypes = {
@@ -16,7 +17,6 @@ ConversationAvatar.propTypes = {
     avatar: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     sizeAvatar: PropTypes.number,
     frameSize: PropTypes.number,
-    avatarColor: PropTypes.string,
 };
 
 ConversationAvatar.defaultProps = {
@@ -26,7 +26,6 @@ ConversationAvatar.defaultProps = {
     avatar: '',
     sizeAvatar: 48,
     frameSize: 48,
-    avatarColor: '#1E90FF',
 };
 
 function ConversationAvatar({
@@ -39,12 +38,12 @@ function ConversationAvatar({
     isActived,
     sizeAvatar,
     frameSize,
-    avatarColor,
+    members,
 }) {
     const renderAvatar = () => {
         let tempAvatar = [];
         for (let index = 0; index < totalMembers; index++) {
-            if (avatar[index]?.avatar) {
+            if (members[index]?.avatar.url) {
                 tempAvatar.push(
                     <Avatar
                         key={index}
@@ -54,7 +53,7 @@ function ConversationAvatar({
                                 : {}
                         }
                         size={demension}
-                        src={avatar[index].avatar}
+                        src={members[index]?.avatar.url}
                     />
                 );
             } else {
@@ -67,12 +66,10 @@ function ConversationAvatar({
                                       ...COVERSATION_STYLE.styleGroup3(
                                           demension
                                       ),
-                                      backgroundColor:
-                                          avatar[index]?.avatarColor,
+                                      backgroundColor: '#1E90FF',
                                   }
                                 : {
-                                      backgroundColor:
-                                          avatar[index]?.avatarColor,
+                                      backgroundColor: '#1E90FF',
                                   }
                         }
                         size={demension}
@@ -88,12 +85,12 @@ function ConversationAvatar({
         let tempAvatar = [];
         for (let index = 0; index < 4; index++) {
             if (index < 3) {
-                if (avatar[index]?.avatar) {
+                if (members[index]?.avatar.url) {
                     tempAvatar.push(
                         <div className="per-user">
                             <Avatar
                                 size={demension}
-                                src={avatar[index]?.avatar}
+                                src={members[index]?.avatar.url}
                                 style={
                                     index === 2
                                         ? { marginTop: (demension / 6) * -1 }
@@ -111,12 +108,10 @@ function ConversationAvatar({
                                     index === 2
                                         ? {
                                               marginTop: (demension / 6) * -1,
-                                              backgroundColor:
-                                                  avatar[index]?.avatarColor,
+                                              backgroundColor: '#1E90FF',
                                           }
                                         : {
-                                              backgroundColor:
-                                                  avatar[index]?.avatarColor,
+                                              backgroundColor: '#1E90FF',
                                           }
                                 }
                                 icon={<UserOutlined />}
@@ -150,12 +145,7 @@ function ConversationAvatar({
         <div className="avatar_conversation">
             {typeof avatar === 'string' ? (
                 <Badge dot={isActived} offset={[-5, 40]} color="green">
-                    <AvatarCustom
-                        size={sizeAvatar}
-                        src={avatar}
-                        color={avatarColor}
-                        name={name}
-                    />
+                    <AvatarCustom size={sizeAvatar} src={avatar} name={name} />
                 </Badge>
             ) : (
                 <>

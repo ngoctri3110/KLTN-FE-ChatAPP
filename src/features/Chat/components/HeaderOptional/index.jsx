@@ -26,7 +26,7 @@ HeaderOptional.propTypes = {
     avatar: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     totalMembers: PropTypes.number,
     name: PropTypes.string,
-    typeConver: PropTypes.bool.isRequired,
+    typeConver: PropTypes.string.isRequired,
     isLogin: PropTypes.bool,
     lastLogin: PropTypes.object,
     onPopUpInfo: PropTypes.func,
@@ -90,10 +90,9 @@ function HeaderOptional(props) {
         dispatch(getLastViewOfMembers({ conversationId: currentConversation }));
     };
 
-    //  true là GROUP, false DUAL
     const handleAddMemberToGroup = () => {
         setIsvisible(true);
-        if (typeConver) {
+        if (typeConver === 'GROUP') {
             setTypeModal('GROUP');
         } else {
             setTypeModal('DUAL');

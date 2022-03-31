@@ -54,8 +54,6 @@ function BodyChatContainer(
     const handleOnStop = () => {};
     const handleOpenModalShare = () => {};
 
-    console.log('row 57, message', messages);
-
     const renderMessages = (messages) => {
         const result = [];
 
@@ -81,8 +79,8 @@ function BodyChatContainer(
                 );
                 continue;
             }
-            const dateTempt2 = new Date(currentMessage.createdAt);
             const dateTempt1 = new Date(preMessage.createdAt);
+            const dateTempt2 = new Date(currentMessage.createdAt);
 
             const isSameUser =
                 currentMessage.user.id === preMessage.user.id &&
@@ -94,27 +92,6 @@ function BodyChatContainer(
                 dateTempt2.setHours(dateTempt2.getHours() - 6) > dateTempt1
                     ? true
                     : false;
-
-            // let conditionTime = false
-            // if (isSameUser) {
-            //     if (indexMesssageBreak.current === i) {
-            //         conditionTime = true;
-            //     }
-
-            //     if (i === messages.length - 1) {
-            //         conditionTime = true;
-            //     }
-            //     indexMesssageBreak.current = i
-            // } else {
-            //     if (indexMesssageBreak.current === i) {
-            //         conditionTime = true;
-            //     }
-
-            //     if (i === messages.length - 1) {
-            //         conditionTime = true;
-            //     }
-
-            // }
 
             // tin nhắn cuối
             const viewUsers = [];
@@ -179,21 +156,11 @@ function BodyChatContainer(
             onScrollFrame={handleOnScrolling}
             onScrollStop={handleOnStop}
         >
-            {/* <div className='main-body-conversation'> */}
-
             <div className="spinning-custom">
                 <Spin spinning={loading} />
             </div>
 
             {renderMessages(messages)}
-
-            {/* <button onClick={() => {
-            document.getElementById('613dddc02f1e724484d09d82').scrollIntoView();
-        }}>
-            nust test
-        </button> */}
-
-            {/* </div>  */}
 
             {/* <ModalShareMessage
                 visible={visibleModalShare}

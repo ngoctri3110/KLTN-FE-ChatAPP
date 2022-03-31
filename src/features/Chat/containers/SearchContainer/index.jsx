@@ -17,7 +17,10 @@ import './style.scss';
 import userApi from 'api/userApi';
 import UserCard from 'components/UserCard';
 import ModalCreateGroup from 'components/ModalCreateGroup';
-import { createGroup } from 'features/Chat/slice/chatSlice';
+import {
+    createGroup,
+    fetchListConversations,
+} from 'features/Chat/slice/chatSlice';
 // const { TabPane } = Tabs;
 
 SearchContainer.propTypes = {
@@ -99,6 +102,7 @@ function SearchContainer({
             // console.log(value);
             setConfirmLoading(true);
             dispatch(createGroup(value));
+            // dispatch(fetchListConversations());
             setConfirmLoading(false);
             setIsModalCreateGroupVisible(false);
             message.success('Tạo nhóm thành công');

@@ -12,11 +12,11 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import NavbarStyle from './NavbarStyle';
 import PropTypes from 'prop-types';
 
-import './style.scss';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import ModalUpdateProfile from 'features/Chat/components/ModalUpdateProfile';
 import ModalChangePassword from 'components/ModalChangePassword';
+import './style.scss';
 
 NavbarContainer.propTypes = {
     onSaveCodeRevoke: PropTypes.func,
@@ -28,7 +28,6 @@ NavbarContainer.defaultProps = {
 function NavbarContainer({ onSaveCodeRevoke }) {
     const { user } = useSelector((state) => state.global);
     const location = useLocation();
-    const navigate = useNavigate();
     //model
     const [isModalUpdateProfileVisible, setIsModalUpdateProfileVisible] =
         useState(false);

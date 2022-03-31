@@ -25,7 +25,6 @@ const dateUtils = {
         // tính ngày
         const day = Math.floor(numberMiliseconds / DAY_MILISECONDS);
         if (day > 0) return `0${day}`.slice(-2) + ` ngày`;
-        // `0${date.getHours()}`.slice(-2);
 
         // tính giờ
         const hour = Math.floor(numberMiliseconds / HOURSE_MILISECONDS);
@@ -40,7 +39,7 @@ const dateUtils = {
 
     transferDateString: (day, month, year) => {
         return (
-            `0${day}`.slice(-2) + '/' + `0${month}`.slice(-2) + '/' + `${year}`
+            `0${day}`.slice(-2) + '/' + `0${month}`.slice(-2) + '/' / +`${year}`
         );
     },
     compareDate: (time, currentTime) => {

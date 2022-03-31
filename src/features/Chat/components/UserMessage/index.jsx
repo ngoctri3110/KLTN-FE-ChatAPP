@@ -4,12 +4,15 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import PersonalIcon from '../PersonalIcon';
 import { useState } from 'react';
-import TextMessage from '../TextMessage';
+import TextMessage from '../MessageType/TextMessage';
 import './style.scss';
-import ImageMessage from '../ImageMessage';
+import ImageMessage from '../MessageType/ImageMessage';
 import VideoMessage from '../VideoMessage';
-import StickerMessage from '../StickerMessage';
-import FileMessage from '../FileMessage';
+import StickerMessage from '../MessageType/StickerMessage';
+import FileMessage from '../MessageType/FileMessage';
+import HTMLMessage from '../MessageType/HTMLMessage';
+import LastView from '../LastView';
+import NotifyMessage from '../MessageType/NotifyMessage';
 
 UserMessage.propTypes = {
     message: PropTypes.object,
@@ -51,7 +54,6 @@ function UserMessage({
         replyMessage,
     } = message;
     const { name, avatar } = user;
-    console.log('50.userMessage', user);
     const {
         messages,
         currentConversation,
@@ -85,12 +87,11 @@ function UserMessage({
         <>
             {!isDeleted && type === 'NOTIFY' ? (
                 <>
-                    {/* <NotifyMessage message={message} /> */}
+                    <NotifyMessage message={message} />
                     <div className="last-view-avatar center">
-                        {/* {viewUsers && viewUsers.length > 0 && (
+                        {viewUsers && viewUsers.length > 0 && (
                             <LastView lastView={viewUsers} />
-                        )} */}
-                        Thong bao
+                        )}
                     </div>
                 </>
             ) : (
@@ -225,6 +226,18 @@ function UserMessage({
                                                                         0
                                                                 }
                                                             ></FileMessage>
+                                                        ) : type === 'HTML' ? (
+                                                            <HTMLMessage
+                                                                content={
+                                                                    content
+                                                                }
+                                                                dateAt={dateAt}
+                                                                isSeen={
+                                                                    viewUsers &&
+                                                                    viewUsers.length >
+                                                                        0
+                                                                }
+                                                            ></HTMLMessage>
                                                         ) : (
                                                             <></>
                                                         )}
@@ -235,6 +248,15 @@ function UserMessage({
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div
+                            className={`last-view-avatar  ${
+                                isMyMessage ? 'reverse' : ''
+                            } `}
+                        >
+                            {viewUsers && viewUsers.length > 0 && (
+                                <LastView lastView={viewUsers} />
+                            )}
                         </div>
                     </div>
                 </>

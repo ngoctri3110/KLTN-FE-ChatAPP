@@ -1,10 +1,11 @@
-import {
+import Icon, {
     DashOutlined,
     FileImageOutlined,
     FontColorsOutlined,
     LinkOutlined,
     SmileOutlined,
 } from '@ant-design/icons';
+import { createFromIconfontCN } from '@ant-design/icons';
 import { Button, Dropdown, Menu, Popover } from 'antd';
 import React from 'react';
 import { BsNewspaper } from 'react-icons/bs';

@@ -11,11 +11,31 @@
 .user-message.bottom {
     margin-bottom: 4rem;
 }
+.user-message.hidden {
+    display: none;
+}
+.user-name-strong {
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.bg-white {
+    background: #fff;
+}
+
+.user-name-strong .blue {
+    color: $blue-talo;
+}
+.user-name-strong .blue:hover {
+    text-decoration: underline;
+}
+
 .user-message {
     transition: visibility 0.4s;
     visibility: visible;
     opacity: 1;
     transition: opacity 0.4s;
+
     .interact-conversation {
         display: flex;
         flex-direction: row;
@@ -26,6 +46,12 @@
     .reverse {
         flex-direction: row-reverse !important;
     }
+    .time-and-last_view {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
     .list-conversation {
         display: flex;
         flex-direction: column;
@@ -78,4 +104,26 @@
             }
         }
     }
+
+    .last-view-avatar {
+        display: flex;
+    }
+    .last-view-avatar.reverse {
+        flex-direction: row-reverse;
+    }
+    .last-message {
+        padding-bottom: 3rem;
+    }
+    .is-seen-message {
+        font-size: 1.3rem;
+        color: $thumbnail-text;
+        padding-left: 1rem;
+        margin-bottom: 0.5rem;
+    }
+}
+.last-view-avatar.center {
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0;
+    margin-bottom: 0.5rem;
 }

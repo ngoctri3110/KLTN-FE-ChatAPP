@@ -9,9 +9,9 @@ import {
 import Text from 'antd/lib/typography/Text';
 import PersonalIcon from 'features/Chat/components/PersonalIcon';
 import ItemsSelected from 'components/ItemsSelected';
-import './style.scss';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import './style.scss';
 
 ModalCreateGroup.propTypes = {
     loading: PropTypes.bool,

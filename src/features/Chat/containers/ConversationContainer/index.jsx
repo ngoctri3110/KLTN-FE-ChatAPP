@@ -2,8 +2,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-
-import './style.scss';
 import { Dropdown, Menu } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
 import ConversationSingle from 'features/Chat/components/ConversationSingle';
@@ -17,6 +15,7 @@ import {
     setCurrentConversation,
     setTypeOfConversation,
 } from 'features/Chat/slice/chatSlice';
+import './style.scss';
 
 ConversationContainer.propTypes = {
     valueClassify: PropTypes.string.isRequired,
