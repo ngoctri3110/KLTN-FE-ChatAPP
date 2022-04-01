@@ -19,7 +19,7 @@ FooterChatContainer.propTypes = {
     onCloseReply: PropTypes.func,
     userMention: PropTypes.object,
     onRemoveMention: PropTypes.func,
-    onViewVotes: PropTypes.func,
+    onViewPolls: PropTypes.func,
     onOpenInfoBlock: PropTypes.func,
 };
 
@@ -30,7 +30,7 @@ FooterChatContainer.defaultProps = {
     onCloseReply: null,
     userMention: {},
     onRemoveMention: null,
-    onViewVotes: null,
+    onViewPolls: null,
     onOpenInfoBlock: null,
 };
 
@@ -42,7 +42,7 @@ function FooterChatContainer({
     onCloseReply,
     userMention,
     onRemoveMention,
-    onViewVotes,
+    onViewPolls,
 }) {
     const {
         currentConversation,
@@ -57,6 +57,8 @@ function FooterChatContainer({
     const [mentionSelect, setMentionSelect] = useState([]);
     const [mentionList, setMentionsList] = useState([]);
     const [isShowLike, setShowLike] = useState(true);
+    const [isHightLight, setHightLight] = useState(false);
+
     const checkGroup = conversations.find(
         (ele) => ele.id === currentConversation
     );
@@ -232,10 +234,19 @@ function FooterChatContainer({
             onScrollWhenSentText(id);
         }
     };
+
+    const handleClickTextFormat = () => {};
+
     return (
         <div id="main-footer-chat">
             <div className="navigation">
-                <NavigationChatBox />
+                <NavigationChatBox
+                    isFocus={isHightLight}
+                    onClickTextFormat={handleClickTextFormat}
+                    onScroll={handleOnScroll}
+                    onViewPolls={onViewPolls}
+                    onOpenInfoBlock={onOpenInfoBlock}
+                />
             </div>
             <div className="chat-editor">
                 <div className="main-editor">

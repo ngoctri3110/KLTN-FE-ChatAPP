@@ -49,6 +49,8 @@ function Chat({ idNewMessage }) {
     const [replyMessage, setReplyMessage] = useState({});
     const [userMention, setUserMention] = useState({});
     const [usersTyping, setUsersTyping] = useState([]);
+    const [visibleNews, setVisibleNews] = useState(false);
+    const [tabActiveInNews, setTabActiveNews] = useState(0);
 
     // filter search=====================================
     const [visibleFilter, setVisbleFilter] = useState(false);
@@ -162,6 +164,13 @@ function Chat({ idNewMessage }) {
             setUserMention(userMent);
         }
     };
+    const handleViewPolls = () => {
+        if (width <= 1199) {
+            setOpenDrawerInfo(true);
+        }
+        setVisibleNews(true);
+        setTabActiveNews(1);
+    };
     return (
         <Spin spinning={isLoading}>
             <div id="main-chat-wrapper">
@@ -241,6 +250,7 @@ function Chat({ idNewMessage }) {
                                                     hanldeResetScrollButton
                                                 }
                                                 onMention={handleOnMention}
+                                                onViewPolls={handleViewPolls}
                                             />
                                         </div>
                                         <div className="main_chat-body--input">

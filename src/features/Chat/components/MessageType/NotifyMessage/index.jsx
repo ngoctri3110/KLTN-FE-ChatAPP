@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import AvatarCustom from 'components/AvatarCustom';
-
-import './style.scss';
 import { Avatar, Tooltip } from 'antd';
 import {
     EditTwoTone,
@@ -12,6 +10,7 @@ import {
     PushpinTwoTone,
 } from '@ant-design/icons';
 import { parse } from 'query-string';
+import './style.scss';
 
 NotifyMessage.propTypes = {
     message: PropTypes.object,

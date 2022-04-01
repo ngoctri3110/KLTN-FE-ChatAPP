@@ -4,6 +4,7 @@ import classifyApi from 'api/classifyApi';
 import conversationApi from 'api/conversationApi';
 import friendApi from 'api/friendApi';
 import messageApi from 'api/messageApi';
+import stickerApi from 'api/stickerApi';
 
 const KEY = 'chat';
 
@@ -101,6 +102,16 @@ export const fetchChannels = createAsyncThunk(
         return data;
     }
 );
+
+//============== Sticker ===========
+export const fetchAllSticker = createAsyncThunk(
+    `${KEY}/fetchAllSticker`,
+    async () => {
+        const data = await stickerApi.fetchAllSticker();
+        return data;
+    }
+);
+
 const chatSlice = createSlice({
     name: KEY,
     initialState: {
@@ -118,6 +129,7 @@ const chatSlice = createSlice({
         currentChannel: '',
         channels: [],
         type: false,
+        stickers: [],
     },
     reducers: {
         setLoading: (state, action) => {
@@ -227,6 +239,17 @@ const chatSlice = createSlice({
             state.channels = action.payload;
         },
         [fetchChannels.rejected]: (state, action) => {
+            state.isLoading = false;
+        },
+        // Sticker
+        [fetchAllSticker.pending]: (state, action) => {
+            state.isLoading = true;
+        },
+        [fetchAllSticker.fulfilled]: (state, action) => {
+            state.isLoading = false;
+            state.stickers = action.payload;
+        },
+        [fetchAllSticker.rejected]: (state, action) => {
             state.isLoading = false;
         },
     },

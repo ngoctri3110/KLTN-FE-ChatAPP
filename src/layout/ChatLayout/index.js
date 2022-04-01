@@ -6,7 +6,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Friend from 'features/Friend';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchListConversations } from 'features/Chat/slice/chatSlice';
+import {
+    fetchAllSticker,
+    fetchListClassify,
+    fetchListConversations,
+} from 'features/Chat/slice/chatSlice';
+import {
+    fetchFriends,
+    fetchListGroup,
+    fetchListMyRequestFriend,
+    fetchListRequestFriend,
+} from 'features/Friend/friendSlice';
 
 const ChatLayout = () => {
     const [codeRevoke, setCodeRevoke] = useState('');
@@ -17,7 +27,22 @@ const ChatLayout = () => {
     const { conversations } = useSelector((state) => state.chat);
 
     useEffect(() => {
+        dispatch(fetchListRequestFriend());
+        dispatch(fetchListMyRequestFriend());
+        dispatch(
+            fetchFriends({
+                name: '',
+            })
+        );
+        dispatch(
+            fetchListGroup({
+                name: '',
+                type: 'GROUP',
+            })
+        );
+        // dispatch(fetchListClassify());
         dispatch(fetchListConversations({}));
+        dispatch(fetchAllSticker());
     }, []);
 
     useEffect(() => {

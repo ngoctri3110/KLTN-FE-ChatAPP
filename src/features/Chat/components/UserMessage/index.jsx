@@ -7,12 +7,13 @@ import { useState } from 'react';
 import TextMessage from '../MessageType/TextMessage';
 import './style.scss';
 import ImageMessage from '../MessageType/ImageMessage';
-import VideoMessage from '../VideoMessage';
+import VideoMessage from '../MessageType/VideoMessage';
 import StickerMessage from '../MessageType/StickerMessage';
 import FileMessage from '../MessageType/FileMessage';
 import HTMLMessage from '../MessageType/HTMLMessage';
 import LastView from '../LastView';
 import NotifyMessage from '../MessageType/NotifyMessage';
+import PollMessage from '../MessageType/PollMessage';
 
 UserMessage.propTypes = {
     message: PropTypes.object,
@@ -96,6 +97,8 @@ function UserMessage({
                 </>
             ) : (
                 <>
+                    {type === 'VOTE' && <PollMessage data={message} />}
+
                     <div
                         className={`${setMarginTopAndBottom(id)} user-message ${
                             type === 'VOTE' ? 'hidden' : ''
