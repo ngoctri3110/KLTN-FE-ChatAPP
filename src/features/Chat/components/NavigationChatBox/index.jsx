@@ -140,11 +140,11 @@ function NavigationChatBox(props) {
                         </Button>
                     </UploadFile>
                 </li>
-                <li className="item-chat-box">
+                {/* <li className="item-chat-box">
                     <div title="Định dạng tin nhắn">
                         <FontColorsOutlined />
                     </div>
-                </li>
+                </li> */}
                 {checkIsGroup === 'GROUP' && (
                     <li className="item-chat-box">
                         <Dropdown

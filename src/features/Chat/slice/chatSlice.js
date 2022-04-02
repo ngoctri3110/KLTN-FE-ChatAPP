@@ -4,6 +4,7 @@ import classifyApi from 'api/classifyApi';
 import conversationApi from 'api/conversationApi';
 import friendApi from 'api/friendApi';
 import messageApi from 'api/messageApi';
+import pollApi from 'api/pollApi';
 import stickerApi from 'api/stickerApi';
 
 const KEY = 'chat';
@@ -102,12 +103,46 @@ export const fetchChannels = createAsyncThunk(
         return data;
     }
 );
+export const fetchMessageInChannel = createAsyncThunk(
+    `${KEY}/fetchMessageInChannel`,
+    async (params, thunkApi) => {
+        const { channelId, page, size } = params;
+        const data = await messageApi.getMessageInChannel(
+            channelId,
+            page,
+            size
+        );
 
+        return {
+            messages: data,
+            channelId,
+        };
+    }
+);
+
+export const getLastViewChannel = createAsyncThunk(
+    `${KEY}/getLastViewChannel`,
+    async (params, thunkApi) => {
+        const { channelId } = params;
+        const lastViews = await channelApi.getLastViewChannel(channelId);
+
+        return lastViews;
+    }
+);
 //============== Sticker ===========
 export const fetchAllSticker = createAsyncThunk(
     `${KEY}/fetchAllSticker`,
     async () => {
         const data = await stickerApi.fetchAllSticker();
+        return data;
+    }
+);
+//========= Poll ==========
+export const fetchPolls = createAsyncThunk(
+    `${KEY}/fetchPolls`,
+    async (params, thunkApi) => {
+        const { conversationId, page, size } = params;
+        const data = await pollApi.getVotes(conversationId, page, size);
         return data;
     }
 );
@@ -130,6 +165,8 @@ const chatSlice = createSlice({
         channels: [],
         type: false,
         stickers: [],
+        polls: [],
+        totalPagesPoll: 0,
     },
     reducers: {
         setLoading: (state, action) => {
@@ -153,6 +190,9 @@ const chatSlice = createSlice({
             if (conversation) {
                 state.type = conversation.type;
             }
+        },
+        updatePoll: (state, action) => {
+            state.polls = action.payload;
         },
     },
     extraReducers: {
@@ -184,7 +224,7 @@ const chatSlice = createSlice({
                 numberUnread: 0,
             };
 
-            // state.currentConversation = conversationId;
+            state.currentConversation = conversationId;
 
             state.messages = action.payload.messages.data;
             state.currentPage = action.payload.messages.page;
@@ -241,6 +281,36 @@ const chatSlice = createSlice({
         [fetchChannels.rejected]: (state, action) => {
             state.isLoading = false;
         },
+
+        [fetchMessageInChannel.pending]: (state, action) => {
+            state.isLoading = true;
+        },
+        [fetchMessageInChannel.fulfilled]: (state, action) => {
+            state.isLoading = false;
+            const { messages, channelId } = action.payload;
+
+            const channelIndex = state.channels.findIndex(
+                (channel) => channel.id === channelId
+            );
+            state.channels[channelIndex] = {
+                ...state.channels[channelIndex],
+                numberUnread: 0,
+            };
+            state.currentChannel = channelId;
+
+            state.messages = messages.data;
+            state.currentPage = messages.page;
+            state.totalPages = messages.totalPages;
+        },
+
+        [fetchMessageInChannel.rejected]: (state, action) => {
+            state.isLoading = false;
+        },
+
+        [getLastViewChannel.fulfilled]: (state, action) => {
+            state.lastViewOfMember = action.payload;
+        },
+
         // Sticker
         [fetchAllSticker.pending]: (state, action) => {
             state.isLoading = true;
@@ -252,6 +322,11 @@ const chatSlice = createSlice({
         [fetchAllSticker.rejected]: (state, action) => {
             state.isLoading = false;
         },
+        // Poll
+        [fetchPolls.fulfilled]: (state, action) => {
+            state.polls = action.payload.data;
+            state.totalPagesPoll = action.payload.totalPages;
+        },
     },
 });
 
@@ -262,6 +337,7 @@ export const {
     setCurrentConversation,
     setCurrentChannel,
     setTypeOfConversation,
+    updatePoll,
 } = actions;
 
 export default reducer;

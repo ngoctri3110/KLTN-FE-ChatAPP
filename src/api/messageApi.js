@@ -1,6 +1,6 @@
 import axiosClient from './axiosClient';
 
-const API_URL = 'message';
+const API_URL = '/message';
 
 const messageApi = {
     fetchListMessages: (conversationId, page, size) => {
@@ -31,6 +31,14 @@ const messageApi = {
             file,
             config
         );
+    },
+    getMessageInChannel: (channelId, page, size) => {
+        return axiosClient.get(`${API_URL}/channel/${channelId}`, {
+            params: {
+                page,
+                size,
+            },
+        });
     },
 };
 export default messageApi;

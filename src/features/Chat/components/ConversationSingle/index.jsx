@@ -14,8 +14,15 @@ ConversationSingle.propTypes = {
     onClick: PropTypes.func,
 };
 function ConversationSingle({ conversation, onClick }) {
-    const { id, name, avatar, numberUnread, lastMessage, totalMembers } =
-        conversation;
+    const {
+        id,
+        name,
+        avatar,
+        numberUnread,
+        lastMessage,
+        members,
+        totalMembers,
+    } = conversation;
     const { type, createdAt } = lastMessage;
     const { conversations, classifies } = useSelector((state) => state.chat);
     const [classify, setClassify] = useState(null);
@@ -29,6 +36,9 @@ function ConversationSingle({ conversation, onClick }) {
         }
         // eslint-disable-next-line
     }, [conversation, conversations, classifies]);
+    // console.log('conversation', conversation);
+    // console.log('members', members);
+    // const  memberInConver =
 
     const handleClick = () => {
         if (onClick) onClick(id);
@@ -38,6 +48,7 @@ function ConversationSingle({ conversation, onClick }) {
             <div className="left-side-box">
                 <div className="icon-users">
                     <ConversationAvatar
+                        // members={members}
                         totalMembers={totalMembers}
                         avatar={avatar.url}
                         type={conversation.type}

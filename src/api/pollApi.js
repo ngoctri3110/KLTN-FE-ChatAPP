@@ -23,6 +23,14 @@ const pollApi = {
 
         return axiosClient.post(`${API_URL}/${messageId}/options`, options);
     },
+    getVotes: (conversationId, page, size) => {
+        return axiosClient.get(`${API_URL}/${conversationId}/`, {
+            params: {
+                page,
+                size,
+            },
+        });
+    },
 };
 
 export default pollApi;

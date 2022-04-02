@@ -1,4 +1,4 @@
-import { Col, Row, Spin } from 'antd';
+import { Col, Row, Spin, Drawer } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -7,13 +7,15 @@ import ConversationContainer from './containers/ConversationContainer';
 import FooterChatContainer from './containers/FooterChatContainer';
 import HeaderChatContainer from './containers/HeaderChatContainer';
 import SearchContainer from './containers/SearchContainer';
-
-import './style.scss';
 import conversationApi from 'api/conversationApi';
 import { fetchListFriends } from './slice/chatSlice';
 import { useLocation } from 'react-router-dom';
 import useWindowSize from 'hooks/useWindowSize';
 import BodyChatContainer from './containers/BodyChatContainer';
+import './style.scss';
+import renderWidthDrawer from 'utils/DrawerResponsive';
+import GroupNews from './components/GroupNews';
+import InfoContainer from './containers/InfoContainer';
 
 Chat.propTypes = {
     idNewMessage: PropTypes.string,
@@ -171,6 +173,13 @@ function Chat({ idNewMessage }) {
         setVisibleNews(true);
         setTabActiveNews(1);
     };
+
+    //Info Group====================
+    const handleOnBack = () => {};
+    const handleChangeActiveKey = () => {};
+
+    //Info container================
+    const handleChangeViewChannel = () => {};
     return (
         <Spin spinning={isLoading}>
             <div id="main-chat-wrapper">
@@ -271,6 +280,48 @@ function Chat({ idNewMessage }) {
                                             />
                                         </div>
                                     </div>
+                                </div>
+                            </Col>
+                            <Col
+                                span={isOpenInfo ? 6 : 0}
+                                xl={{ span: isOpenInfo ? 6 : 0 }}
+                                lg={{ span: 0 }}
+                                md={{ span: 0 }}
+                                sm={{ span: 0 }}
+                                xs={{ span: 0 }}
+                            >
+                                <div className="main-info">
+                                    <Drawer
+                                        key="right"
+                                        className="drawer-responsive"
+                                        placement="right"
+                                        closable={false}
+                                        visible={openDrawerInfo}
+                                        bodyStyle={{ padding: 0 }}
+                                        width={`${renderWidthDrawer(width)}%`}
+                                        onClose={() => setOpenDrawerInfo(false)}
+                                    >
+                                        <>
+                                            {visibleNews ? (
+                                                <GroupNews
+                                                    tabActive={tabActiveInNews}
+                                                    onBack={handleOnBack}
+                                                    onChange={
+                                                        handleChangeActiveKey
+                                                    }
+                                                />
+                                            ) : (
+                                                <InfoContainer
+                                                    onViewChannel={
+                                                        handleChangeViewChannel
+                                                    }
+                                                    onOpenInfoBlock={() =>
+                                                        setIsOpenInfo(true)
+                                                    }
+                                                />
+                                            )}
+                                        </>
+                                    </Drawer>
                                 </div>
                             </Col>
                         </>
