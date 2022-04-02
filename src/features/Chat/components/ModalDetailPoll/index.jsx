@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import './style.scss';
 import { Modal } from 'antd';
 import { useSelector } from 'react-redux';
 import PersonalIcon from '../PersonalIcon';
+import './style.scss';
 
 ModalDetailPoll.propTypes = {
     visible: PropTypes.bool.isRequired,
