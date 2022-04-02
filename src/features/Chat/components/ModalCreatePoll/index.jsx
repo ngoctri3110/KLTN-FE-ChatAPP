@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import './style.scss';
 import { Button, Form, Input, message, Modal } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import pollApi from 'api/pollApi';
 import { useSelector } from 'react-redux';
+import './style.scss';
 
 ModalCreatePoll.propTypes = {
     visible: PropTypes.bool,

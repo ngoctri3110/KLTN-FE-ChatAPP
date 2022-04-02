@@ -1,7 +1,8 @@
 import { CaretRightOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import React, { useState } from 'react';
-import ModalDetailVote from '../../ModalDetailVote';
+import ModalDetailPoll from '../../ModalDetailPoll';
+import ModalViewOption from '../../ModalViewOption';
 import './style.scss';
 const PollMessage = ({ data }) => {
     const [isVisibleDetail, setIsVisibleDetail] = useState(false);
@@ -10,7 +11,7 @@ const PollMessage = ({ data }) => {
 
     const getNumberJoinVote = () => {
         let tempUserIds = [];
-        data.pollId.options.forEach((option) => {
+        data.options.forEach((option) => {
             option.userIds.forEach((userId) => {
                 tempUserIds.push(userId);
             });
@@ -23,7 +24,7 @@ const PollMessage = ({ data }) => {
     };
     const checkNumberUserSelected = () => {
         let count = 0;
-        data.pollId.options.forEach((option) => {
+        data.options.forEach((option) => {
             if (option.userIds.length > 0) {
                 count += option.userIds.length;
             }
@@ -57,7 +58,7 @@ const PollMessage = ({ data }) => {
                     </span>
                 )}
                 <div className="poll-message_list">
-                    {data.pollId.options.map((ele, index) => {
+                    {data.options.map((ele, index) => {
                         if (index < 3) {
                             return (
                                 <div className="poll-message_item" key={index}>
@@ -80,9 +81,9 @@ const PollMessage = ({ data }) => {
                         }
                     })}
                 </div>
-                {data.pollId.options.length > 3 && (
+                {data.options.length > 3 && (
                     <small>{`* Còn ${
-                        data.pollId.options.length - 3
+                        data.options.length - 3
                     } lựa chọn khác `}</small>
                 )}
 
@@ -96,10 +97,16 @@ const PollMessage = ({ data }) => {
                     </Button>
                 </div>
             </div>
-            <ModalDetailVote
+            <ModalDetailPoll
                 visible={isVisibleDetail}
                 onCancel={() => setIsVisibleDetail(false)}
-                data={data.pollId.options}
+                data={data.options}
+            />
+            <ModalViewOption
+                isModalVisible={isVisibleOption}
+                onCancel={() => setIsVisibleOption(false)}
+                data={data}
+                onShowDetail={() => setIsVisibleDetail(true)}
             />
         </div>
     );

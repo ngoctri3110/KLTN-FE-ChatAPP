@@ -6,19 +6,19 @@ import { Modal } from 'antd';
 import { useSelector } from 'react-redux';
 import PersonalIcon from '../PersonalIcon';
 
-ModalDetailVote.propTypes = {
+ModalDetailPoll.propTypes = {
     visible: PropTypes.bool.isRequired,
     onCancel: PropTypes.func,
     data: PropTypes.array,
 };
 
-ModalDetailVote.defaultProps = {
+ModalDetailPoll.defaultProps = {
     onCancel: null,
     data: [],
     onShowDetail: null,
 };
 
-function ModalDetailVote({ visible, onCancel, data }) {
+function ModalDetailPoll({ visible, onCancel, data }) {
     const { memberInConversation } = useSelector((state) => state.chat);
 
     const handleCancel = () => {
@@ -96,4 +96,4 @@ function ModalDetailVote({ visible, onCancel, data }) {
     );
 }
 
-export default ModalDetailVote;
+export default ModalDetailPoll;

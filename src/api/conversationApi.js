@@ -60,8 +60,8 @@ const conversationApi = {
     getMemberInConversation: (id) => {
         return axiosClient.get(`${API_URL}/${id}/members`);
     },
-    addMembersToConver: (userIds, coversationId) => {
-        return axiosClient.post(`${API_URL}/${coversationId}/members`, {
+    addMembersToConver: (userIds, conversationId) => {
+        return axiosClient.post(`${API_URL}/${conversationId}/members`, {
             userIds,
         });
     },

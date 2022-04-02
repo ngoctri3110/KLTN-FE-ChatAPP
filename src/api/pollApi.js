@@ -9,6 +9,20 @@ const pollApi = {
             options,
         });
     },
+    deleteSelect: (messageId, options) => {
+        console.log('delete', options);
+        return axiosClient.delete(`${API_URL}/${messageId}/choose`, options);
+    },
+    selectPoll: (messageId, options) => {
+        console.log('select_API', options);
+
+        return axiosClient.post(`${API_URL}/${messageId}/choose`, options);
+    },
+    addPoll: (messageId, options) => {
+        console.log('add_API', options);
+
+        return axiosClient.post(`${API_URL}/${messageId}/options`, options);
+    },
 };
 
 export default pollApi;

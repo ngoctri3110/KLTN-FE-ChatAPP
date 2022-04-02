@@ -60,6 +60,7 @@ function HeaderOptional(props) {
     const [isVisible, setIsvisible] = useState(false);
     const [typeModal, setTypeModal] = useState('');
 
+    console.log('typeConver', typeConver);
     const { width } = useWindowSize();
     const handleCutText = (text) => {
         if (width < 577) {
