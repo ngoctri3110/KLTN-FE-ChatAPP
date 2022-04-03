@@ -167,6 +167,7 @@ const chatSlice = createSlice({
         stickers: [],
         polls: [],
         totalPagesPoll: 0,
+        totalChannelNotify: 0,
     },
     reducers: {
         setLoading: (state, action) => {
@@ -193,6 +194,21 @@ const chatSlice = createSlice({
         },
         updatePoll: (state, action) => {
             state.polls = action.payload;
+        },
+        setTotalChannelNotify: (state, action) => {
+            let notify = state.conversations.find(
+                (ele) => ele.id === state.currentConversation
+            ).numberUnread;
+
+            if (state.channels.length > 0) {
+                state.channels.forEach((ele) => {
+                    if (ele.numberUnread && ele.numberUnread > 0) {
+                        notify += 1;
+                    }
+                });
+            }
+
+            state.totalChannelNotify = notify;
         },
     },
     extraReducers: {
@@ -337,6 +353,7 @@ export const {
     setCurrentChannel,
     setTypeOfConversation,
     updatePoll,
+    setTotalChannelNotify,
 } = actions;
 
 export default reducer;

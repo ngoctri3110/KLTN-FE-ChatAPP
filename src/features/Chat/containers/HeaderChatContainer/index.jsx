@@ -30,8 +30,6 @@ function HeaderChatContainer({ onPopUpInfo, onOpenDrawer }) {
         }
     }, [currentConversation, conversations]);
 
-    console.log('detailConver', detailConver);
-
     return (
         <div id="header-main">
             <HeaderOptional

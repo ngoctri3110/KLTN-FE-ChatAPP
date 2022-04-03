@@ -17,6 +17,7 @@ const globalSlice = createSlice({
         isLoading: false,
         isLogin: false,
         user: null,
+        tabActive: 0,
     },
     reducers: {
         setLoading: (state, action) => {
@@ -30,6 +31,9 @@ const globalSlice = createSlice({
         },
         setCoverPhotoProfile: (state, action) => {
             state.user.coverPhoto = action.payload;
+        },
+        setTabActive: (state, action) => {
+            state.tabActive = action.payload;
         },
     },
 
@@ -52,7 +56,12 @@ const globalSlice = createSlice({
 
 const { reducer, actions } = globalSlice;
 
-export const { setLoading, setLogin, setAvatarProfile, setCoverPhotoProfile } =
-    actions;
+export const {
+    setLoading,
+    setLogin,
+    setAvatarProfile,
+    setCoverPhotoProfile,
+    setTabActive,
+} = actions;
 
 export default reducer;

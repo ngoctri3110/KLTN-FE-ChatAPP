@@ -35,7 +35,6 @@ function UploadAvatar({ avatar, getFile, isClear }) {
     };
     useEffect(() => {
         if (isClear) {
-            console.log('clear');
             setImagePreview('');
         }
     }, [isClear]);

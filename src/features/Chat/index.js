@@ -8,7 +8,7 @@ import FooterChatContainer from './containers/FooterChatContainer';
 import HeaderChatContainer from './containers/HeaderChatContainer';
 import SearchContainer from './containers/SearchContainer';
 import conversationApi from 'api/conversationApi';
-import { fetchListFriends } from './slice/chatSlice';
+import { fetchListFriends, setTotalChannelNotify } from './slice/chatSlice';
 import { useLocation } from 'react-router-dom';
 import useWindowSize from 'hooks/useWindowSize';
 import BodyChatContainer from './containers/BodyChatContainer';
@@ -29,8 +29,13 @@ function Chat({ idNewMessage }) {
     const dispatch = useDispatch();
 
     //store
-    const { conversations, isLoading, currentConversation, currentChannel } =
-        useSelector((state) => state.chat);
+    const {
+        conversations,
+        isLoading,
+        currentConversation,
+        currentChannel,
+        channels,
+    } = useSelector((state) => state.chat);
     const { isJoinChatLayout, isJoinFriendLayout, user } = useSelector(
         (state) => state.global
     );
@@ -63,8 +68,7 @@ function Chat({ idNewMessage }) {
     const [groupConverFilter, setGroupConverFilter] = useState([]);
 
     //=========================================
-    console.log('path', location.pathname);
-    console.log('currentconver', currentConversation);
+
     //=============
     useEffect(() => {
         if (width > 1199) {
@@ -81,9 +85,16 @@ function Chat({ idNewMessage }) {
     useEffect(() => {
         refConversations.current = conversations;
     }, [conversations]);
+
     useEffect(() => {
         refCurrentChannel.current = currentChannel;
     }, [currentChannel]);
+
+    useEffect(() => {
+        if (currentConversation) {
+            dispatch(setTotalChannelNotify());
+        }
+    }, [currentConversation, channels, conversations]);
 
     const handleOnVisibleFilter = (value) => {
         if (value.trim().length > 0) {
@@ -154,7 +165,6 @@ function Chat({ idNewMessage }) {
         setUserMention({});
     };
 
-    const handleViewVotes = () => {};
     useEffect(() => {
         setUsersTyping([]);
         setReplyMessage(null);
@@ -175,11 +185,18 @@ function Chat({ idNewMessage }) {
     };
 
     //Info Group====================
-    const handleOnBack = () => {};
-    const handleChangeActiveKey = () => {};
+    const handleOnBack = () => {
+        setVisibleNews(false);
+    };
+    const handleChangeActiveKey = (key) => {
+        setTabActiveNews(key);
+    };
 
     //Info container================
-    const handleChangeViewChannel = () => {};
+    const handleChangeViewChannel = () => {
+        setVisibleNews(true);
+        setTabActiveNews(2);
+    };
     return (
         <Spin spinning={isLoading}>
             <div id="main-chat-wrapper">
@@ -252,14 +269,15 @@ function Chat({ idNewMessage }) {
                                     <div className="main_chat-body">
                                         <div id="main_chat-body--view">
                                             <BodyChatContainer
+                                                scrollId={scrollId}
                                                 onBackToBottom={
                                                     handleBackToBottom
                                                 }
                                                 onResetScrollButton={
                                                     hanldeResetScrollButton
                                                 }
+                                                turnOnScrollButoon={isScroll}
                                                 onMention={handleOnMention}
-                                                onViewPolls={handleViewPolls}
                                             />
                                         </div>
                                         <div className="main_chat-body--input">
@@ -273,7 +291,7 @@ function Chat({ idNewMessage }) {
                                                 onRemoveMention={
                                                     handleOnRemoveMention
                                                 }
-                                                onViewVotes={handleViewVotes}
+                                                onViewPolls={handleViewPolls}
                                                 onOpenInfoBlock={() =>
                                                     setIsOpenInfo(true)
                                                 }
@@ -322,6 +340,23 @@ function Chat({ idNewMessage }) {
                                             )}
                                         </>
                                     </Drawer>
+
+                                    {visibleNews ? (
+                                        <GroupNews
+                                            tabActive={tabActiveInNews}
+                                            onBack={handleOnBack}
+                                            onChange={handleChangeActiveKey}
+                                        />
+                                    ) : (
+                                        <InfoContainer
+                                            onViewChannel={
+                                                handleChangeViewChannel
+                                            }
+                                            onOpenInfoBlock={() =>
+                                                setIsOpenInfo(true)
+                                            }
+                                        />
+                                    )}
                                 </div>
                             </Col>
                         </>

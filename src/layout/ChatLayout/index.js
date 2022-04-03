@@ -17,6 +17,7 @@ import {
     fetchListMyRequestFriend,
     fetchListRequestFriend,
 } from 'features/Friend/friendSlice';
+import { setTabActive } from 'app/globalSlice';
 
 const ChatLayout = () => {
     const [codeRevoke, setCodeRevoke] = useState('');
@@ -43,6 +44,7 @@ const ChatLayout = () => {
         // dispatch(fetchListClassify());
         dispatch(fetchListConversations({}));
         dispatch(fetchAllSticker());
+        dispatch(setTabActive(1));
     }, []);
 
     useEffect(() => {

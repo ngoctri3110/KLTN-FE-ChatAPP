@@ -106,7 +106,7 @@ function HeaderOptional(props) {
             onPopUpInfo();
         }
     };
-    const handleOpenDraweer = () => {
+    const handleOpenDrawer = () => {
         if (onOpenDrawer) {
             onOpenDrawer();
         }
@@ -220,9 +220,7 @@ function HeaderOptional(props) {
                     </div>
 
                     <div className="icon-header pop-up-responsive">
-                        <ExclamationCircleOutlined
-                            onClick={handleOpenDraweer}
-                        />
+                        <ExclamationCircleOutlined onClick={handleOpenDrawer} />
                     </div>
                 </div>
             </div>

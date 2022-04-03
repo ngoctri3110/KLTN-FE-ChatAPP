@@ -2,7 +2,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Dropdown, Menu } from 'antd';
+import { Dropdown, Menu, message, Modal } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
 import ConversationSingle from 'features/Chat/components/ConversationSingle';
 import SubMenuClassify from 'components/SubMenuClassify';
@@ -16,6 +16,7 @@ import {
     setTypeOfConversation,
 } from 'features/Chat/slice/chatSlice';
 import './style.scss';
+import conversationApi from 'api/conversationApi';
 
 ConversationContainer.propTypes = {
     valueClassify: PropTypes.string.isRequired,
@@ -44,7 +45,7 @@ function ConversationContainer({ valueClassify }) {
         if (checkConverInClassify(ele.id)) return true;
     });
     const handleConversationClick = async (conversationId) => {
-        dispatch(setCurrentConversation(conversationId));
+        // dispatch(setCurrentConversation(conversationId));
 
         dispatch(setCurrentChannel(''));
         dispatch(getLastViewOfMembers({ conversationId }));
@@ -55,6 +56,37 @@ function ConversationContainer({ valueClassify }) {
         dispatch(fetchChannels({ conversationId }));
     };
 
+    const handleOnClickItem = (e, id) => {
+        if (e.key === 1) {
+            confirm(id);
+        }
+    };
+
+    const deleteConver = async (id) => {
+        try {
+            await conversationApi.deleteConversation(id);
+            message.success('Xóa thành công');
+        } catch (error) {
+            message.error('Đã có lỗi xảy ra');
+        }
+    };
+
+    function confirm(id) {
+        Modal.confirm({
+            title: 'Xác nhận',
+            content: (
+                <span>
+                    Toàn bộ nội dung cuộc trò chuyện sẽ bị xóa vĩnh viễn, bạn có
+                    chắc chắn muốn xóa?
+                </span>
+            ),
+            okText: 'Xóa',
+            cancelText: 'Không',
+            onOk: () => {
+                deleteConver(id);
+            },
+        });
+    }
     return (
         <>
             <div id="conversation-main">
@@ -67,7 +99,14 @@ function ConversationContainer({ valueClassify }) {
                                     <Dropdown
                                         key={index}
                                         overlay={
-                                            <Menu>
+                                            <Menu
+                                                onClick={(e) =>
+                                                    handleOnClickItem(
+                                                        e,
+                                                        conversationEle.id
+                                                    )
+                                                }
+                                            >
                                                 <SubMenuClassify
                                                     data={classifies}
                                                     idConver={

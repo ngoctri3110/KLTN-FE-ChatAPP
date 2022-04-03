@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import ConversationAvatar from '../ConversationAvatar';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { TagFilled } from '@ant-design/icons';
+import { DeleteFilled, MoreOutlined, TagFilled } from '@ant-design/icons';
 import ShortMessage from '../ShortMessage';
 import classifyUtils from 'utils/classifyUtils';
 import dateUtils from 'utils/dateUtils';
 import './style.scss';
+import { Button, Dropdown, Menu } from 'antd';
+import SubMenuClassify from 'components/SubMenuClassify';
 
 ConversationSingle.propTypes = {
     conversation: PropTypes.object,
@@ -21,6 +23,7 @@ function ConversationSingle({ conversation, onClick }) {
         lastMessage,
         members,
         totalMembers,
+        leaderId,
     } = conversation;
     const { type, createdAt } = lastMessage;
     const { conversations, classifies } = useSelector((state) => state.chat);

@@ -48,11 +48,11 @@ const conversationApi = {
     },
     //join by link
     joinGroupFromLink: (conversationId) => {
-        return axiosClient.post(`${API_URL}/${conversationId}/join-from-link`);
+        return axiosClient.post(`${API_URL}/${conversationId}/join-with-link`);
     },
     changeStatusForGroup: (conversationId, isStatus) => {
         return axiosClient.patch(
-            `${API_URL}/${conversationId}/join-from-link`,
+            `${API_URL}/${conversationId}/join-with-link`,
             { isStatus }
         );
     },

@@ -6,7 +6,7 @@ const channelApi = {
     fetchChannel: (conversationId, description) => {
         return axiosClient.get(`${API_URL}/${conversationId}`);
     },
-    addChannel: (name, conversationId) => {
+    addChannel: (conversationId, name) => {
         return axiosClient.post(`${API_URL}/${conversationId}`, {
             name,
             description: '',

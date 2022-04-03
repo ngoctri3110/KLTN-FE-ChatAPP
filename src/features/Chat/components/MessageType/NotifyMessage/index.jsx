@@ -9,7 +9,7 @@ import {
     NumberOutlined,
     PushpinTwoTone,
 } from '@ant-design/icons';
-import { parse } from 'query-string';
+import parse from 'html-react-parser';
 import './style.scss';
 
 NotifyMessage.propTypes = {
@@ -54,7 +54,7 @@ function NotifyMessage({ message }) {
         if (text === 'NOT_PIN_MESSAGE') {
             return 8;
         }
-        if (text.startsWith('Đã đổi tên nhóm thành')) {
+        if (text.startsWith('Đã đổi tên nhóm thành: ')) {
             return 9;
         }
         if (text === 'Tham gia từ link') {

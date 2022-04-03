@@ -4,6 +4,7 @@ import DEFAULT_AVATAR from 'assets/images/user/talo_user_default.jpg';
 import AvatarCustom from 'components/AvatarCustom';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
+import PersonalIcon from '../PersonalIcon';
 import COVERSATION_STYLE from './ConversationAvatarStyle';
 import './style.scss';
 ConversationAvatar.propTypes = {
@@ -13,8 +14,8 @@ ConversationAvatar.propTypes = {
     members: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
     type: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
+    avatar: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     isActived: PropTypes.bool,
-    avatar: PropTypes.string,
     sizeAvatar: PropTypes.number,
     frameSize: PropTypes.number,
 };
@@ -40,6 +41,7 @@ function ConversationAvatar({
     sizeAvatar,
     frameSize,
 }) {
+    console.log('type', type);
     const renderAvatar = () => {
         let tempAvatar = [];
         for (let index = 0; index < totalMembers; index++) {
@@ -144,6 +146,8 @@ function ConversationAvatar({
     return (
         <div className="avatar_conversation">
             {avatar !== '' ? (
+                <AvatarCustom size={sizeAvatar} src={avatar} name={name} />
+            ) : type === 'DUAL' ? (
                 <AvatarCustom size={sizeAvatar} src={avatar} name={name} />
             ) : (
                 <>
