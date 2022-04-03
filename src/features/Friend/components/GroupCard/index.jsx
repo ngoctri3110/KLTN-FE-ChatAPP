@@ -9,6 +9,7 @@ import classifyUtils from 'utils/classifyUtils';
 import { useNavigate } from 'react-router-dom';
 import {
     fetchListMessages,
+    getMembersConversation,
     setCurrentConversation,
 } from 'features/Chat/slice/chatSlice';
 import './style.scss';
@@ -59,7 +60,7 @@ function GroupCard({ data, onRemove }) {
         try {
             dispatch(fetchListMessages({ conversationId: data.id, size: 10 }));
             dispatch(setCurrentConversation(data.id));
-            navigate('/chat');
+            navigate('/chat', { replace: true });
         } catch (error) {
             console.log(error);
         }
@@ -80,6 +81,7 @@ function GroupCard({ data, onRemove }) {
                         name={data.name}
                         type={data.type}
                         totalMembers={data.totalMembers}
+                        members={data.members}
                         isGroupCard={true}
                         sizeAvatar={48}
                         frameSize={96}

@@ -15,8 +15,9 @@ HeaderChatContainer.defaultProps = {
 };
 function HeaderChatContainer({ onPopUpInfo, onOpenDrawer }) {
     const [detailConver, setDetailConver] = useState({});
-    const { currentConversation, conversations, memberInConversation } =
-        useSelector((state) => state.chat);
+    const { currentConversation, conversations } = useSelector(
+        (state) => state.chat
+    );
 
     useEffect(() => {
         if (currentConversation) {
@@ -29,11 +30,14 @@ function HeaderChatContainer({ onPopUpInfo, onOpenDrawer }) {
         }
     }, [currentConversation, conversations]);
 
+    console.log('detailConver', detailConver);
+
     return (
         <div id="header-main">
             <HeaderOptional
                 avatar={detailConver.avatar?.url}
-                totalMembers={memberInConversation.length}
+                totalMembers={detailConver?.totalMembers}
+                members={detailConver?.members}
                 name={detailConver.name}
                 typeConver={detailConver.type}
                 isLogin={detailConver?.isOnline}

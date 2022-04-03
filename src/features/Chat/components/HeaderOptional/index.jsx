@@ -25,6 +25,7 @@ import { Tooltip } from 'antd';
 HeaderOptional.propTypes = {
     avatar: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     totalMembers: PropTypes.number,
+    members: PropTypes.array,
     name: PropTypes.string,
     typeConver: PropTypes.string.isRequired,
     isLogin: PropTypes.bool,
@@ -46,6 +47,7 @@ function HeaderOptional(props) {
     const {
         avatar,
         totalMembers,
+        members,
         name,
         typeConver,
         isLogin,
@@ -60,7 +62,6 @@ function HeaderOptional(props) {
     const [isVisible, setIsvisible] = useState(false);
     const [typeModal, setTypeModal] = useState('');
 
-    console.log('typeConver', typeConver);
     const { width } = useWindowSize();
     const handleCutText = (text) => {
         if (width < 577) {
@@ -126,6 +127,7 @@ function HeaderOptional(props) {
                             <ConversationAvatar
                                 avatar={avatar}
                                 totalMembers={totalMembers}
+                                members={members}
                                 type={typeConver}
                                 name={name}
                                 isActived={isLogin}
@@ -154,7 +156,7 @@ function HeaderOptional(props) {
                             </div>
                         ) : (
                             <div className="lasttime-access">
-                                {typeConver ? (
+                                {typeConver === 'GROUP' ? (
                                     <div className="member-hover">
                                         <UserOutlined />
                                         &nbsp;{totalMembers}

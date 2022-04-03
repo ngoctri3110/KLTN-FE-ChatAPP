@@ -232,7 +232,6 @@ const chatSlice = createSlice({
         },
         [getMembersConversation.fulfilled]: (state, action) => {
             const tempMembers = [...action.payload];
-            console.log('tempMembers', tempMembers);
             const temp = [];
 
             tempMembers.forEach((member) => {

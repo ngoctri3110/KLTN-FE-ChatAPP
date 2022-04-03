@@ -4,17 +4,17 @@ import DEFAULT_AVATAR from 'assets/images/user/talo_user_default.jpg';
 import AvatarCustom from 'components/AvatarCustom';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import COVERSATION_STYLE from './ConversationAvatarStyle';
 import './style.scss';
 ConversationAvatar.propTypes = {
     demension: PropTypes.number,
     isGroupCard: PropTypes.bool,
     totalMembers: PropTypes.number.isRequired,
+    members: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
     type: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     isActived: PropTypes.bool,
-    avatar: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+    avatar: PropTypes.string,
     sizeAvatar: PropTypes.number,
     frameSize: PropTypes.number,
 };
@@ -33,17 +33,17 @@ function ConversationAvatar({
     demension,
     isGroupCard,
     totalMembers,
+    members,
     type,
     name,
     isActived,
     sizeAvatar,
     frameSize,
-    members,
 }) {
     const renderAvatar = () => {
         let tempAvatar = [];
         for (let index = 0; index < totalMembers; index++) {
-            if (members[index]?.avatar.url) {
+            if (members[index]?.avatar?.url) {
                 tempAvatar.push(
                     <Avatar
                         key={index}
@@ -53,7 +53,7 @@ function ConversationAvatar({
                                 : {}
                         }
                         size={demension}
-                        src={members[index]?.avatar.url}
+                        src={members[index]?.avatar?.url}
                     />
                 );
             } else {
@@ -85,12 +85,12 @@ function ConversationAvatar({
         let tempAvatar = [];
         for (let index = 0; index < 4; index++) {
             if (index < 3) {
-                if (members[index]?.avatar.url) {
+                if (members[index]?.avatar?.url) {
                     tempAvatar.push(
                         <div className="per-user">
                             <Avatar
                                 size={demension}
-                                src={members[index]?.avatar.url}
+                                src={members[index]?.avatar?.url}
                                 style={
                                     index === 2
                                         ? { marginTop: (demension / 6) * -1 }
@@ -143,10 +143,8 @@ function ConversationAvatar({
 
     return (
         <div className="avatar_conversation">
-            {typeof avatar === 'string' ? (
-                <Badge dot={isActived} offset={[-5, 40]} color="green">
-                    <AvatarCustom size={sizeAvatar} src={avatar} name={name} />
-                </Badge>
+            {avatar !== '' ? (
+                <AvatarCustom size={sizeAvatar} src={avatar} name={name} />
             ) : (
                 <>
                     {totalMembers === 3 ? (
@@ -228,7 +226,7 @@ function ConversationAvatar({
                         <div>
                             <Avatar
                                 size={sizeAvatar}
-                                src={avatar[0] ? avatar[0] : DEFAULT_AVATAR}
+                                src={avatar ? avatar : DEFAULT_AVATAR}
                             />
                         </div>
                     )}

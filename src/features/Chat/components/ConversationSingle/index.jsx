@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import ConversationAvatar from '../ConversationAvatar';
 import PropTypes from 'prop-types';
-
-import './style.scss';
 import { useSelector } from 'react-redux';
 import { TagFilled } from '@ant-design/icons';
 import ShortMessage from '../ShortMessage';
 import classifyUtils from 'utils/classifyUtils';
 import dateUtils from 'utils/dateUtils';
+import './style.scss';
 
 ConversationSingle.propTypes = {
     conversation: PropTypes.object,
@@ -38,7 +37,6 @@ function ConversationSingle({ conversation, onClick }) {
     }, [conversation, conversations, classifies]);
     // console.log('conversation', conversation);
     // console.log('members', members);
-    // const  memberInConver =
 
     const handleClick = () => {
         if (onClick) onClick(id);
@@ -48,7 +46,7 @@ function ConversationSingle({ conversation, onClick }) {
             <div className="left-side-box">
                 <div className="icon-users">
                     <ConversationAvatar
-                        // members={members}
+                        members={members}
                         totalMembers={totalMembers}
                         avatar={avatar.url}
                         type={conversation.type}

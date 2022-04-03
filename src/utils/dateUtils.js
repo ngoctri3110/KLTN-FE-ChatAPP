@@ -39,7 +39,7 @@ const dateUtils = {
 
     transferDateString: (day, month, year) => {
         return (
-            `0${day}`.slice(-2) + '/' + `0${month}`.slice(-2) + '/' / +`${year}`
+            `0${day}`.slice(-2) + '/' + `0${month}`.slice(-2) + '/' + `${year}`
         );
     },
     compareDate: (time, currentTime) => {
