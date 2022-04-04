@@ -1,6 +1,6 @@
 import meApi from 'api/meApi';
 
-const { createSlice, createAsyncThunk } = require('@reduxjs/toolkit');
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 const KEY = 'global';
 export const fetchUserProfile = createAsyncThunk(

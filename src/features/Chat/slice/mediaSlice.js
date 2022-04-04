@@ -1,6 +1,5 @@
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import mediaApi from 'api/mediaApi';
-
-const { createSlice, createAsyncThunk } = require('@reduxjs/toolkit');
 
 const KEY = 'MEDIAFILE';
 
@@ -18,7 +17,11 @@ const mediaSlice = createSlice({
         media: {},
     },
     reducers: {},
-    extraReducers: {},
+    extraReducers: {
+        [fetchAllMedia.fulfilled]: (state, action) => {
+            state.media = action.payload;
+        },
+    },
 });
 
 const { reducer, action } = mediaSlice;

@@ -8,6 +8,10 @@ import './style.scss';
 import InfoNameAndThumbnail from 'features/Chat/components/InfoNameAndThumbnail';
 import InfoMember from 'features/Chat/components/InfoMember';
 import Channel from 'features/Chat/components/Channel';
+import StorageMedia from 'features/Chat/components/StorageMedia';
+import StorageFile from 'features/Chat/components/StorageFile';
+import OtherSettings from 'features/Chat/components/OtherSettings';
+import InfoMediaSearch from 'features/Chat/components/InfoMediaSearch';
 
 InfoContainer.propTypes = {
     onViewChannel: PropTypes.func,
@@ -20,7 +24,7 @@ InfoContainer.defaultProps = {
 };
 
 function InfoContainer({ onViewChannel, onOpenInfoBlock }) {
-    const [isFind, setFind] = useState({ tapane: 0, view: 0 });
+    const [isFind, setFind] = useState({ tabpane: 0, view: 0 });
 
     const dispatch = useDispatch();
 
@@ -45,6 +49,9 @@ function InfoContainer({ onViewChannel, onOpenInfoBlock }) {
 
     const handleViewMemberClick = (value) => {
         setFind({ view: value, tabpane: 0 });
+    };
+    const handleViewMediaClick = (value, tabpane) => {
+        setFind({ view: value, tabpane });
     };
     return (
         <div id="main-info">
@@ -108,9 +115,52 @@ function InfoContainer({ onViewChannel, onOpenInfoBlock }) {
                                             </div>
                                         </>
                                     )}
+                                    <div className="info_archive-media-wrapper">
+                                        <StorageMedia
+                                            viewMediaClick={
+                                                handleViewMediaClick
+                                            }
+                                            name="Ảnh"
+                                            items={media.images}
+                                        />
+                                    </div>
+
+                                    <div className="info_archive-media-wrapper">
+                                        <StorageMedia
+                                            viewMediaClick={
+                                                handleViewMediaClick
+                                            }
+                                            name="Video"
+                                            items={media.videos}
+                                        />
+                                    </div>
+
+                                    <div className="info_archive-file-wrapper">
+                                        <StorageFile
+                                            viewMediaClick={
+                                                handleViewMediaClick
+                                            }
+                                            items={media.files}
+                                        />
+                                    </div>
+
+                                    {conversations.find(
+                                        (ele) => ele.id === currentConversation
+                                    ).type && (
+                                        <div className="info_another-setting-wrapper">
+                                            <OtherSettings />
+                                        </div>
+                                    )}
                                 </div>
                             </Scrollbars>
                         </>
+                    );
+                } else if (isFind.view === 2) {
+                    return (
+                        <InfoMediaSearch
+                            onBack={handleOnBack}
+                            tabpane={isFind.tabpane}
+                        />
                     );
                 }
             })()}

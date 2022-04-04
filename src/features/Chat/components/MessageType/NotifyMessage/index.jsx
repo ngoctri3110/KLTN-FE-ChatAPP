@@ -246,7 +246,7 @@ function NotifyMessage({ message }) {
                             <div className="notify-message-content_per-avatar">
                                 <AvatarCustom
                                     size="small"
-                                    src={avatar}
+                                    src={avatar.url}
                                     name={name}
                                 />
                             </div>
@@ -307,9 +307,8 @@ function NotifyMessage({ message }) {
                             <div className="notify-message-content_per-avatar">
                                 <AvatarCustom
                                     size="small"
-                                    src={user.avatar}
-                                    color={user.avatarColor}
-                                    name={user.name}
+                                    src={avatar.url}
+                                    name={name}
                                 />
                             </div>
                             <div className="notify-message-content-title">
@@ -330,9 +329,8 @@ function NotifyMessage({ message }) {
                             <div className="notify-message-content_per-avatar">
                                 <AvatarCustom
                                     size="small"
-                                    src={user.avatar}
-                                    name={user.name}
-                                    color={user.avatarColor}
+                                    src={avatar.url}
+                                    name={name}
                                 />
                             </div>
                             <div className="notify-message-content-title">
@@ -352,8 +350,8 @@ function NotifyMessage({ message }) {
                             <div className="notify-message-content_per-avatar">
                                 <AvatarCustom
                                     size="small"
-                                    src={user.avatar.url}
-                                    name={user.name}
+                                    src={avatar.url}
+                                    name={name}
                                 />
                             </div>
                             <div className="notify-message-content-title">
@@ -373,8 +371,8 @@ function NotifyMessage({ message }) {
                             <div className="notify-message-content_per-avatar">
                                 <AvatarCustom
                                     size="small"
-                                    src={user.avatar.url}
-                                    name={user.name}
+                                    src={avatar.url}
+                                    name={name}
                                 />
                             </div>
                             <div className="notify-message-content-title">
@@ -394,8 +392,8 @@ function NotifyMessage({ message }) {
                             <div className="notify-message-content_per-avatar">
                                 <AvatarCustom
                                     size="small"
-                                    src={user.avatar.url}
-                                    name={user.name}
+                                    src={avatar.url}
+                                    name={name}
                                 />
                             </div>
                             <div className="notify-message-content-title">
@@ -416,8 +414,8 @@ function NotifyMessage({ message }) {
                             <div className="notify-message-content_per-avatar">
                                 <AvatarCustom
                                     size="small"
-                                    src={user.avatar.url}
-                                    name={user.name}
+                                    src={avatar.url}
+                                    name={name}
                                 />
                             </div>
                             <div className="notify-message-content-title">
@@ -438,8 +436,8 @@ function NotifyMessage({ message }) {
                             <div className="notify-message-content_per-avatar">
                                 <AvatarCustom
                                     size="small"
-                                    src={user.avatar.url}
-                                    name={user.name}
+                                    src={avatar.url}
+                                    name={name}
                                 />
                             </div>
                             <div className="notify-message-content-title">

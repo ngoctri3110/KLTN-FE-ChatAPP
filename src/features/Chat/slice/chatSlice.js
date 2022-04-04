@@ -210,6 +210,14 @@ const chatSlice = createSlice({
 
             state.totalChannelNotify = notify;
         },
+        leaveGroup: (state, action) => {
+            const conversationId = action.payload;
+            const newConvers = state.conversations.filter(
+                (ele) => ele.id !== conversationId
+            );
+            state.conversations = newConvers;
+            state.currentConversation = '';
+        },
     },
     extraReducers: {
         // conversation
@@ -354,6 +362,7 @@ export const {
     setTypeOfConversation,
     updatePoll,
     setTotalChannelNotify,
+    leaveGroup,
 } = actions;
 
 export default reducer;

@@ -147,11 +147,11 @@ function Channel({ onViewChannel, data, onOpenInfoBlock }) {
                 })}
 
                 <div className="channel-interact-button">
-                    <button onClick={handleAddChannel}>Thêm Channel</button>
+                    <button onClick={handleAddChannel}>Thêm channel</button>
                 </div>
 
                 <div className="channel-interact-button">
-                    <button onClick={handleViewAll}>Xem Tất cả</button>
+                    <button onClick={handleViewAll}>Xem tất cả</button>
                 </div>
             </div>
 

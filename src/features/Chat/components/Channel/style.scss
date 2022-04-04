@@ -2,13 +2,12 @@
 
 .channel {
     background: #fff;
-    padding: 0.8rem 0;
     &-header {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        padding: 0.8rem 1.2rem;
+        padding: 0.8rem 1.8rem;
         cursor: pointer;
 
         &-title {
@@ -83,8 +82,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0rem 1.4rem;
-            margin-top: 1rem;
+            margin: 1rem 1.4rem;
         }
 
         &-button button {
