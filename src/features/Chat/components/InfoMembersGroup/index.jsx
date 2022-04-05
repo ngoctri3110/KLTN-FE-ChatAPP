@@ -5,9 +5,13 @@ import './style.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import InfoTitle from '../InfoTitle';
 import Scrollbars from 'react-custom-scrollbars';
-import { Dropdown, Menu, Tag } from 'antd';
+import { Button, Dropdown, Menu, message, Tag } from 'antd';
 import { UserDeleteOutlined } from '@ant-design/icons';
 import PersonalIcon from '../PersonalIcon';
+import ModalSendAddFriend from 'components/ModalSendAddFriend';
+import { useState } from 'react';
+import UserCard from 'components/UserCard';
+import userApi from 'api/userApi';
 InfoMembersGroup.propTypes = {
     onBack: PropTypes.func,
     members: PropTypes.array,
@@ -29,9 +33,10 @@ function InfoMembersGroup({ onBack, members, onChoseUser }) {
         (ele) => ele.id === currentConversation
     );
     const { leaderId, managerIds } = converDataCurrent;
+    const [isVisible, setIsVisible] = useState(false);
+    const [isVisibleUserCard, setIsVisibleUserCard] = useState(false);
+    const [userAddFriend, setUserAddFriend] = useState({});
     const dispatch = useDispatch();
-
-    console.log('managerIds', converDataCurrent);
 
     const handleOnBack = (value) => {
         if (onBack) {
@@ -40,6 +45,39 @@ function InfoMembersGroup({ onBack, members, onChoseUser }) {
     };
     const handleClickMember = () => {};
 
+    const handleFindUser = async (value) => {
+        try {
+            const user = await userApi.findId(value);
+            setUserAddFriend(user);
+            setIsVisible(true);
+        } catch (error) {
+            message.error('Không tìm thấy người dùng');
+        }
+    };
+    const handleFindUserProfile = async (value) => {
+        try {
+            const user = await userApi.findId(value);
+            setUserAddFriend(user);
+            setIsVisibleUserCard(true);
+        } catch (error) {
+            message.error('Không tìm thấy người dùng');
+        }
+    };
+    const onCancel = () => {
+        setIsVisible(false);
+        setIsVisibleUserCard(true);
+    };
+
+    const onOk = () => {};
+    const handleCancelModalUserCard = () => {
+        setIsVisibleUserCard(false);
+    };
+    const hanldOnClosable = () => {
+        setIsVisible(false);
+        setIsVisibleUserCard(false);
+    };
+
+    console.log('userAddFriend', userAddFriend);
     const menu = (value) => (
         <Menu onClick={(e) => handleClickMember(e, value)}>
             {value.id !== user.id && (
@@ -101,7 +139,12 @@ function InfoMembersGroup({ onBack, members, onChoseUser }) {
                                 trigger={['contextMenu']}
                             >
                                 <div className="info_members-content-item">
-                                    <div className="info_members-content-item-leftside">
+                                    <div
+                                        className="info_members-content-item-leftside"
+                                        onClick={() =>
+                                            handleFindUserProfile(ele.id)
+                                        }
+                                    >
                                         <div className="info_members-content-item-leftside-avatar">
                                             <PersonalIcon
                                                 avatar={ele.avatar?.url}
@@ -126,10 +169,17 @@ function InfoMembersGroup({ onBack, members, onChoseUser }) {
                                             ele.id === user.id && 'hidden'
                                         }`}
                                     >
-                                        {ele.isFriend ? (
-                                            <Tag color="#87d068">Bạn bè</Tag>
+                                        {!ele.isFriend ? (
+                                            <Button
+                                                type="primary"
+                                                onClick={() =>
+                                                    handleFindUser(ele.id)
+                                                }
+                                            >
+                                                Kết bạn
+                                            </Button>
                                         ) : (
-                                            <Tag color="#f5d003">Người lạ</Tag>
+                                            <></>
                                         )}
                                     </div>
                                 </div>
@@ -138,6 +188,18 @@ function InfoMembersGroup({ onBack, members, onChoseUser }) {
                     </div>
                 </div>
             </Scrollbars>
+            <ModalSendAddFriend
+                isVisible={isVisible}
+                onCancel={onCancel}
+                onOk={onOk}
+                userAddFriend={userAddFriend}
+                onClosable={hanldOnClosable}
+            />
+            <UserCard
+                user={userAddFriend}
+                isVisible={isVisibleUserCard}
+                onCancel={handleCancelModalUserCard}
+            />
         </div>
     );
 }

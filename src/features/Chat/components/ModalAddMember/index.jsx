@@ -10,13 +10,15 @@ import { useSelector } from 'react-redux';
 import Text from 'antd/lib/typography/Text';
 import PersonalIcon from '../PersonalIcon';
 import ItemsSelected from 'components/ItemsSelected';
+import { useEffect } from 'react';
+import './style.scss';
 
 ModalAddMember.propTypes = {
     onOk: PropTypes.func,
     loading: PropTypes.bool,
     onCancel: PropTypes.func,
     isVisible: PropTypes.bool.isRequired,
-    typeModal: PropTypes.number.isRequired,
+    typeModal: PropTypes.string.isRequired,
 };
 
 ModalAddMember.defaultProps = {
@@ -28,14 +30,26 @@ function ModalAddMember({ loading, onOk, onCancel, isVisible, typeModal }) {
     const { friends, memberInConversation } = useSelector(
         (state) => state.chat
     );
+    const initialValue = memberInConversation.map((ele) => ele.id);
     const [nameGroup, setNameGroup] = useState('');
-    const [checkList, setCheckList] = useState([]);
+    const [checkListFriend, setCheckListFriend] = useState([]);
     const [isShowError, setIsShowError] = useState(false);
     const [itemSelected, setItemSelected] = useState([]);
-    const [frInput, setFrInput] = useState('');
+    const [friendInput, setFriendInput] = useState('');
 
-    const [initalFriend, setInitalFriend] = useState([]);
-    const initialValue = memberInConversation.map((ele) => ele.id);
+    const [initialFriend, setInitialFriend] = useState([]);
+
+    useEffect(() => {
+        if (isVisible) {
+            setInitialFriend(friends);
+        } else {
+            setFriendInput('');
+            setCheckListFriend([]);
+            setItemSelected([]);
+            setNameGroup('');
+            setIsShowError(false);
+        }
+    }, [isVisible]);
 
     const handleCancel = () => {
         if (onCancel) {
@@ -43,21 +57,102 @@ function ModalAddMember({ loading, onOk, onCancel, isVisible, typeModal }) {
         }
     };
 
-    // kiểm tra người có trong nhóm và disable những đối tượng đó
+    // disable những người đã trong nhóm
     const checkInitialValue = (value) => {
         const index = initialValue.findIndex((ele) => ele === value);
         return index > -1;
     };
 
-    const handleOk = () => {};
-    const handleOnBlur = () => {};
-    const handleChange = () => {};
-    const handleSearch = () => {};
-    const handleChangeCheckBox = () => {};
-    const handleRemoveItem = () => {};
+    const handleOk = () => {
+        const userIds = itemSelected.map((ele) => ele.id);
+
+        if (onOk) {
+            if (typeModal === 'DUAL') {
+                onOk([...checkListFriend], nameGroup);
+            } else {
+                onOk(userIds);
+            }
+        }
+    };
+
+    const handleOnBlur = (e) => {
+        !nameGroup.length > 0 ? setIsShowError(true) : setIsShowError(false);
+    };
+
+    const handleChange = (e) => {
+        const value = e.target.value;
+        setNameGroup(value);
+    };
+
+    const handleSearch = (e) => {
+        const value = e.target.value;
+        setFriendInput(value);
+
+        if (!value && isVisible) {
+            setInitialFriend(friends);
+        } else {
+            const realFriends = [];
+
+            friends.forEach((ele) => {
+                const index = ele.name.search(value);
+
+                if (index > -1) {
+                    realFriends.push(ele);
+                }
+            });
+            setInitialFriend(friends);
+        }
+    };
+    const handleChangeCheckBox = (e) => {
+        const value = e.target.value;
+
+        // console.log('value', value);
+        // check checklist co data chua
+        const index = checkListFriend.findIndex((item) => item === value);
+        let checkListFriendTemp = [...checkListFriend];
+        let itemSelectedTemp = [...itemSelected];
+
+        //neu co trong checklist
+        if (index !== -1) {
+            itemSelectedTemp = itemSelectedTemp.filter(
+                (item) => item.id !== value
+            );
+
+            checkListFriendTemp = checkListFriendTemp.filter(
+                (item) => item !== value
+            );
+        } else {
+            //neu chua co
+            checkListFriendTemp.push(value);
+
+            const index = initialFriend.findIndex((item) => item.id === value);
+
+            if (index !== -1) {
+                itemSelectedTemp.push(initialFriend[index]);
+            }
+        }
+
+        setCheckListFriend(checkListFriendTemp);
+        setItemSelected(itemSelectedTemp);
+    };
+    const handleRemoveItem = (id) => {
+        let checkListFriendTemp = [...checkListFriend];
+        let itemSelectedTemp = [...itemSelected];
+
+        checkListFriendTemp = checkListFriendTemp.filter((item) => item !== id);
+        itemSelectedTemp = itemSelectedTemp.filter((item) => item.id !== id);
+        // console.log('checkListFriendTemp', checkListFriendTemp);
+        // console.log('itemSelectedTemp', itemSelectedTemp);
+
+        setCheckListFriend(checkListFriendTemp);
+        setItemSelected(itemSelectedTemp);
+
+        setFriendInput('');
+        setInitialFriend(friends);
+    };
     return (
         <Modal
-            title={typeModal === 2 ? 'Thêm thành viên' : 'Tạo nhóm'}
+            title={typeModal === 'GROUP' ? 'Thêm thành viên' : 'Tạo nhóm'}
             visible={isVisible}
             onOk={handleOk}
             onCancel={handleCancel}
@@ -66,20 +161,20 @@ function ModalAddMember({ loading, onOk, onCancel, isVisible, typeModal }) {
             cancelText="Hủy"
             okButtonProps={{
                 disabled:
-                    (!nameGroup.trim().length > 0 && typeModal === 1) ||
-                    checkList.length < 1,
+                    (!nameGroup.trim().length > 0 && typeModal === 'DUAL') ||
+                    checkListFriend.length < 1,
             }}
             confirmLoading={loading}
         >
-            <div id="modal-add-member-to-conver">
-                {typeModal === 1 && (
+            <div id="modal-add-member">
+                {typeModal === 'DUAL' && (
                     <>
-                        <div className="heading-group">
-                            <div className="select-background">
+                        <div className="heading-create-group">
+                            <div className="create-name-icon">
                                 <EditOutlined />
                             </div>
 
-                            <div className="input-name-group">
+                            <div className="input-name-create-group">
                                 <Input
                                     size="middle"
                                     placeholder="Nhập tên nhóm"
@@ -97,11 +192,8 @@ function ModalAddMember({ loading, onOk, onCancel, isVisible, typeModal }) {
                                 )}
                             </div>
                         </div>
-                        <Divider orientation="left" plain>
-                            <span className="divider-title">
-                                Thêm bạn vào nhóm
-                            </span>
-                        </Divider>
+
+                        <div className="addMember-title">Thêm bạn vào nhóm</div>
                     </>
                 )}
 
@@ -112,7 +204,7 @@ function ModalAddMember({ loading, onOk, onCancel, isVisible, typeModal }) {
                         style={{ width: '100%' }}
                         prefix={<SearchOutlined />}
                         onChange={handleSearch}
-                        value={frInput}
+                        value={friendInput}
                     />
                 </div>
 
@@ -126,10 +218,10 @@ function ModalAddMember({ loading, onOk, onCancel, isVisible, typeModal }) {
                         <div className="checkbox-list-friend">
                             <Checkbox.Group
                                 style={{ width: '100%' }}
-                                value={checkList}
+                                value={checkListFriend}
                             >
                                 <Row gutter={[0, 12]}>
-                                    {initalFriend.map((ele, index) => (
+                                    {initialFriend.map((ele, index) => (
                                         <Col span={24} key={index}>
                                             <Checkbox
                                                 disabled={checkInitialValue(

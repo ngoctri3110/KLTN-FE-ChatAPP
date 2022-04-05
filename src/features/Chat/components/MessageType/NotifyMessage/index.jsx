@@ -61,15 +61,15 @@ function NotifyMessage({ message }) {
             return 10;
         }
 
-        if (text === 'UPDATE_CHANNEL') {
+        if (text === 'Thay đổi 1 channel') {
             return 11;
         }
 
-        if (text === 'DELETE_CHANNEL') {
+        if (text === 'Xóa 1 channel') {
             return 12;
         }
 
-        if (text === 'CREATE_CHANNEL') {
+        if (text === 'Đã tạo 1 channel') {
             return 13;
         }
 
@@ -135,7 +135,7 @@ function NotifyMessage({ message }) {
                                 <span className="user-name-strong">
                                     {` ${
                                         ele.id === global.user.id
-                                            ? 'bạn'
+                                            ? 'Bạn'
                                             : ele.name
                                     }`}
                                 </span>
@@ -145,7 +145,7 @@ function NotifyMessage({ message }) {
                                 <span className="user-name-strong">
                                     {`, ${
                                         ele.id === global.user.id
-                                            ? 'bạn'
+                                            ? 'Bạn'
                                             : ele.name
                                     }`}
                                 </span>
@@ -155,7 +155,7 @@ function NotifyMessage({ message }) {
                         return (
                             <span className="user-name-strong">
                                 {` và`}{' '}
-                                <span className="blue">{`${
+                                <span>{`${
                                     manipulatedUserIds.length - 3
                                 } người khác`}</span>
                             </span>
@@ -175,12 +175,15 @@ function NotifyMessage({ message }) {
                         </div>
 
                         <div className="notify-message-content-title">
+                            {renderUser}
+                            &nbsp;
+                            <span>được</span>
+                            &nbsp;
                             <span className="user-name-strong">
                                 {isMyActive}
                             </span>
                             &nbsp;
-                            <span>đã thêm</span>
-                            {renderUser}
+                            <span>thêm vào nhóm</span>
                         </div>
                     </>
                 )}
@@ -337,7 +340,7 @@ function NotifyMessage({ message }) {
                                 <span className="user-name-strong">
                                     {`${isMyActive} `}
                                 </span>
-                                đã đổi tên channel &nbsp;
+                                đã đổi tên một channel &nbsp;
                                 <NumberOutlined />
                             </div>
                         </div>
@@ -358,7 +361,7 @@ function NotifyMessage({ message }) {
                                 <span className="user-name-strong">
                                     {`${isMyActive} `}
                                 </span>
-                                đã xóa Channel &nbsp;
+                                đã xóa một channel &nbsp;
                                 <NumberOutlined />
                             </div>
                         </div>
@@ -379,7 +382,7 @@ function NotifyMessage({ message }) {
                                 <span className="user-name-strong">
                                     {`${isMyActive} `}
                                 </span>
-                                đã tạo Channel &nbsp;
+                                đã tạo một channel &nbsp;
                                 <NumberOutlined />
                             </div>
                         </div>

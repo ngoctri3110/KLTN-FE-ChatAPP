@@ -14,14 +14,16 @@ import useWindowSize from 'hooks/useWindowSize';
 import { useSelector } from 'react-redux';
 import dateUtils from 'utils/dateUtils';
 import {
+    createGroup,
     fetchListMessages,
     getLastViewOfMembers,
     setCurrentChannel,
 } from 'features/Chat/slice/chatSlice';
 import { useDispatch } from 'react-redux';
 import './style.scss';
-import { Tooltip } from 'antd';
+import { message, Tooltip } from 'antd';
 import ModalAddMember from '../ModalAddMember';
+import conversationApi from 'api/conversationApi';
 
 HeaderOptional.propTypes = {
     avatar: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
@@ -118,7 +120,28 @@ function HeaderOptional(props) {
         setIsvisible(false);
     };
 
-    const handleOk = () => {};
+    const handleOk = async (userIds, name) => {
+        if (typeModal === 'DUAL') {
+            setConfirmLoading(true);
+
+            dispatch(
+                createGroup({
+                    name,
+                    userIds,
+                })
+            );
+
+            setConfirmLoading(false);
+        } else {
+            setConfirmLoading(true);
+            await conversationApi.addMembersToConver(
+                userIds,
+                currentConversation
+            );
+            setConfirmLoading(false);
+        }
+        setIsvisible(false);
+    };
     return (
         <div id="header-optional">
             <div className="header_wrapper">

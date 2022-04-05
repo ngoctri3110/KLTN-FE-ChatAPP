@@ -61,9 +61,10 @@ const conversationApi = {
         return axiosClient.get(`${API_URL}/${id}/members`);
     },
     addMembersToConver: (userIds, conversationId) => {
-        return axiosClient.post(`${API_URL}/${conversationId}/members`, {
-            userIds,
-        });
+        return axiosClient.post(
+            `${API_URL}/${conversationId}/members`,
+            userIds
+        );
     },
     leaveGroup: (conversationId) => {
         // console.log('API conversationId', conversationId);

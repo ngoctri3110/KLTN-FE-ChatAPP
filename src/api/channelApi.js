@@ -3,7 +3,7 @@ import axiosClient from './axiosClient';
 const API_URL = '/channels';
 
 const channelApi = {
-    fetchChannel: (conversationId, description) => {
+    fetchChannel: (conversationId) => {
         return axiosClient.get(`${API_URL}/${conversationId}`);
     },
     addChannel: (conversationId, name, description) => {

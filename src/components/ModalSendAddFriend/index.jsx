@@ -15,12 +15,14 @@ ModalSendAddFriend.propTypes = {
     isVisible: PropTypes.bool.isRequired,
     onCancel: PropTypes.func,
     onOk: PropTypes.func,
+    onClosable: PropTypes.func,
 };
 
 ModalSendAddFriend.defaultProps = {
     title: 'Thêm bạn',
     onCancel: null,
     onOk: null,
+    onClosable: null,
 };
 
 function ModalSendAddFriend({
@@ -29,6 +31,7 @@ function ModalSendAddFriend({
     userAddFriend,
     onCancel,
     onOk,
+    onClosable,
 }) {
     const { coverPhoto, avatar } = userAddFriend;
     const { user } = useSelector((state) => state.global);
@@ -53,6 +56,11 @@ function ModalSendAddFriend({
         const value = e.target.value;
         setMessageInput(value);
     };
+    const hangleClosable = () => {
+        if (onClosable) {
+            onClosable();
+        }
+    };
     return (
         <Modal
             // id="modalStyleSendAddFriend"
@@ -64,6 +72,7 @@ function ModalSendAddFriend({
             cancelText="Thông tin"
             onOk={handleOnOk}
             onCancel={handleOnCancle}
+            afterClose={hangleClosable}
         >
             <div id="user-card">
                 <div className="user-card_wrapper">
@@ -108,7 +117,6 @@ function ModalSendAddFriend({
                             maxLength={100}
                             style={{ height: 120 }}
                             onChange={handleOnChange}
-                            // defaultValue={}
                             value={messageInput}
                         />
                     </div>
