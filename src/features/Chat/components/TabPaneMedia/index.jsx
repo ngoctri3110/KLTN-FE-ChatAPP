@@ -39,14 +39,14 @@ function TabPaneMedia(props) {
             setSender(members[index].name);
             queryTempt = {
                 ...query,
-                senderId: memberId,
+                userIdSend: memberId,
             };
             setQuery(queryTempt);
         } else {
             setSender('');
             queryTempt = {
                 ...query,
-                senderId: '',
+                userIdSend: '',
             };
             setQuery(queryTempt);
         }

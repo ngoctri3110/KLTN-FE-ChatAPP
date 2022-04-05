@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Divider, Menu } from 'antd';
 import { TagFilled } from '@ant-design/icons';
-import classifyApi from 'api/classifyApi';
 import { useDispatch } from 'react-redux';
 import { fetchListClassify } from 'features/Chat/slice/chatSlice';
+import classifyApi from 'api/ClassifyApi';
 
 SubMenuClassify.propTypes = {
     data: PropTypes.array,

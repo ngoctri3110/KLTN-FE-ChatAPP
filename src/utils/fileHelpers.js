@@ -25,8 +25,8 @@ const fileHelpers = {
         const endTimeTempt = endTime.split('/');
 
         return {
-            startTime: `${startTimeTempt[2]}-${startTimeTempt[1]}-${startTimeTempt[0]}`,
-            endTime: `${endTimeTempt[2]}-${endTimeTempt[1]}-${endTimeTempt[0]}`,
+            startTime: `${startTimeTempt[1]}/${startTimeTempt[0]}/${startTimeTempt[2]}`,
+            endTime: `${endTimeTempt[1]}/${endTimeTempt[0]}/${endTimeTempt[2]}`,
         };
     },
 };

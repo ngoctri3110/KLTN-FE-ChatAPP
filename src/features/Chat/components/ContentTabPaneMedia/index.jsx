@@ -32,7 +32,7 @@ function ContentTabPaneMedia(props) {
         setCurrentVideo(url);
     };
     return (
-        <div className="content-tabpane-media-wrapper">
+        <div id="content-tabpane-media-wrapper">
             <div className="item-in-storage-media">
                 <div className="list-item-sent">
                     {type === 'video' ? (

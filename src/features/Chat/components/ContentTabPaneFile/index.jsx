@@ -1,8 +1,17 @@
 import FileItem from 'components/FileItem';
 import React from 'react';
+import PropTypes from 'prop-types';
 import './style.scss';
 
-const ContentTabPaneFile = ({ items }) => {
+ContentTabPaneFile.propTypes = {
+    items: PropTypes.array,
+};
+
+ContentTabPaneFile.defaultProps = {
+    items: [],
+};
+
+function ContentTabPaneFile({ items }) {
     return (
         <div id="content-tabpane-file">
             {items.map((item, index) => (
@@ -10,6 +19,6 @@ const ContentTabPaneFile = ({ items }) => {
             ))}
         </div>
     );
-};
+}
 
 export default ContentTabPaneFile;

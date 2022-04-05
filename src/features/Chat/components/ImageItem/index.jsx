@@ -29,8 +29,6 @@ function ImageItem(props) {
         height: height,
     };
 
-    console.log('type anh', type);
-    console.log('url anh', url);
     const handleOnClick = () => {
         if (type === 'video' && onVisibleVideoModal) {
             onVisibleVideoModal(url);

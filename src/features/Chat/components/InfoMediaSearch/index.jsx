@@ -24,18 +24,17 @@ function InfoMediaSearch(props) {
     const { memberInConversation, currentConversation } = useSelector(
         (state) => state.chat
     );
-    console.log('memberInConversation', memberInConversation);
     const [activeKey, setActiveKey] = useState(tabpane.toString());
-    const [medias, setMedias] = useState({});
+    const [medias, setMedias] = useState([]);
 
     const getTypeWithTabpane = (value) => {
-        if (tabpane === 1) {
+        if (value === 1) {
             return 'IMAGE';
         }
-        if (tabpane === 2) {
+        if (value === 2) {
             return 'VIDEO';
         }
-        if (tabpane === 3) {
+        if (value === 3) {
             return 'FILE';
         }
     };
@@ -60,7 +59,7 @@ function InfoMediaSearch(props) {
     };
 
     const handleChangeTab = (activeKey) => {
-        setQuery({ ...query, type: getType(activeKey), senderId: '' });
+        setQuery({ ...query, type: getType(activeKey), userIdSend: '' });
         setActiveKey(activeKey);
     };
 
@@ -72,8 +71,8 @@ function InfoMediaSearch(props) {
         const fetchMedia = async () => {
             const mediasResult = await mediaApi.getAllMedia(
                 query.conversationId,
+                query.userIdSend,
                 query.type,
-                query.senderId,
                 query.startTime,
                 query.endTime
             );
@@ -85,7 +84,7 @@ function InfoMediaSearch(props) {
     }, [query]);
 
     return (
-        <div className="info_media-search">
+        <div id="info_media-search">
             <div className="info_media-search--title">
                 <InfoTitle
                     isBack={true}
@@ -132,20 +131,12 @@ function InfoMediaSearch(props) {
                     height="100%"
                 >
                     {activeKey === '1' && (
-                        <ContentTabPaneMedia
-                            items={medias.images}
-                            type="image"
-                        />
+                        <ContentTabPaneMedia items={medias} type="image" />
                     )}
                     {activeKey === '2' && (
-                        <ContentTabPaneMedia
-                            items={medias.videos}
-                            type="video"
-                        />
+                        <ContentTabPaneMedia items={medias} type="video" />
                     )}
-                    {activeKey === '3' && (
-                        <ContentTabPaneFile items={medias.files} />
-                    )}
+                    {activeKey === '3' && <ContentTabPaneFile items={medias} />}
                 </Scrollbars>
             </div>
         </div>
