@@ -34,12 +34,6 @@ const OtherSettings = () => {
         conversations.find((ele) => ele.id === currentConversation).type ===
         'GROUP';
 
-    console.log(
-        'type conver',
-        conversations.find((ele) => ele.id === currentConversation).type ===
-            'GROUP'
-    );
-
     const handleOnClick = () => {
         setIsDrop(!isDrop);
     };

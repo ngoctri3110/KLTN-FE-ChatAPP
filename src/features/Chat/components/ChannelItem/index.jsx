@@ -65,7 +65,7 @@ function ChannelItem({ isActive, data }) {
             <Menu.Item key="1">
                 <span className="menu-item">Đổi tên Channel</span>
             </Menu.Item>
-            {conversations.find((ele) => ele.leaderId === user._id) && (
+            {conversations.find((ele) => ele.leaderId === user.id) && (
                 <Menu.Item key="2" danger icon={<DeleteOutlined />}>
                     <span className="menu-item">Xóa Channel</span>
                 </Menu.Item>
@@ -77,9 +77,9 @@ function ChannelItem({ isActive, data }) {
         dispatch(fetchMessageInChannel({ channelId: data.id, size: 10 }));
         dispatch(getLastViewChannel({ channelId: data.id }));
     };
-    const handleOnOk = async (value) => {
+    const handleOnOk = async (nameNew, descriptionNew) => {
         try {
-            await channelApi.renameChannel(data.id, value);
+            await channelApi.renameChannel(data.id, nameNew, descriptionNew);
             setVisible(false);
             message.success('Đổi tên channel thành công');
         } catch (error) {
@@ -101,6 +101,10 @@ function ChannelItem({ isActive, data }) {
                         <span>{data.name}</span>
                     </div>
 
+                    <div className="channel-item-descrip">
+                        <span>{data.description}</span>
+                    </div>
+
                     {data.numberUnread > 0 && (
                         <div className="notify-amount">{data.numberUnread}</div>
                     )}
@@ -111,7 +115,8 @@ function ChannelItem({ isActive, data }) {
                 visible={visible}
                 onCancel={() => setVisible(false)}
                 onOk={handleOnOk}
-                initialValue={data.name}
+                nameValue={data.name}
+                descriptionValue={data.description}
             />
         </>
     );

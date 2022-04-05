@@ -72,34 +72,42 @@ function StorageMedia({ viewMediaClick, name, items }) {
                         <div className="info_media-interact-media">
                             {name === 'Video' ? (
                                 <>
-                                    {items.map((item, index) => (
-                                        <ThumbnailVideoCustom
-                                            key={index}
-                                            url={item.content}
-                                            onVisibleVideoModal={
-                                                handleVisibleModal
-                                            }
-                                        />
-                                    ))}
+                                    {items.map((item, index) => {
+                                        if (index < 8) {
+                                            return (
+                                                <ThumbnailVideoCustom
+                                                    key={index}
+                                                    url={item.content}
+                                                    onVisibleVideoModal={
+                                                        handleVisibleModal
+                                                    }
+                                                />
+                                            );
+                                        }
+                                    })}
                                 </>
                             ) : (
                                 <Image.PreviewGroup>
-                                    {items.map((item, index) => (
-                                        <ImageItem
-                                            key={index}
-                                            width={80}
-                                            height={80}
-                                            url={item.content}
-                                            type={
-                                                name === 'Video'
-                                                    ? name.toLowerCase()
-                                                    : 'image'
-                                            }
-                                            onVisibleVideoModal={
-                                                handleVisibleModal
-                                            }
-                                        />
-                                    ))}
+                                    {items.map((item, index) => {
+                                        if (index < 8) {
+                                            return (
+                                                <ImageItem
+                                                    key={index}
+                                                    width={80}
+                                                    height={80}
+                                                    url={item.content}
+                                                    type={
+                                                        name === 'Video'
+                                                            ? name.toLowerCase()
+                                                            : 'image'
+                                                    }
+                                                    onVisibleVideoModal={
+                                                        handleVisibleModal
+                                                    }
+                                                />
+                                            );
+                                        }
+                                    })}
                                 </Image.PreviewGroup>
                             )}
                         </div>

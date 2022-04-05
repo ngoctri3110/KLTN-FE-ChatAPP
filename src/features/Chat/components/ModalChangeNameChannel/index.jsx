@@ -1,43 +1,62 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Modal } from 'antd';
+import { Form, Input, Modal } from 'antd';
 
 ModalChangeNameChannel.propTypes = {
     visible: PropTypes.bool,
     onOk: PropTypes.func,
     onCancel: PropTypes.func,
-    initialValue: PropTypes.string,
+    nameValue: PropTypes.string,
+    descriptionValue: PropTypes.string,
 };
 
 ModalChangeNameChannel.defaultProps = {
     visible: false,
     onOk: null,
     onCancel: null,
-    initialValue: '',
+    nameValue: '',
+    descriptionValue: '',
 };
 
-function ModalChangeNameChannel({ visible, onOk, onCancel, initialValue }) {
-    const [nameValue, setNameValue] = useState('');
+function ModalChangeNameChannel({
+    visible,
+    onOk,
+    onCancel,
+    nameValue,
+    descriptionValue,
+}) {
+    const [confirmLoading, setConfirmLoading] = useState(false);
 
-    useEffect(() => {
-        setNameValue(initialValue);
-    }, [initialValue, visible]);
-
+    const [form] = Form.useForm();
     const handleOnCancel = () => {
         if (onCancel) {
             onCancel();
-            setNameValue('');
         }
     };
     const handleOnOk = () => {
+        setConfirmLoading(true);
         if (onOk) {
-            onOk(nameValue);
+            form.validateFields().then(
+                async ({ nameChannel, descripChannel }) => {
+                    try {
+                        onOk(nameChannel, descripChannel);
+                    } catch (error) {}
+                }
+            );
         }
+        setConfirmLoading(false);
+    };
+    const formItemLayout = {
+        labelCol: {
+            xs: { span: 24 },
+            sm: { span: 4 },
+        },
+        wrapperCol: {
+            xs: { span: 24 },
+            sm: { span: 20 },
+        },
     };
 
-    const handleOnchange = (e) => {
-        setNameValue(e.target.value);
-    };
     return (
         <Modal
             title="Đổi tên channel"
@@ -46,14 +65,35 @@ function ModalChangeNameChannel({ visible, onOk, onCancel, initialValue }) {
             onOk={handleOnOk}
             onText="Xác nhận"
             cancelText="Hủy"
-            okButtonProps={{ disabled: nameValue.trim().length === 0 }}
+            confirmLoading={confirmLoading}
         >
-            <Input
-                placeholder="Nhập tên channel mới"
-                allowClear
-                value={nameValue}
-                onChange={handleOnchange}
-            />
+            <Form
+                {...formItemLayout}
+                form={form}
+                name="changechannel"
+                initialValues={{
+                    nameChannel: nameValue,
+                    descripChannel: descriptionValue,
+                }}
+                scrollToFirstError
+            >
+                <Form.Item
+                    name="nameChannel"
+                    label="Tên kênh"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Vui lòng nhập tên kênh!',
+                        },
+                    ]}
+                >
+                    <Input placeholder="Nhập tên kênh mới" allowClear />
+                </Form.Item>
+
+                <Form.Item name="descripChannel" label="Mô tả">
+                    <Input placeholder="Nhập mô tả mới" allowClear />
+                </Form.Item>
+            </Form>
         </Modal>
     );
 }

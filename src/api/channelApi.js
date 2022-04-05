@@ -6,16 +6,16 @@ const channelApi = {
     fetchChannel: (conversationId, description) => {
         return axiosClient.get(`${API_URL}/${conversationId}`);
     },
-    addChannel: (conversationId, name) => {
+    addChannel: (conversationId, name, description) => {
         return axiosClient.post(`${API_URL}/${conversationId}`, {
             name,
-            description: '',
+            description,
         });
     },
     renameChannel: (id, name, description) => {
         return axiosClient.put(`${API_URL}/${id}`, {
             name,
-            description: '',
+            description,
         });
     },
     deleteChannel: (channelId) => {

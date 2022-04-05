@@ -42,7 +42,8 @@ function Channel({ onViewChannel, data, onOpenInfoBlock }) {
 
     const [isDrop, setIsDrop] = useState(true);
     const [isVisible, setIsVisible] = useState(false);
-    const [valueInput, setValueInput] = useState('');
+    const [valueInputName, setValueInputName] = useState('');
+    const [valueInputDescrip, setValueInputDescrip] = useState('');
     const dispatch = useDispatch();
 
     const numberUnread = conversations.find(
@@ -76,7 +77,11 @@ function Channel({ onViewChannel, data, onOpenInfoBlock }) {
 
     const handleOkModal = async () => {
         try {
-            await channelApi.addChannel(currentConversation, valueInput);
+            await channelApi.addChannel(
+                currentConversation,
+                valueInputName,
+                valueInputDescrip
+            );
             message.success('Tạo channel thành công');
             setIsVisible(false);
         } catch (error) {
@@ -86,12 +91,22 @@ function Channel({ onViewChannel, data, onOpenInfoBlock }) {
 
     const handleCancelModal = () => {
         setIsVisible(false);
-        setValueInput('');
+        setValueInputName('');
+        setValueInputDescrip('');
     };
 
-    const handleInputChange = (e) => {
-        setValueInput(e.target.value);
+    const handleInputChangeName = (e) => {
+        setValueInputName(e.target.value);
     };
+    const handleInputChangeDescrip = (e) => {
+        setValueInputDescrip(e.target.value);
+    };
+
+    const modalStyle = {
+        width: '80%',
+        margin: '1rem 4rem',
+    };
+
     return (
         <div className="channel">
             <div className="channel-header" onClick={handleOnClick}>
@@ -119,7 +134,7 @@ function Channel({ onViewChannel, data, onOpenInfoBlock }) {
                     className={`channel-interact-item ${
                         currentChannel ? '' : 'active'
                     }`}
-                    onclick={handleViewGeneralChannel}
+                    onClick={handleViewGeneralChannel}
                 >
                     <div className="channel-interact-item-icon">
                         <NumberOutlined />
@@ -149,7 +164,6 @@ function Channel({ onViewChannel, data, onOpenInfoBlock }) {
                 <div className="channel-interact-button">
                     <button onClick={handleAddChannel}>Thêm channel</button>
                 </div>
-
                 <div className="channel-interact-button">
                     <button onClick={handleViewAll}>Xem tất cả</button>
                 </div>
@@ -162,14 +176,24 @@ function Channel({ onViewChannel, data, onOpenInfoBlock }) {
                 onCancel={handleCancelModal}
                 okText="Tạo"
                 cancelText="Hủy"
-                okButtonProps={{ disabled: valueInput.trim().length === 0 }}
+                okButtonProps={{ disabled: valueInputName.trim().length === 0 }}
             >
                 <Input
                     placeholder="Nhập tên channel"
                     allowClear
-                    value={valueInput}
-                    onChange={handleInputChange}
+                    value={valueInputName}
+                    onChange={handleInputChangeName}
                     onEnter={handleOkModal}
+                    style={modalStyle}
+                />
+
+                <Input
+                    placeholder="Nhập mô tả"
+                    allowClear
+                    value={valueInputDescrip}
+                    onChange={handleInputChangeDescrip}
+                    onEnter={handleOkModal}
+                    style={modalStyle}
                 />
             </Modal>
         </div>

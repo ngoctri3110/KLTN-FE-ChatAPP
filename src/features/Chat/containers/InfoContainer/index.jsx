@@ -12,6 +12,8 @@ import StorageMedia from 'features/Chat/components/StorageMedia';
 import StorageFile from 'features/Chat/components/StorageFile';
 import OtherSettings from 'features/Chat/components/OtherSettings';
 import InfoMediaSearch from 'features/Chat/components/InfoMediaSearch';
+import userApi from 'api/userApi';
+import InfoMembersGroup from 'features/Chat/components/InfoMembersGroup';
 
 InfoContainer.propTypes = {
     onViewChannel: PropTypes.func,
@@ -25,6 +27,8 @@ InfoContainer.defaultProps = {
 
 function InfoContainer({ onViewChannel, onOpenInfoBlock }) {
     const [isFind, setFind] = useState({ tabpane: 0, view: 0 });
+    const [userChose, setUserChose] = useState(null);
+    const [isVisible, setIsVisible] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -52,6 +56,11 @@ function InfoContainer({ onViewChannel, onOpenInfoBlock }) {
     };
     const handleViewMediaClick = (value, tabpane) => {
         setFind({ view: value, tabpane });
+    };
+    const handleChoseUser = async (value) => {
+        const user = await userApi.fetchUser(value.username);
+        setUserChose(user);
+        setIsVisible(true);
     };
     return (
         <div id="main-info">
@@ -160,6 +169,14 @@ function InfoContainer({ onViewChannel, onOpenInfoBlock }) {
                         <InfoMediaSearch
                             onBack={handleOnBack}
                             tabpane={isFind.tabpane}
+                        />
+                    );
+                } else {
+                    return (
+                        <InfoMembersGroup
+                            onBack={handleOnBack}
+                            members={memberInConversation}
+                            onChoseUser={handleChoseUser}
                         />
                     );
                 }

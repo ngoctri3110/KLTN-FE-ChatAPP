@@ -21,6 +21,7 @@ import {
 import { useDispatch } from 'react-redux';
 import './style.scss';
 import { Tooltip } from 'antd';
+import ModalAddMember from '../ModalAddMember';
 
 HeaderOptional.propTypes = {
     avatar: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
@@ -61,6 +62,7 @@ function HeaderOptional(props) {
     const dispatch = useDispatch();
     const [isVisible, setIsvisible] = useState(false);
     const [typeModal, setTypeModal] = useState('');
+    const [confirmLoading, setConfirmLoading] = useState(false);
 
     const { width } = useWindowSize();
     const handleCutText = (text) => {
@@ -111,6 +113,12 @@ function HeaderOptional(props) {
             onOpenDrawer();
         }
     };
+
+    const hanleOnCancel = () => {
+        setIsvisible(false);
+    };
+
+    const handleOk = () => {};
     return (
         <div id="header-optional">
             <div className="header_wrapper">
@@ -224,7 +232,13 @@ function HeaderOptional(props) {
                     </div>
                 </div>
             </div>
-            {/* <ModalAddMemberToConver/> */}
+            <ModalAddMember
+                isVisible={isVisible}
+                onCancel={hanleOnCancel}
+                onOk={handleOk}
+                loading={confirmLoading}
+                typeModal={typeModal}
+            />
         </div>
     );
 }
