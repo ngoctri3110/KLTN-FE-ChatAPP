@@ -1,31 +1,43 @@
 import { NumberOutlined } from '@ant-design/icons';
+import {
+    fetchListMessages,
+    getLastViewOfMembers,
+    setCurrentChannel,
+} from 'features/Chat/slice/chatSlice';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ChannelItem from '../ChannelItem';
 
 const ListChannel = ({ data }) => {
     const { currentChannel, currentConversation, conversations } = useSelector(
         (state) => state.chat
     );
+    const dispatch = useDispatch();
 
-    const handleViewGeneralChannel = () => {};
+    const handleViewGeneralChannel = () => {
+        dispatch(setCurrentChannel(''));
+        dispatch(
+            fetchListMessages({ conversationId: currentConversation, size: 10 })
+        );
+        dispatch(getLastViewOfMembers({ conversationId: currentConversation }));
+    };
     return (
-        <div className="list-channel">
+        <div className="channel">
             <div
-                className={`channel-interact-amount ${
+                className={`channel-interact-item ${
                     currentChannel ? '' : 'active'
                 }`}
                 onClick={handleViewGeneralChannel}
             >
-                <div className="channel-interact-amount-icon">
+                <div className="channel-interact-item-icon">
                     <NumberOutlined />
                 </div>
-                <div className="channel-interact-amount-text">
+                <div className="channel-interact-item-text">
                     <span>Kênh chung</span>
                 </div>
                 {conversations.find((ele) => ele.id === currentConversation)
                     .numberUnread > 0 && (
-                    <div className="notify-amount">
+                    <div className="notify-item">
                         {
                             conversations.find(
                                 (ele) => ele.id === currentConversation

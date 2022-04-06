@@ -287,21 +287,17 @@ function ModalViewOption({ isModalVisible, onCancel, data, onShowDetail }) {
                                                     (ele, index) => {
                                                         if (
                                                             getUserFromConver(
-                                                                ele
+                                                                ele.id
                                                             )
                                                         ) {
                                                             return (
                                                                 <PersonalIcon
                                                                     key={index}
                                                                     name={
-                                                                        getUserFromConver(
-                                                                            ele
-                                                                        )?.name
+                                                                        ele?.name
                                                                     }
                                                                     avatar={
-                                                                        getUserFromConver(
-                                                                            ele
-                                                                        )
+                                                                        ele
                                                                             ?.avatar
                                                                             .url
                                                                     }

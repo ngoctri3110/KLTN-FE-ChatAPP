@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './style.scss';
 import InfoTitle from '../InfoTitle';
 import Scrollbars from 'react-custom-scrollbars';
 import { Tabs } from 'antd';
@@ -8,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { BarChartOutlined, NumberOutlined } from '@ant-design/icons';
 import TabPanePoll from '../TabPanePoll';
 import ListChannel from '../ListChannel';
+import './style.scss';
 
 GroupNews.propTypes = {
     onBack: PropTypes.func,
@@ -23,7 +23,11 @@ function GroupNews({ onBack, tabActive, onChange }) {
 
     const { channels } = useSelector((state) => state.chat);
 
-    const handleChangeActiveKey = () => {};
+    const handleChangeActiveKey = (key) => {
+        if (onChange) {
+            onChange(key);
+        }
+    };
     return (
         <div className="group-news_wrapper">
             <div className="group-news_header">

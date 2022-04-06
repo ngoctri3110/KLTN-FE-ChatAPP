@@ -25,6 +25,8 @@ function ModalDetailPoll({ visible, onCancel, data }) {
             onCancel();
         }
     };
+    console.log(data);
+    console.log('memberInConversation', memberInConversation);
     return (
         <Modal
             title="Chi tiết bình chọn"
@@ -43,7 +45,7 @@ function ModalDetailPoll({ visible, onCancel, data }) {
                                 <div className="detail-vote_list-user">
                                     {ele.userIds.map((ele, index) => {
                                         const user = memberInConversation.find(
-                                            (member) => member.id === ele
+                                            (member) => member.id === ele.id
                                         );
 
                                         if (user) {

@@ -1,10 +1,7 @@
-import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Badge, Tooltip } from 'antd';
+import { Avatar, Tooltip } from 'antd';
 import DEFAULT_AVATAR from 'assets/images/user/talo_user_default.jpg';
 import AvatarCustom from 'components/AvatarCustom';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
-import PersonalIcon from '../PersonalIcon';
 import COVERSATION_STYLE from './ConversationAvatarStyle';
 import './style.scss';
 ConversationAvatar.propTypes = {
@@ -60,8 +57,11 @@ function ConversationAvatar({
                 );
             } else {
                 tempAvatar.push(
-                    <Avatar
+                    <AvatarCustom
                         key={index}
+                        name={members[index]?.name}
+                        avatar={members[index]?.avatar?.url}
+                        size={demension}
                         style={
                             totalMembers === 3 && index === 2
                                 ? {
@@ -74,8 +74,6 @@ function ConversationAvatar({
                                       backgroundColor: '#1E90FF',
                                   }
                         }
-                        size={demension}
-                        icon={<UserOutlined />}
                     />
                 );
             }
@@ -104,7 +102,10 @@ function ConversationAvatar({
                 } else {
                     tempAvatar.push(
                         <div className="per-user">
-                            <Avatar
+                            <AvatarCustom
+                                key={index}
+                                name={members[index]?.name}
+                                avatar={members[index]?.avatar?.url}
                                 size={demension}
                                 style={
                                     index === 2
@@ -116,7 +117,6 @@ function ConversationAvatar({
                                               backgroundColor: '#1E90FF',
                                           }
                                 }
-                                icon={<UserOutlined />}
                             />
                         </div>
                     );

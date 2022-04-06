@@ -12,7 +12,6 @@ import StorageMedia from 'features/Chat/components/StorageMedia';
 import StorageFile from 'features/Chat/components/StorageFile';
 import OtherSettings from 'features/Chat/components/OtherSettings';
 import InfoMediaSearch from 'features/Chat/components/InfoMediaSearch';
-import userApi from 'api/userApi';
 import InfoMembersGroup from 'features/Chat/components/InfoMembersGroup';
 
 InfoContainer.propTypes = {
@@ -25,7 +24,7 @@ InfoContainer.defaultProps = {
     onOpenInfoBlock: null,
 };
 
-function InfoContainer({ onViewChannel, onOpenInfoBlock }) {
+function InfoContainer({ onViewChannel }) {
     const [isFind, setFind] = useState({ tabpane: 0, view: 0 });
 
     const dispatch = useDispatch();

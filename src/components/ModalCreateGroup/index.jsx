@@ -110,12 +110,12 @@ function ModalCreateGroup({ loading, isVisible, onCancel, onOk }) {
         const value = e.target.value;
 
         // console.log('value', value);
-        // check checklist co data chua
+        // checklish value ton tai
         const index = checkListFriend.findIndex((item) => item === value);
         let checkListFriendTemp = [...checkListFriend];
         let itemSelectedTemp = [...itemSelected];
 
-        //neu co trong checklist
+        //value ton tai trong checklist
         if (index !== -1) {
             itemSelectedTemp = itemSelectedTemp.filter(
                 (item) => item.id !== value
@@ -125,7 +125,7 @@ function ModalCreateGroup({ loading, isVisible, onCancel, onOk }) {
                 (item) => item !== value
             );
         } else {
-            //neu chua co
+            //chua co trong checklist
             checkListFriendTemp.push(value);
 
             const index = initialFriend.findIndex((item) => item.id === value);
@@ -149,7 +149,7 @@ function ModalCreateGroup({ loading, isVisible, onCancel, onOk }) {
             okText="Tạo nhóm"
             cancelText="Hủy"
             okButtonProps={{
-                disabled: !(itemSelected.length > 0 && nameGroup.length > 0),
+                disabled: !(itemSelected.length > 1 && nameGroup.length > 0),
             }}
             style={{ top: 20 }}
         >

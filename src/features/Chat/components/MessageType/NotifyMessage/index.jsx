@@ -35,7 +35,7 @@ function NotifyMessage({ message }) {
             return 2;
         }
 
-        if (text === 'Đã tạo nhóm') {
+        if (text === 'Đã là nhóm') {
             return 3;
         }
         if (text === 'Đã tham gia nhóm') {

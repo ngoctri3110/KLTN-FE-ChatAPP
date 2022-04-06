@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import PollMessage from '../MessageType/PollMessage';
 
 const TabPanePoll = () => {
-    const { currentConversation, votes, totalPagesVote } = useSelector(
+    const { currentConversation, polls, totalPagesVote } = useSelector(
         (state) => state.chat
     );
     const dispatch = useDispatch();
@@ -38,15 +38,15 @@ const TabPanePoll = () => {
             query.size
         );
         const { data } = res;
-        dispatch(updatePoll([...votes, ...data]));
+        dispatch(updatePoll([...polls, ...data]));
         setQuery({
             size: query.size,
             page: query.page + 1,
         });
     };
     return (
-        <div className="tabpane-vote">
-            {votes.map((ele, index) => (
+        <div className="tabpane-poll">
+            {polls.map((ele, index) => (
                 <div className="tabpane-poll-item" key={index}>
                     <PollMessage data={ele} />
                 </div>
