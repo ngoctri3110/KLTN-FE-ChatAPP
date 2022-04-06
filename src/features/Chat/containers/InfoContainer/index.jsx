@@ -27,8 +27,6 @@ InfoContainer.defaultProps = {
 
 function InfoContainer({ onViewChannel, onOpenInfoBlock }) {
     const [isFind, setFind] = useState({ tabpane: 0, view: 0 });
-    const [userChose, setUserChose] = useState(null);
-    const [isVisible, setIsVisible] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -57,11 +55,7 @@ function InfoContainer({ onViewChannel, onOpenInfoBlock }) {
     const handleViewMediaClick = (value, tabpane) => {
         setFind({ view: value, tabpane });
     };
-    const handleChoseUser = async (value) => {
-        const user = await userApi.fetchUser(value.username);
-        setUserChose(user);
-        setIsVisible(true);
-    };
+
     return (
         <div id="main-info">
             {(() => {
@@ -176,7 +170,6 @@ function InfoContainer({ onViewChannel, onOpenInfoBlock }) {
                         <InfoMembersGroup
                             onBack={handleOnBack}
                             members={memberInConversation}
-                            onChoseUser={handleChoseUser}
                         />
                     );
                 }

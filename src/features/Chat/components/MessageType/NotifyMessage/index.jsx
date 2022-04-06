@@ -31,7 +31,7 @@ function NotifyMessage({ message }) {
             return 1;
         }
 
-        if (text === 'Đã xóa ra khỏi nhóm') {
+        if (text === 'Đã xóa thành viên ra khỏi nhóm') {
             return 2;
         }
 
@@ -76,11 +76,11 @@ function NotifyMessage({ message }) {
         if (text === 'Ảnh đại diện nhóm đã thay đổi') {
             return 14;
         }
-        if (text === 'ADD_MANAGERS') {
+        if (text === 'Đã thêm vào quản lý nhóm') {
             return 15;
         }
 
-        if (text === 'DELETE_MANAGERS') {
+        if (text === 'Đã xóa quyền quản lý') {
             return 16;
         }
     };
@@ -195,12 +195,12 @@ function NotifyMessage({ message }) {
                         </div>
 
                         <div className="notify-message-content-title">
+                            {renderUser}
+                            <span>&nbsp;được&nbsp;</span>
                             <span className="user-name-strong">
                                 {isMyActive}
                             </span>
-                            <span>&nbsp;đã xóa</span>
-                            {renderUser}
-                            <span> ra khỏi nhóm</span>
+                            <span> mời ra khỏi nhóm</span>
                         </div>
                     </>
                 )}
@@ -414,20 +414,16 @@ function NotifyMessage({ message }) {
                 {transferTextToValue(content) === 15 && (
                     <>
                         <div className="notify-message-content_group-avatar">
-                            <div className="notify-message-content_per-avatar">
-                                <AvatarCustom
-                                    size="small"
-                                    src={avatar.url}
-                                    name={name}
-                                />
-                            </div>
+                            {renderGroupAvatars}
+
                             <div className="notify-message-content-title">
-                                <KeyOutlined />
-                                &nbsp;
+                                <KeyOutlined rotate="180" />
+                                {renderUser}
+                                &nbsp;đã được&nbsp;
                                 <span className="user-name-strong">
                                     {`${isMyActive} `}
                                 </span>
-                                đã thêm {renderUser} làm phó nhóm
+                                bổ nhiệm thành phó nhóm
                             </div>
                         </div>
                     </>
@@ -436,20 +432,12 @@ function NotifyMessage({ message }) {
                 {transferTextToValue(content) === 16 && (
                     <>
                         <div className="notify-message-content_group-avatar">
-                            <div className="notify-message-content_per-avatar">
-                                <AvatarCustom
-                                    size="small"
-                                    src={avatar.url}
-                                    name={name}
-                                />
-                            </div>
+                            {renderGroupAvatars}
+
                             <div className="notify-message-content-title">
-                                <KeyOutlined />
-                                &nbsp;
-                                <span className="user-name-strong">
-                                    {`${isMyActive} `}
-                                </span>
-                                đã xóa phó nhóm của {renderUser}
+                                <KeyOutlined rotate="180" />
+                                {renderUser}
+                                &nbsp;đã không còn là phó nhóm
                             </div>
                         </div>
                     </>

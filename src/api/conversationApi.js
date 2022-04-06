@@ -76,15 +76,17 @@ const conversationApi = {
         );
     },
     //managers
-    addManagerToConver: (coversationId, userIds) => {
-        return axiosClient.post(`${API_URL}/${coversationId}/managers`, {
-            userIds,
-        });
+    addManagerInGroup: (coversationId, userIds) => {
+        return axiosClient.post(
+            `${API_URL}/${coversationId}/managers`,
+            userIds
+        );
     },
     deleteManager: (coversationId, userIds) => {
-        return axiosClient.patch(`${API_URL}/${coversationId}/managers`, {
-            userIds,
-        });
+        return axiosClient.patch(
+            `${API_URL}/${coversationId}/managers`,
+            userIds
+        );
     },
     //Other
     getSortInfoGroup: (conversationId) => {

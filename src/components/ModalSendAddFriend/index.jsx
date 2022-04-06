@@ -1,13 +1,13 @@
-import { Avatar, Image, Modal, Input } from 'antd';
+import { Avatar, Image, Modal, Input, Button, Divider } from 'antd';
 import React from 'react';
 import PropTypes from 'prop-types';
 import COVERPHOTO_DEFAULT from 'assets/images/user/talo_coverPhoto_default.png';
 import UserCardStyle from 'components/UserCard/UserCardStyle';
 import USER_AVATAR_DEFAULT from 'assets/images/user/talo_user_default.jpg';
 import getSummaryName from 'utils/nameHelper';
-import './style.scss';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import './style.scss';
 const { TextArea } = Input;
 ModalSendAddFriend.propTypes = {
     title: PropTypes.string,
@@ -15,14 +15,14 @@ ModalSendAddFriend.propTypes = {
     isVisible: PropTypes.bool.isRequired,
     onCancel: PropTypes.func,
     onOk: PropTypes.func,
-    onClosable: PropTypes.func,
+    onInfo: PropTypes.func,
 };
 
 ModalSendAddFriend.defaultProps = {
     title: 'Thêm bạn',
     onCancel: null,
     onOk: null,
-    onClosable: null,
+    onInfo: null,
 };
 
 function ModalSendAddFriend({
@@ -31,7 +31,7 @@ function ModalSendAddFriend({
     userAddFriend,
     onCancel,
     onOk,
-    onClosable,
+    onInfo,
 }) {
     const { coverPhoto, avatar } = userAddFriend;
     const { user } = useSelector((state) => state.global);
@@ -56,9 +56,9 @@ function ModalSendAddFriend({
         const value = e.target.value;
         setMessageInput(value);
     };
-    const hangleClosable = () => {
-        if (onClosable) {
-            onClosable();
+    const hangleOnInfo = () => {
+        if (onInfo) {
+            onInfo();
         }
     };
     return (
@@ -68,11 +68,11 @@ function ModalSendAddFriend({
             title={title}
             width={380}
             visible={isVisible}
-            okText="Kết bạn"
-            cancelText="Thông tin"
-            onOk={handleOnOk}
+            // okText="Kết bạn"
+            // cancelText="Thông tin"
+            footer={null}
+            // onOk={handleOnOk}
             onCancel={handleOnCancle}
-            afterClose={hangleClosable}
         >
             <div id="user-card">
                 <div className="user-card_wrapper">
@@ -122,6 +122,25 @@ function ModalSendAddFriend({
                     </div>
                 </div>
             </div>
+            <Divider className="divider-modal" />
+            {[
+                <div className="footer-modal">
+                    <Button
+                        className="footer-modal-button"
+                        onClick={hangleOnInfo}
+                    >
+                        Thông tin
+                    </Button>
+
+                    <Button
+                        className="footer-modal-button"
+                        type="primary"
+                        onClick={handleOnOk}
+                    >
+                        Kết bạn
+                    </Button>
+                </div>,
+            ]}
         </Modal>
     );
 }

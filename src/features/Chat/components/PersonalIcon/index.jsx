@@ -11,6 +11,7 @@ PersonalIcon.propTypes = {
     demention: PropTypes.number,
     common: PropTypes.bool,
     isHost: PropTypes.bool,
+    isManager: PropTypes.bool,
     name: PropTypes.string,
     color: PropTypes.string,
     noneUser: PropTypes.bool,
@@ -22,6 +23,7 @@ PersonalIcon.defaultProps = {
     demention: 48,
     common: true,
     isHost: false,
+    isManager: false,
     name: '',
     color: '',
     noneUser: false,
@@ -34,6 +36,7 @@ function PersonalIcon(props) {
         demention,
         common,
         isHost,
+        isManager,
         name,
         color,
         noneUser,
@@ -52,16 +55,28 @@ function PersonalIcon(props) {
         >
             <Badge
                 dot={isActive}
-                offset={!isHost ? [-5, 40] : [-5, 32]}
+                offset={!isHost && !isManager ? [-5, 40] : [-8, 34]}
                 color="green"
                 count={
                     isHost ? (
                         <KeyOutlined
+                            rotate="180"
                             style={{
-                                backgroundColor: 'rgba(0,0,0,0.3)',
+                                backgroundColor: 'rgba(0,0,0,0.6)',
                                 padding: '0.24rem',
                                 borderRadius: '50%',
                                 color: 'yellow',
+                                fontSize: '1.2rem',
+                            }}
+                        />
+                    ) : isManager ? (
+                        <KeyOutlined
+                            rotate="180"
+                            style={{
+                                backgroundColor: 'rgba(0,0,0,0.6)',
+                                padding: '0.24rem',
+                                borderRadius: '50%',
+                                color: 'silver',
                                 fontSize: '1.2rem',
                             }}
                         />

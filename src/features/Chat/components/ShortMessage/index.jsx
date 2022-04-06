@@ -110,7 +110,9 @@ function ShortMessage({ message, type }) {
                         )}
 
                     {message.type === 'NOTIFY' &&
-                        message.content.startsWith('Đã đổi tên nhóm thành') && (
+                        message.content.startsWith(
+                            'Đã đổi tên nhóm thành: '
+                        ) && (
                             <span>
                                 {renderName()}
                                 <EditOutlined />
@@ -145,7 +147,7 @@ function ShortMessage({ message, type }) {
                         )}
 
                     {message.type === 'NOTIFY' &&
-                        message.content === 'UPDATE_CHANNEL' && (
+                        message.content === 'Thay đổi 1 channel' && (
                             <span>
                                 {renderName()}
                                 <NumberOutlined />
@@ -154,7 +156,7 @@ function ShortMessage({ message, type }) {
                         )}
 
                     {message.type === 'NOTIFY' &&
-                        message.content === 'DELETE_CHANNEL' && (
+                        message.content === 'Xóa 1 channel' && (
                             <span>
                                 {renderName()}
                                 <NumberOutlined />
@@ -163,7 +165,7 @@ function ShortMessage({ message, type }) {
                         )}
 
                     {message.type === 'NOTIFY' &&
-                        message.content === 'CREATE_CHANNEL' && (
+                        message.content === 'Đã tạo 1 channel' && (
                             <span>
                                 {renderName()}
                                 <NumberOutlined />
@@ -190,15 +192,15 @@ function ShortMessage({ message, type }) {
                             </span>
                         )}
                     {message.type === 'NOTIFY' &&
-                        message.content === 'ADD_MANAGERS' && (
+                        message.content === 'Đã thêm vào quản lý nhóm' && (
                             <span>
                                 {renderName()}
                                 <KeyOutlined />
-                                &nbsp;đã thêm phó nhóm
+                                &nbsp;đã bổ nhiệm phó nhóm
                             </span>
                         )}
                     {message.type === 'NOTIFY' &&
-                        message.content === 'DELETE_MANAGERS' && (
+                        message.content === 'Đã xóa quyền quản lý' && (
                             <span>
                                 {renderName()}
                                 <KeyOutlined />

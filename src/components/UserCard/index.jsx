@@ -367,6 +367,7 @@ function UserCard({ title, isVisible, user, onCancel }) {
                 isVisible={isVisibleModal}
                 onCancel={handleCancelModalAddFriend}
                 onOk={handleOkAddFriend}
+                onInfo={handleCancelModalAddFriend}
             />
         </Modal>
     );

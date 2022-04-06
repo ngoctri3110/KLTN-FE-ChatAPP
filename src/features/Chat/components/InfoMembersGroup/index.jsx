@@ -5,26 +5,27 @@ import './style.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import InfoTitle from '../InfoTitle';
 import Scrollbars from 'react-custom-scrollbars';
-import { Button, Dropdown, Menu, message, Tag } from 'antd';
-import { UserDeleteOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Menu, message, Modal, Tag } from 'antd';
+import { MoreOutlined } from '@ant-design/icons';
 import PersonalIcon from '../PersonalIcon';
 import ModalSendAddFriend from 'components/ModalSendAddFriend';
 import { useState } from 'react';
 import UserCard from 'components/UserCard';
 import userApi from 'api/userApi';
+import friendApi from 'api/friendApi';
+import { fetchListMyRequestFriend } from 'features/Friend/friendSlice';
+import conversationApi from 'api/conversationApi';
 InfoMembersGroup.propTypes = {
     onBack: PropTypes.func,
     members: PropTypes.array,
-    onChoseUser: PropTypes.func,
 };
 
 InfoMembersGroup.defaultProps = {
     onBack: null,
     members: [],
-    onChoseUser: null,
 };
 
-function InfoMembersGroup({ onBack, members, onChoseUser }) {
+function InfoMembersGroup({ onBack, members }) {
     const { user } = useSelector((state) => state.global);
     const { currentConversation, conversations } = useSelector(
         (state) => state.chat
@@ -37,13 +38,67 @@ function InfoMembersGroup({ onBack, members, onChoseUser }) {
     const [isVisibleUserCard, setIsVisibleUserCard] = useState(false);
     const [userAddFriend, setUserAddFriend] = useState({});
     const dispatch = useDispatch();
+    const { confirm } = Modal;
 
     const handleOnBack = (value) => {
         if (onBack) {
             onBack(value);
         }
     };
-    const handleClickMember = () => {};
+    const handleClickMember = async ({ key }, value) => {
+        if (key === '1') {
+            handleAddLeader(value.id);
+        }
+        if (key === '2') {
+            handleDeleteLeader(value.id);
+        }
+        if (key === '3') {
+            showConfirmRemove(value);
+        }
+    };
+
+    const handleAddLeader = async (idUser) => {
+        try {
+            await conversationApi.addManagerInGroup(currentConversation, [
+                idUser,
+            ]);
+            message.success('Thêm thành công');
+        } catch (error) {
+            message.error('Thêm thất bại');
+        }
+    };
+    const handleDeleteLeader = async (idUser) => {
+        try {
+            await conversationApi.deleteManager(currentConversation, [idUser]);
+            message.success('Gỡ thành công');
+        } catch (error) {
+            message.error('Gỡ thất bại');
+        }
+    };
+
+    function showConfirmRemove(value) {
+        confirm({
+            title: 'Cảnh báo',
+            content: (
+                <span>
+                    Bạn muốn xóa thành viên <b>{value.name}</b> ra khỏi nhóm?{' '}
+                </span>
+            ),
+            okText: 'Đồng ý',
+            cancelText: 'Hủy',
+            onOk() {
+                removeMember(value.id);
+            },
+        });
+    }
+
+    async function removeMember(idMember) {
+        try {
+            await conversationApi.deleteMember(currentConversation, idMember);
+        } catch (error) {
+            message.error('Xóa thất bại');
+        }
+    }
 
     const handleFindUser = async (value) => {
         try {
@@ -65,26 +120,36 @@ function InfoMembersGroup({ onBack, members, onChoseUser }) {
     };
     const onCancel = () => {
         setIsVisible(false);
-        setIsVisibleUserCard(true);
     };
 
-    const onOk = () => {};
+    const handleOkAddFriend = async (value) => {
+        try {
+            const { userAddFriend, messageInput } = value;
+            console.log(userAddFriend);
+            await friendApi.sendRequestFriend(userAddFriend, messageInput);
+            dispatch(fetchListMyRequestFriend());
+            onCancel();
+
+            message.success('Gửi lời mời kết bạn thành công');
+        } catch (error) {
+            message.error('Gửi lời mời kết bạn thất bại');
+        }
+    };
     const handleCancelModalUserCard = () => {
         setIsVisibleUserCard(false);
     };
-    const hanldOnClosable = () => {
+    const handleOnInfo = () => {
         setIsVisible(false);
-        setIsVisibleUserCard(false);
+        setIsVisibleUserCard(true);
     };
-
-    console.log('userAddFriend', userAddFriend);
     const menu = (value) => (
         <Menu onClick={(e) => handleClickMember(e, value)}>
             {value.id !== user.id && (
                 <>
                     {leaderId === user.id &&
-                        !managerIds.find((ele) => ele === value.id) && (
-                            <Menu.Item key="2">
+                        !managerIds.find((ele) => ele === value.id) &&
+                        value.isFriend && (
+                            <Menu.Item key="1">
                                 <span className="menu-icon">
                                     Thêm phó nhóm{' '}
                                 </span>
@@ -93,7 +158,7 @@ function InfoMembersGroup({ onBack, members, onChoseUser }) {
 
                     {leaderId === user.id &&
                         managerIds.find((ele) => ele === value.id) && (
-                            <Menu.Item key="3">
+                            <Menu.Item key="2">
                                 <span className="menu-icon">
                                     Gỡ quyền phó nhóm{' '}
                                 </span>
@@ -102,7 +167,7 @@ function InfoMembersGroup({ onBack, members, onChoseUser }) {
 
                     {(leaderId === user.id ||
                         managerIds.find((ele) => ele === user.id)) && (
-                        <Menu.Item key="1" danger>
+                        <Menu.Item key="3" danger>
                             <span className="menu-icon">Mời ra khỏi nhóm</span>
                         </Menu.Item>
                     )}
@@ -150,17 +215,29 @@ function InfoMembersGroup({ onBack, members, onChoseUser }) {
                                                 avatar={ele.avatar?.url}
                                                 demention={40}
                                                 name={ele.name}
-                                                isHost={
-                                                    ele.id === leaderId ||
-                                                    managerIds.find(
-                                                        (managerId) =>
-                                                            managerId === ele.id
-                                                    )
-                                                }
+                                                isHost={ele.id === leaderId}
+                                                isManager={managerIds.find(
+                                                    (managerId) =>
+                                                        managerId === ele.id
+                                                )}
                                             />
                                         </div>
                                         <div className="info_members-content-item-leftside-name">
-                                            <strong>{ele.name}</strong>
+                                            <div className="info_members-content-item-leftside-name-above">
+                                                <strong>{ele.name}</strong>
+                                            </div>
+                                            <div className="info_members-content-item-leftside-name-below">
+                                                {ele.id === leaderId ? (
+                                                    <span>Trưởng nhóm</span>
+                                                ) : managerIds.find(
+                                                      (managerId) =>
+                                                          managerId === ele.id
+                                                  ) ? (
+                                                    <span>Phó nhóm</span>
+                                                ) : (
+                                                    <></>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
 
@@ -170,16 +247,65 @@ function InfoMembersGroup({ onBack, members, onChoseUser }) {
                                         }`}
                                     >
                                         {!ele.isFriend ? (
-                                            <Button
-                                                type="primary"
-                                                onClick={() =>
-                                                    handleFindUser(ele.id)
-                                                }
-                                            >
-                                                Kết bạn
-                                            </Button>
+                                            <div className="info_members-content-item-interact">
+                                                <div className="info_members-item-interact">
+                                                    <Dropdown
+                                                        overlay={() =>
+                                                            menu(ele)
+                                                        }
+                                                        trigger={['click']}
+                                                    >
+                                                        <Button
+                                                            type="text"
+                                                            icon={
+                                                                <MoreOutlined
+                                                                    rotate={90}
+                                                                    style={{
+                                                                        fontSize:
+                                                                            '20px',
+                                                                    }}
+                                                                />
+                                                            }
+                                                            style={{
+                                                                background:
+                                                                    'eeeff2',
+                                                            }}
+                                                        />
+                                                    </Dropdown>
+                                                </div>
+                                                <Button
+                                                    type="primary"
+                                                    onClick={() =>
+                                                        handleFindUser(ele.id)
+                                                    }
+                                                >
+                                                    Kết bạn
+                                                </Button>
+                                            </div>
                                         ) : (
-                                            <></>
+                                            <div className="info_members-item-interact">
+                                                <Dropdown
+                                                    overlay={() => menu(ele)}
+                                                    trigger={['click']}
+                                                >
+                                                    <Button
+                                                        type="text"
+                                                        icon={
+                                                            <MoreOutlined
+                                                                rotate={90}
+                                                                style={{
+                                                                    fontSize:
+                                                                        '20px',
+                                                                }}
+                                                            />
+                                                        }
+                                                        style={{
+                                                            background:
+                                                                'eeeff2',
+                                                        }}
+                                                    />
+                                                </Dropdown>
+                                            </div>
                                         )}
                                     </div>
                                 </div>
@@ -188,18 +314,23 @@ function InfoMembersGroup({ onBack, members, onChoseUser }) {
                     </div>
                 </div>
             </Scrollbars>
-            <ModalSendAddFriend
-                isVisible={isVisible}
-                onCancel={onCancel}
-                onOk={onOk}
-                userAddFriend={userAddFriend}
-                onClosable={hanldOnClosable}
-            />
-            <UserCard
-                user={userAddFriend}
-                isVisible={isVisibleUserCard}
-                onCancel={handleCancelModalUserCard}
-            />
+            {userAddFriend && (
+                <ModalSendAddFriend
+                    isVisible={isVisible}
+                    onCancel={onCancel}
+                    onOk={handleOkAddFriend}
+                    userAddFriend={userAddFriend}
+                    onInfo={handleOnInfo}
+                />
+            )}
+
+            {userAddFriend && (
+                <UserCard
+                    user={userAddFriend}
+                    isVisible={isVisibleUserCard}
+                    onCancel={handleCancelModalUserCard}
+                />
+            )}
         </div>
     );
 }
