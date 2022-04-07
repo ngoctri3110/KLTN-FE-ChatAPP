@@ -85,7 +85,7 @@ const OtherSettings = () => {
             title: 'Xác nhận',
             content: (
                 <span>
-                    Toàn bộ nội dung trò chuyện sẽ bị xóa vĩnh viễn, bạn có chắc
+                    Toàn bộ lịch sử trò chuyện sẽ bị xóa vĩnh viễn, bạn có chắc
                     chắn muốn xóa?
                 </span>
             ),
@@ -121,31 +121,59 @@ const OtherSettings = () => {
             >
                 {typeConver ? (
                     findLeader ? (
-                        <div
-                            className="info_setting-interact-item danger"
-                            onClick={confirmDeleteGroup}
-                        >
-                            <div className="info_setting-interact-item-icon">
-                                <DeleteOutlined />
-                            </div>
+                        <>
+                            <div
+                                className="info_setting-interact-item danger"
+                                onClick={confirmDeleteMessage}
+                            >
+                                <div className="info_setting-interact-item-icon">
+                                    <DeleteOutlined />
+                                </div>
 
-                            <div className="info_setting-interact-item-text">
-                                <span>Giải tán nhóm</span>
+                                <div className="info_setting-interact-item-text">
+                                    <span>Xóa lịch sử trò chuyện</span>
+                                </div>
                             </div>
-                        </div>
+                            <div
+                                className="info_setting-interact-item danger"
+                                onClick={confirmDeleteGroup}
+                            >
+                                <div className="info_setting-interact-item-icon">
+                                    <DeleteOutlined />
+                                </div>
+
+                                <div className="info_setting-interact-item-text">
+                                    <span>Giải tán nhóm</span>
+                                </div>
+                            </div>
+                        </>
                     ) : (
-                        <div
-                            className="info_setting-interact-item danger"
-                            onClick={confirm}
-                        >
-                            <div className="info_setting-interact-item-icon">
-                                <ExportOutlined />
-                            </div>
+                        <>
+                            <div
+                                className="info_setting-interact-item danger"
+                                onClick={confirmDeleteMessage}
+                            >
+                                <div className="info_setting-interact-item-icon">
+                                    <DeleteOutlined />
+                                </div>
 
-                            <div className="info_setting-interact-item-text">
-                                <span>Rời nhóm</span>
+                                <div className="info_setting-interact-item-text">
+                                    <span>Xóa lịch sử trò chuyện</span>
+                                </div>
                             </div>
-                        </div>
+                            <div
+                                className="info_setting-interact-item danger"
+                                onClick={confirm}
+                            >
+                                <div className="info_setting-interact-item-icon">
+                                    <ExportOutlined />
+                                </div>
+
+                                <div className="info_setting-interact-item-text">
+                                    <span>Rời nhóm</span>
+                                </div>
+                            </div>
+                        </>
                     )
                 ) : (
                     <div

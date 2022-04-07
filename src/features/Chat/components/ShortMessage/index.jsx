@@ -195,7 +195,7 @@ function ShortMessage({ message, type }) {
                         message.content === 'Đã thêm vào quản lý nhóm' && (
                             <span>
                                 {renderName()}
-                                <KeyOutlined />
+                                <KeyOutlined rotate="180" />
                                 &nbsp;đã bổ nhiệm phó nhóm
                             </span>
                         )}
@@ -203,7 +203,7 @@ function ShortMessage({ message, type }) {
                         message.content === 'Đã xóa quyền quản lý' && (
                             <span>
                                 {renderName()}
-                                <KeyOutlined />
+                                <KeyOutlined rotate="180" />
                                 &nbsp;đã xóa phó nhóm
                             </span>
                         )}
