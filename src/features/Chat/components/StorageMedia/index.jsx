@@ -121,11 +121,11 @@ function StorageMedia({ viewMediaClick, name, items }) {
                     <>
                         {name === 'Video' ? (
                             <div className="info_media-interact-empty">
-                                Chưa có video được chia sẽ trong hội thoại này
+                                Chưa có video được chia sẻ trong hội thoại này
                             </div>
                         ) : (
                             <div className="info_media-interact-empty">
-                                Chưa có hình ảnh được chia sẽ trong hội thoại
+                                Chưa có hình ảnh được chia sẻ trong hội thoại
                                 này
                             </div>
                         )}

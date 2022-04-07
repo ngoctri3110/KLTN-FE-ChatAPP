@@ -61,6 +61,20 @@ export const fetchListMessages = createAsyncThunk(
     }
 );
 
+export const fetchNextPageMessage = createAsyncThunk(
+    `${KEY}/fetchNextPageMessage`,
+    async (params, thunkApi) => {
+        const { conversationId, page, size } = params;
+        const messages = await messageApi.fetchListMessages(
+            conversationId,
+            page,
+            size
+        );
+
+        return messages;
+    }
+);
+
 // FRIEND API
 
 export const fetchListFriends = createAsyncThunk(
@@ -117,6 +131,20 @@ export const fetchMessageInChannel = createAsyncThunk(
             messages: data,
             channelId,
         };
+    }
+);
+
+export const fetchNextPageOfChannel = createAsyncThunk(
+    `${KEY}/fetchNextPageOfChannel`,
+    async (params, thunkApi) => {
+        const { channelId, page, size } = params;
+        const messages = await messageApi.getMessageInChannel(
+            channelId,
+            page,
+            size
+        );
+
+        return messages;
     }
 );
 
@@ -218,6 +246,11 @@ const chatSlice = createSlice({
             state.conversations = newConvers;
             state.currentConversation = '';
         },
+        setRollUpPage: (state, action) => {
+            if (state.currentPage < state.totalPages - 1) {
+                state.currentPage = state.currentPage + 1;
+            }
+        },
     },
     extraReducers: {
         // conversation
@@ -231,6 +264,7 @@ const chatSlice = createSlice({
         [getLastViewOfMembers.fulfilled]: (state, action) => {
             state.lastViewOfMember = action.payload;
         },
+        // messages
         [fetchListMessages.pending]: (state, action) => {
             state.isLoading = true;
         },
@@ -269,6 +303,11 @@ const chatSlice = createSlice({
             });
 
             state.memberInConversation = temp;
+        },
+
+        [fetchNextPageMessage.fulfilled]: (state, action) => {
+            state.messages = [...action.payload.data, ...state.messages];
+            state.currentPage = action.payload.page;
         },
         // classify
         [fetchListClassify.pending]: (state, action) => {
@@ -330,6 +369,11 @@ const chatSlice = createSlice({
             state.isLoading = false;
         },
 
+        [fetchNextPageOfChannel.fulfilled]: (state, action) => {
+            state.messages = [...action.payload.data, ...action.messages];
+            state.currentPage = action.payload.page;
+        },
+
         [getLastViewChannel.fulfilled]: (state, action) => {
             state.lastViewOfMember = action.payload;
         },
@@ -363,6 +407,7 @@ export const {
     updatePoll,
     setTotalChannelNotify,
     leaveGroup,
+    setRollUpPage,
 } = actions;
 
 export default reducer;

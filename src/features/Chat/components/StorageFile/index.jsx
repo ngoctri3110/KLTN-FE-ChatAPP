@@ -63,7 +63,7 @@ function StorageFile({ viewMediaClick, items }) {
                     </>
                 ) : (
                     <div className="info_file-interact-empty">
-                        Chưa có file được chia sẽ trong cuộc hội thoại này
+                        Chưa có file được chia sẻ trong cuộc hội thoại này
                     </div>
                 )}
             </div>

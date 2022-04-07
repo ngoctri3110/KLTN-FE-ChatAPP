@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import './style.scss';
@@ -7,6 +7,11 @@ import { Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import UserMessage from 'features/Chat/components/UserMessage';
 import DividerCustom from 'features/Chat/components/DividerCustom';
+import {
+    fetchNextPageMessage,
+    fetchNextPageOfChannel,
+    setRollUpPage,
+} from 'features/Chat/slice/chatSlice';
 
 BodyChatContainer.propTypes = {
     scrollId: PropTypes.string,
@@ -46,12 +51,104 @@ function BodyChatContainer(
     } = useSelector((state) => state.chat);
 
     const [loading, setLoading] = useState(false);
+    const [position, setPosition] = useState(1);
 
     const scrollbars = useRef();
+    const previousHeight = useRef();
+    const tempPosition = useRef();
+
     const dispatch = useDispatch();
 
-    const handleOnScrolling = () => {};
-    const handleOnStop = () => {};
+    useEffect(() => {
+        if (turnOnScrollButoon) {
+            scrollbars.current.scrollToBottom();
+            onResetScrollButton(false);
+        }
+        //eslint-disable-next-line
+    }, [turnOnScrollButoon]);
+
+    useEffect(() => {
+        const fetchMessageWhenRollUp = async () => {
+            if (currentChannel) {
+                dispatch(
+                    fetchNextPageOfChannel({
+                        channelId: currentChannel,
+                        page: currentPage,
+                        size: 10,
+                    })
+                );
+            } else {
+                dispatch(
+                    fetchNextPageMessage({
+                        conversationId: currentConversation,
+                        page: currentPage,
+                        size: 10,
+                    })
+                );
+            }
+        };
+        async function fetchNextListMessage() {
+            if (currentPage > 0) {
+                setLoading(true);
+                await fetchMessageWhenRollUp();
+                setLoading(false);
+
+                scrollbars.current.scrollTop(
+                    scrollbars.current.getScrollHeight() -
+                        previousHeight.current
+                );
+            }
+        }
+        fetchNextListMessage();
+
+        //eslint-disable-next-line
+    }, [currentPage]);
+
+    useEffect(() => {
+        if (
+            onSCrollDown &&
+            scrollbars.current.getScrollHeight() >
+                scrollbars.current.getClientHeight()
+        ) {
+            if (position >= 0.95) {
+                scrollbars.current.scrollToBottom();
+            } else {
+                if (onBackToBottom) {
+                    onBackToBottom(true, 'Có tin nhắn mới');
+                }
+            }
+        }
+        //eslint-disable-next-line
+    }, [onSCrollDown]);
+
+    const handleOnScrolling = ({ scrollTop, scrollHeight, top }) => {
+        tempPosition.current = top;
+        if (
+            scrollbars.current.getScrollHeight ===
+            scrollbars.current.getClientHeight()
+        ) {
+            onBackToBottom(false);
+            return;
+        }
+
+        if (scrollTop === 0) {
+            previousHeight.current = scrollHeight;
+            dispatch(setRollUpPage());
+        }
+
+        if (top < 0.85) {
+            if (onBackToBottom) {
+                onBackToBottom(true);
+            } else {
+                if (onBackToBottom) {
+                    onBackToBottom(false);
+                }
+            }
+        }
+    };
+    const handleOnStop = (value) => {
+        setPosition(tempPosition.current);
+    };
     const handleOpenModalShare = () => {};
 
     const renderMessages = (messages) => {
@@ -95,11 +192,11 @@ function BodyChatContainer(
 
             // tin nhắn cuối
             const viewUsers = [];
-            if (i == messages.length - 1) {
+            if (i === messages.length - 1) {
                 const lastViewNotMe = lastViewOfMember.filter((ele) => {
                     if (
-                        ele.user.id == messages[i].user.id ||
-                        ele.user.id == user.id
+                        ele.user.id === messages[i].user.id ||
+                        ele.user.id === user.id
                     )
                         return false;
 
@@ -161,12 +258,6 @@ function BodyChatContainer(
             </div>
 
             {renderMessages(messages)}
-
-            {/* <ModalShareMessage
-                visible={visibleModalShare}
-                onCancel={() => setVisibleModalShare(false)}
-                idMessage={idMessageShare}
-            /> */}
         </Scrollbars>
     );
 }
