@@ -93,7 +93,6 @@ function ModalViewOption({ isModalVisible, onCancel, data, onShowDetail }) {
                         await pollApi.selectPoll(infoPoll.id, checkList);
                         message.success('Cập nhật lựa chọn thành công');
                     }
-                    console.log('options', options);
 
                     if (options && options.length > 0) {
                         const newField = options.map((ele) => ele.name);

@@ -54,7 +54,7 @@ const OtherSettings = () => {
                     await conversationApi.deleteConversation(
                         currentConversation
                     );
-                    message.success('Xóa thành công');
+                    message.success('Giải tán nhóm thành công');
                 } catch (error) {
                     message.error('Đã có lỗi xảy ra');
                 }

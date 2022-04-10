@@ -163,7 +163,7 @@ function UserCard({ title, isVisible, user, onCancel }) {
     const handleOkAddFriend = async (value) => {
         try {
             const { userAddFriend, messageInput } = value;
-            console.log(userAddFriend);
+            //userAddFriend == id
             await friendApi.sendRequestFriend(userAddFriend, messageInput);
             dispatch(fetchListMyRequestFriend());
             // if (onCancel) {

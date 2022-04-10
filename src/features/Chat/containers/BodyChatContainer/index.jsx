@@ -74,7 +74,7 @@ function BodyChatContainer(
                     fetchNextPageOfChannel({
                         channelId: currentChannel,
                         page: currentPage,
-                        size: 10,
+                        size: 20,
                     })
                 );
             } else {
@@ -82,7 +82,7 @@ function BodyChatContainer(
                     fetchNextPageMessage({
                         conversationId: currentConversation,
                         page: currentPage,
-                        size: 10,
+                        size: 20,
                     })
                 );
             }
@@ -146,6 +146,12 @@ function BodyChatContainer(
             }
         }
     };
+    useEffect(() => {
+        if (scrollId) {
+            scrollbars.current.scrollToBottom();
+        }
+    }, [scrollId]);
+
     const handleOnStop = (value) => {
         setPosition(tempPosition.current);
     };

@@ -38,7 +38,6 @@ function ConversationAvatar({
     sizeAvatar,
     frameSize,
 }) {
-    console.log('type', type);
     const renderAvatar = () => {
         let tempAvatar = [];
         for (let index = 0; index < totalMembers; index++) {
@@ -146,7 +145,7 @@ function ConversationAvatar({
     return (
         <div className="avatar_conversation">
             {avatar !== '' ? (
-                <AvatarCustom size={sizeAvatar} src={avatar} name={name} />
+                <AvatarCustom size={frameSize} src={avatar} name={name} />
             ) : type === 'DUAL' ? (
                 <AvatarCustom size={sizeAvatar} src={avatar} name={name} />
             ) : (

@@ -75,6 +75,38 @@ const friendSlice = createSlice({
         setAmountNotify: (state, action) => {
             state.amountNotify = action.payload;
         },
+        setNewFriend: (state, action) => {
+            const newFriend = action.payload;
+            state.friends = [newFriend, ...state.friends];
+        },
+        setMyRequestFriend: (state, action) => {
+            state.myRequestFriend = state.myRequestFriend.filter(
+                (item) => item.id !== action.payload
+            );
+        },
+        setSendNewRequestFriend: (state, action) => {
+            const sendNewRequestFriend = action.payload;
+            state.requestFriends = [
+                sendNewRequestFriend,
+                ...state.requestFriends,
+            ];
+        },
+        updateMyRequestFriend: (state, action) => {
+            const id = action.payload;
+            state.myRequestFriend = state.myRequestFriend.filter(
+                (item) => item.id !== id
+            );
+        },
+        updateRequestFriends: (state, action) => {
+            const id = action.payload;
+            state.requestFriends = state.requestFriends.filter(
+                (item) => item.id !== id
+            );
+        },
+        updateFriend: (state, action) => {
+            const id = action.payload;
+            state.friends = state.friends.filter((item) => item.id !== id);
+        },
     },
     extraReducers: {
         [fetchListRequestFriend.pending]: (state, action) => {
@@ -147,5 +179,14 @@ const friendSlice = createSlice({
 });
 
 const { reducer, actions } = friendSlice;
-export const { setLoading, setAmountNotify } = actions;
+export const {
+    setLoading,
+    setAmountNotify,
+    setNewFriend,
+    setMyRequestFriend,
+    setSendNewRequestFriend,
+    updateMyRequestFriend,
+    updateRequestFriends,
+    updateFriend,
+} = actions;
 export default reducer;

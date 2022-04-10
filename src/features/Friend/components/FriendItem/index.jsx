@@ -38,7 +38,7 @@ function FriendItem({ data, onClickMenu }) {
                 <div className="friend-item_left">
                     <div className="friend-item-avatar">
                         <PersonalIcon
-                            isActive={data.isOnline && data.isOnline}
+                            isActive={data.isOnline}
                             avatar={data.avatar.url}
                             name={data.name}
                         />
