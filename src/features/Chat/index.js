@@ -1,4 +1,4 @@
-import { Col, Row, Spin, Drawer } from 'antd';
+import { Col, Row, Spin, Drawer, notification } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -8,7 +8,27 @@ import FooterChatContainer from './containers/FooterChatContainer';
 import HeaderChatContainer from './containers/HeaderChatContainer';
 import SearchContainer from './containers/SearchContainer';
 import conversationApi from 'api/conversationApi';
-import { fetchListFriends, setTotalChannelNotify } from './slice/chatSlice';
+import {
+    addManagers,
+    addMessage,
+    deleteChannel,
+    deleteConversation,
+    deleteManager,
+    fetchConversationById,
+    fetchListFriends,
+    fetchListMessages,
+    getLastViewOfMembers,
+    isDeletedFromGroup,
+    setCurrentChannel,
+    setCurrentConversation,
+    setTotalChannelNotify,
+    updateAvavarConver,
+    updateChannel,
+    updateInfoChannel,
+    updateMemberInConver,
+    updateMessageViewLast,
+    updateNameOfConver,
+} from './slice/chatSlice';
 import { useLocation } from 'react-router-dom';
 import useWindowSize from 'hooks/useWindowSize';
 import BodyChatContainer from './containers/BodyChatContainer';
@@ -16,16 +36,19 @@ import './style.scss';
 import renderWidthDrawer from 'utils/DrawerResponsive';
 import GroupNews from './components/GroupNews';
 import InfoContainer from './containers/InfoContainer';
+import { setJoinChatLayout } from 'app/globalSlice';
 
 Chat.propTypes = {
+    socket: PropTypes.object,
     idNewMessage: PropTypes.string,
 };
 
 Chat.defaultProps = {
+    socket: {},
     idNewMessage: '',
 };
 
-function Chat({ idNewMessage }) {
+function Chat({ socket, idNewMessage }) {
     const dispatch = useDispatch();
 
     //store
@@ -197,6 +220,183 @@ function Chat({ idNewMessage }) {
         setVisibleNews(true);
         setTabActiveNews(2);
     };
+    //Socket
+    useEffect(() => {
+        console.log('isJoinChatLayout', isJoinChatLayout);
+        if (!isJoinChatLayout) {
+            socket.on('ConversationGroupCreate', (conversationId) => {
+                dispatch(fetchConversationById({ conversationId }));
+            });
+
+            socket.on('ConversationDelete', (conversationId) => {
+                console.log('conversationId', conversationId);
+
+                const conver = refConversations.current.find(
+                    (ele) => ele.id === conversationId
+                );
+
+                if (conver.leaderId !== user.id) {
+                    notification.info({
+                        placement: 'topRight',
+                        bottom: 50,
+                        duration: 3,
+                        rtl: true,
+                        message: (
+                            <span>
+                                Nhóm <strong>{conver.name}</strong> đã bị giải
+                                tán
+                            </span>
+                        ),
+                    });
+                }
+                dispatch(deleteConversation(conversationId));
+            });
+            socket.on('ConsersationRemoveYou', (conversationId) => {
+                console.log('conversationId', conversationId);
+                const conversation = refConversations.current.find(
+                    (ele) => ele.id === conversationId
+                );
+                notification.info({
+                    placement: 'topRight',
+                    bottom: 50,
+                    duration: 3,
+                    rlt: true,
+                    message: (
+                        <span>
+                            Bạn đã bị xóa khỏi nhóm{' '}
+                            <strong>{conversation.name}</strong>
+                        </span>
+                    ),
+                });
+
+                if (conversationId === refCurrentConversation.current) {
+                    dispatch(setCurrentConversation(''));
+                }
+                dispatch(isDeletedFromGroup(conversationId));
+                socket.emit('ConversationLeft', conversationId);
+            });
+            socket.on(
+                'MessageViewLast',
+                ({ conversationId, userId, lastView, channelId }) => {
+                    if (userId != user.id) {
+                        dispatch(
+                            updateMessageViewLast({
+                                conversationId,
+                                userId,
+                                lastView,
+                                channelId,
+                            })
+                        );
+                    }
+                }
+            );
+            socket.on(
+                'ConversationChangeName',
+                (conversationId, name, message) => {
+                    dispatch(updateNameOfConver({ conversationId, name }));
+                    dispatch(addMessage({ conversationId, message }));
+                }
+            );
+
+            socket.on('ConversationMemberUpdate', async (conversationId) => {
+                if (conversationId === refCurrentConversation.current) {
+                    await dispatch(getLastViewOfMembers({ conversationId }));
+                    const newMember =
+                        await conversationApi.getMemberInConversation(
+                            refCurrentConversation.current
+                        );
+                    dispatch(
+                        updateMemberInConver({ conversationId, newMember })
+                    );
+                }
+            });
+            socket.on(
+                'ChannelCreate',
+                ({ id, name, description, conversationId, createdAt }) => {
+                    if (conversationId === refCurrentConversation.current) {
+                        dispatch(
+                            updateChannel({ id, name, description, createdAt })
+                        );
+                    }
+                }
+            );
+
+            socket.on(
+                'ChannelUpdate',
+                ({ id, name, description, conversationId }) => {
+                    if (refCurrentConversation.current === conversationId) {
+                        dispatch(
+                            updateInfoChannel({
+                                channelId: id,
+                                name,
+                                description,
+                            })
+                        );
+                    }
+                }
+            );
+
+            socket.on(
+                'ChannelDelete',
+                async ({ conversationId, channelId }) => {
+                    const actionAfterDelete = async () => {
+                        await dispatch(setCurrentChannel(''));
+                        dispatch(
+                            fetchListMessages({
+                                conversationId: refCurrentConversation.current,
+                                size: 20,
+                            })
+                        );
+                        dispatch(
+                            getLastViewOfMembers({
+                                conversationId: refCurrentConversation.current,
+                            })
+                        );
+                    };
+
+                    await actionAfterDelete();
+
+                    if (refCurrentConversation.current === conversationId) {
+                        dispatch(deleteChannel({ channelId }));
+                    }
+                }
+            );
+
+            socket.on(
+                'ConversationChangeAvatar',
+                (conversationId, conversationAvatar) => {
+                    if (refCurrentConversation.current === conversationId) {
+                        dispatch(
+                            updateAvavarConver({
+                                conversationId,
+                                conversationAvatar,
+                            })
+                        );
+                    }
+                }
+            );
+
+            socket.on(
+                'ConversationManagerAdd',
+                (conversationId, managerIds) => {
+                    dispatch(addManagers({ conversationId, managerIds }));
+                }
+            );
+            socket.on(
+                'ConversationManagerDelete',
+                (conversationId, managerIds) => {
+                    dispatch(
+                        deleteManager({
+                            conversationId,
+                            managerIds,
+                        })
+                    );
+                }
+            );
+        }
+
+        // dispatch(setJoinChatLayout(true));
+    }, []);
     return (
         <Spin spinning={isLoading}>
             <div id="main-chat-wrapper">
@@ -333,9 +533,7 @@ function Chat({ idNewMessage }) {
                                                     onViewChannel={
                                                         handleChangeViewChannel
                                                     }
-                                                    onOpenInfoBlock={() =>
-                                                        setIsOpenInfo(true)
-                                                    }
+                                                    socket={socket}
                                                 />
                                             )}
                                         </>
@@ -352,9 +550,7 @@ function Chat({ idNewMessage }) {
                                             onViewChannel={
                                                 handleChangeViewChannel
                                             }
-                                            onOpenInfoBlock={() =>
-                                                setIsOpenInfo(true)
-                                            }
+                                            socket={socket}
                                         />
                                     )}
                                 </div>

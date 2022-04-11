@@ -78,7 +78,7 @@ const InfoNameAndThumbnail = ({ conversation }) => {
                     totalMembers={conversation.totalMembers}
                     members={conversation.members}
                     type={conversation.type}
-                    avatar={conversation.avatar.url}
+                    avatar={conversation.avatar?.url}
                     name={conversation.name}
                 />
             </div>
@@ -114,8 +114,8 @@ const InfoNameAndThumbnail = ({ conversation }) => {
                     <div className="update-profile_upload">
                         <UploadAvatar
                             avatar={
-                                typeof conversation.avatar.url === 'string'
-                                    ? conversation.avatar.url
+                                typeof conversation.avatar?.url === 'string'
+                                    ? conversation.avatar?.url
                                     : ''
                             }
                             getFile={handleGetfile}

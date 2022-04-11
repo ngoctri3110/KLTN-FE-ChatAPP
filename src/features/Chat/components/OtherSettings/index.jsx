@@ -18,7 +18,7 @@ const styleInteract = {
     maxHeight: '0px',
 };
 
-const OtherSettings = () => {
+const OtherSettings = ({ socket }) => {
     const { user } = useSelector((state) => state.global);
     const { currentConversation, conversations } = useSelector(
         (state) => state.chat
@@ -71,6 +71,9 @@ const OtherSettings = () => {
             onOk: async () => {
                 try {
                     await conversationApi.leaveGroup(currentConversation);
+
+                    socket.emit('ConversationLeft', currentConversation);
+
                     dispatch(leaveGroup(currentConversation));
                     message.success(`Rời nhóm thành công`);
                 } catch (error) {

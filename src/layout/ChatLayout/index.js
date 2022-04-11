@@ -36,7 +36,6 @@ import useUnload from 'hooks/useUnload';
 init();
 
 const ChatLayout = () => {
-    const [codeRevoke, setCodeRevoke] = useState('');
     const codeRevokeRef = useRef();
     const [idNewMessage, setIdNewMessage] = useState('');
     const dispatch = useDispatch();
@@ -100,12 +99,12 @@ const ChatLayout = () => {
     }, []);
 
     useEffect(() => {
-        socket.on('MessageNew', (conversationId, newMessage) => {
-            dispatch(addMessage(newMessage));
-            setIdNewMessage(newMessage.id);
+        socket.on('MessageNew', (conversationId, message) => {
+            dispatch(addMessage({ conversationId, message }));
+            setIdNewMessage(message.id);
         });
 
-        socket.on('ConversationMemberAdd', async (conversationId) => {
+        socket.on('ConversationMemberUpdate', async (conversationId) => {
             const data = await conversationApi.getConversationById(
                 conversationId
             );
@@ -132,7 +131,6 @@ const ChatLayout = () => {
     }, []);
 
     const handleSetCodeRevoke = (code) => {
-        setCodeRevoke(code);
         codeRevokeRef.current = code;
     };
 
@@ -158,7 +156,6 @@ const ChatLayout = () => {
         });
         // bạn bè gửi lời mời cho mình
         socket.on('FriendRequestSend', (value) => {
-            console.log('value', value);
             dispatch(setSendNewRequestFriend(value));
             dispatch(setAmountNotify(amountNotify + 1));
         });
@@ -214,7 +211,13 @@ const ChatLayout = () => {
                         <Route
                             index
                             path=""
-                            element={<Chat idNewMessage={idNewMessage} />}
+                            element={
+                                <Chat
+                                    socket={socket}
+                                    authed={true}
+                                    idNewMessage={idNewMessage}
+                                />
+                            }
                         />
                         <Route
                             path="friends"

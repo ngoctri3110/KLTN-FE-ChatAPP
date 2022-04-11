@@ -265,20 +265,14 @@ const chatSlice = createSlice({
             }
         },
         addMessage: (state, action) => {
-            const newMessage = action.payload;
-
-            const { conversationId } = newMessage;
-            // tìm conversation trong convers hiện tại.
+            const { conversationId, message } = action.payload;
             const indexConver = state.conversations.findIndex(
                 (converEle) => converEle.id === conversationId
             );
 
-            const seachConversationByIndex = state.conversations[indexConver];
-            seachConversationByIndex.numberUnread =
-                seachConversationByIndex.numberUnread + 1;
-            seachConversationByIndex.lastMessage = {
-                ...newMessage,
-            };
+            const searchConver = state.conversations[indexConver];
+
+            searchConver.numberUnread = searchConver.numberUnread + 1;
 
             // xóa conversation đó ra khỏi conversations hiện tại
             const conversationTempt = state.conversations.filter(
@@ -289,14 +283,11 @@ const chatSlice = createSlice({
                 conversationId === state.currentConversation &&
                 !state.currentChannel
             ) {
-                state.messages.push(action.payload);
-                seachConversationByIndex.numberUnread = 0;
+                state.messages.push(message);
+                searchConver.numberUnread = 0;
             }
 
-            state.conversations = [
-                seachConversationByIndex,
-                ...conversationTempt,
-            ];
+            state.conversations = [searchConver, ...conversationTempt];
         },
         updateAvatarWhenUpdateMember: (state, action) => {
             const { conversationId, avatar, totalMembers } = action.payload;
@@ -343,7 +334,141 @@ const chatSlice = createSlice({
         },
         updateFriendChat: (state, action) => {
             const id = action.payload;
-            state.friends = state.friends.filter((ele) => ele.id !== id);
+            state.friends = state.friends.filter((item) => item.id !== id);
+        },
+        deleteConversation: (state, action) => {
+            const converId = action.payload;
+            state.conversations = state.conversations.filter(
+                (item) => item.id !== converId
+            );
+            state.currentConversation = '';
+        },
+        isDeletedFromGroup: (state, action) => {
+            const converId = action.payload;
+            const newConver = state.conversations.filter(
+                (item) => item.id !== converId
+            );
+            state.conversations = newConver;
+        },
+        updateNameOfConver: (state, action) => {
+            const { conversationId, name } = action.payload;
+            const index = state.conversations.findIndex(
+                (ele) => ele.id === conversationId
+            );
+
+            state.conversations[index] = {
+                ...state.conversations[index],
+                name: name,
+            };
+        },
+        updateMessageViewLast: (state, action) => {
+            const { conversationId, userId, lastView, channelId } =
+                action.payload;
+            if (channelId) {
+                if (state.currentChannel === channelId) {
+                    const index = state.lastViewOfMember.findIndex(
+                        (item) => item.user.id === userId
+                    );
+                    state.lastViewOfMember[index].lastView = lastView;
+                }
+            } else {
+                if (
+                    conversationId === state.currentConversation &&
+                    !state.currentChannel
+                ) {
+                    const index = state.lastViewOfMember.findIndex(
+                        (item) => item.user.id === userId
+                    );
+                    state.lastViewOfMember[index].lastView = lastView;
+                }
+            }
+        },
+        updateMemberInConver: (state, action) => {
+            const { conversationId, newMember } = action.payload;
+            console.log('conversationId', conversationId);
+            console.log('newMember', newMember);
+            state.memberInConversation = newMember;
+
+            const index = state.conversations.findIndex(
+                (ele) => ele.id === conversationId
+            );
+            if (index > -1) {
+                state.conversations[index].totalMembers = newMember.length;
+                state.conversations[index].members = newMember;
+            }
+        },
+        updateChannel: (state, action) => {
+            const { id, name, description, createdAt } = action.payload;
+            state.channels = [
+                { id, name, description, createdAt },
+                ...state.channels,
+            ];
+        },
+        updateInfoChannel: (state, action) => {
+            const { channelId, name, description } = action.payload;
+
+            const index = state.channels.findIndex(
+                (item) => item.id === channelId
+            );
+
+            state.channels[index] = {
+                ...state.channels[index],
+                name,
+                description,
+            };
+        },
+        deleteChannel: (state, action) => {
+            const { channelId } = action.payload;
+            const newchannels = state.channels.filter(
+                (item) => item.id !== channelId
+            );
+            state.channels = newchannels;
+        },
+        updateAvavarConver: (state, action) => {
+            const { conversationId, conversationAvatar } = action.payload;
+            const index = state.conversations.findIndex(
+                (item) => item.id === conversationId
+            );
+
+            state.conversations[index] = {
+                ...state.conversations[index],
+                avatar: conversationAvatar,
+            };
+        },
+        addManagers: (state, action) => {
+            const { conversationId, managerIds } = action.payload;
+            if (conversationId === state.currentConversation) {
+                const index = state.conversations.findIndex(
+                    (item) => item.id === conversationId
+                );
+
+                const tempManagerIds =
+                    state.conversations[index].managerIds.concat(managerIds);
+                if (index > -1) {
+                    state.conversations[index] = {
+                        ...state.conversations[index],
+                        managerIds: tempManagerIds,
+                    };
+                }
+            }
+        },
+        deleteManager: (state, action) => {
+            const { conversationId, managerIds } = action.payload;
+            if (conversationId === state.currentConversation) {
+                const index = state.conversations.findIndex(
+                    (item) => item.id === conversationId
+                );
+
+                const tempManagerIds = state.conversations[
+                    index
+                ].managerIds.filter((item) => item !== managerIds[0]);
+                if (index > -1) {
+                    state.conversations[index] = {
+                        ...state.conversations[index],
+                        managerIds: tempManagerIds,
+                    };
+                }
+            }
         },
     },
     extraReducers: {
@@ -510,6 +635,17 @@ export const {
     updateAvatarWhenUpdateMember,
     addMessageInChannel,
     updateFriendChat,
+    deleteConversation,
+    isDeletedFromGroup,
+    updateNameOfConver,
+    updateMessageViewLast,
+    updateMemberInConver,
+    updateChannel,
+    updateInfoChannel,
+    deleteChannel,
+    updateAvavarConver,
+    addManagers,
+    deleteManager,
 } = actions;
 
 export default reducer;

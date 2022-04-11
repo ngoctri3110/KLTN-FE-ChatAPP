@@ -96,7 +96,8 @@ function ShortMessage({ message, type }) {
                         )}
 
                     {message.type === 'NOTIFY' &&
-                        message.content === 'Đã xóa ra khỏi nhóm' && (
+                        message.content ===
+                            'Đã xóa thành viên ra khỏi nhóm' && (
                             <span>
                                 {renderName()}
                                 <UserDeleteOutlined />

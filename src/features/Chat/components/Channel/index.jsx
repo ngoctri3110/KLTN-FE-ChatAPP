@@ -83,6 +83,8 @@ function Channel({ onViewChannel, data, onOpenInfoBlock }) {
                 valueInputDescrip
             );
             message.success('Tạo channel thành công');
+            setValueInputName('');
+            setValueInputDescrip('');
             setIsVisible(false);
         } catch (error) {
             message.error('Có lỗi xảy ra khi tạo channel');

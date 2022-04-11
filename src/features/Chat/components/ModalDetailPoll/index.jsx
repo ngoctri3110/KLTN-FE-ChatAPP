@@ -25,8 +25,6 @@ function ModalDetailPoll({ visible, onCancel, data }) {
             onCancel();
         }
     };
-    console.log(data);
-    console.log('memberInConversation', memberInConversation);
     return (
         <Modal
             title="Chi tiết bình chọn"

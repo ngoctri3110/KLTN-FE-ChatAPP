@@ -64,11 +64,10 @@ function FooterChatContainer({
     );
     const [detailConver, setDetailConver] = useState({});
     const preMention = useRef();
+
     const getTypeConversation = conversations.find(
         (ele) => ele.id === currentConversation
     ).type;
-
-    // console.log('mentionList', mentionList);
     useEffect(() => {
         if (currentConversation) {
             const tempConver = conversations.find(

@@ -84,8 +84,6 @@ function NotifyMessage({ message }) {
             return 16;
         }
     };
-
-    console.log('manipulatedUserIds', manipulatedUserIds);
     const renderGroupAvatars = (
         <>
             {manipulatedUserIds &&

@@ -7,7 +7,6 @@ import './style.scss';
 const PollMessage = ({ data }) => {
     const [isVisibleDetail, setIsVisibleDetail] = useState(false);
     const [isVisibleOption, setIsVisibleOption] = useState(false);
-    console.log(data);
 
     const getNumberJoinVote = () => {
         let tempUserIds = [];

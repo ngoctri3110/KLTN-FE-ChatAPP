@@ -16,15 +16,15 @@ import InfoMembersGroup from 'features/Chat/components/InfoMembersGroup';
 
 InfoContainer.propTypes = {
     onViewChannel: PropTypes.func,
-    onOpenInfoBlock: PropTypes.func,
+    socket: PropTypes.object,
 };
 
 InfoContainer.defaultProps = {
     onViewChannel: null,
-    onOpenInfoBlock: null,
+    socket: {},
 };
 
-function InfoContainer({ onViewChannel }) {
+function InfoContainer({ onViewChannel, socket }) {
     const [isFind, setFind] = useState({ tabpane: 0, view: 0 });
 
     const dispatch = useDispatch();
@@ -150,7 +150,7 @@ function InfoContainer({ onViewChannel }) {
                                         (ele) => ele.id === currentConversation
                                     ).type && (
                                         <div className="info_another-setting-wrapper">
-                                            <OtherSettings />
+                                            <OtherSettings socket={socket} />
                                         </div>
                                     )}
                                 </div>

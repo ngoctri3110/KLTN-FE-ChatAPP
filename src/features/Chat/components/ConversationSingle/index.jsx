@@ -23,7 +23,6 @@ function ConversationSingle({ conversation, onClick }) {
         lastMessage,
         members,
         totalMembers,
-        leaderId,
     } = conversation;
     const { type, createdAt } = lastMessage;
     const { conversations, classifies } = useSelector((state) => state.chat);
@@ -38,7 +37,6 @@ function ConversationSingle({ conversation, onClick }) {
         }
         // eslint-disable-next-line
     }, [conversation, conversations, classifies]);
-    // console.log('conversation', conversation);
     // console.log('members', members);
 
     const handleClick = () => {
@@ -51,7 +49,7 @@ function ConversationSingle({ conversation, onClick }) {
                     <ConversationAvatar
                         members={members}
                         totalMembers={totalMembers}
-                        avatar={avatar.url}
+                        avatar={avatar?.url}
                         type={conversation.type}
                         name={name}
                     />
