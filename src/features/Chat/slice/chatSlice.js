@@ -385,8 +385,6 @@ const chatSlice = createSlice({
         },
         updateMemberInConver: (state, action) => {
             const { conversationId, newMember } = action.payload;
-            console.log('conversationId', conversationId);
-            console.log('newMember', newMember);
             state.memberInConversation = newMember;
 
             const index = state.conversations.findIndex(
