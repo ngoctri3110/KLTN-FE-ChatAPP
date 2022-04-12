@@ -11,7 +11,7 @@ import './style.scss';
 
 GroupNews.propTypes = {
     onBack: PropTypes.func,
-    tabActive: PropTypes.number,
+    tabActive: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 GroupNews.defaultProps = {
     onBack: null,

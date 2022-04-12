@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PersonalIcon from '../PersonalIcon';
 import { useState } from 'react';
 import TextMessage from '../MessageType/TextMessage';
@@ -14,6 +14,10 @@ import HTMLMessage from '../MessageType/HTMLMessage';
 import LastView from '../LastView';
 import NotifyMessage from '../MessageType/NotifyMessage';
 import PollMessage from '../MessageType/PollMessage';
+import { checkLeader } from 'utils/groupUtils';
+import messageApi from 'api/messageApi';
+import ListReaction from '../ListReaction';
+import ListReactionOfUser from '../ListReactionOfUser';
 
 UserMessage.propTypes = {
     message: PropTypes.object,
@@ -54,6 +58,7 @@ function UserMessage({
         tags,
         replyMessage,
     } = message;
+
     const { name, avatar } = user;
     const {
         messages,
@@ -64,7 +69,9 @@ function UserMessage({
     } = useSelector((state) => state.chat);
 
     const global = useSelector((state) => state.global);
+
     const [isLeader, setIsLeader] = useState(false);
+    const dispatch = useDispatch();
 
     const setMarginTopAndBottom = (id) => {
         const index = messages.findIndex((message) => message.id === id);
@@ -78,12 +85,102 @@ function UserMessage({
         return '';
     };
 
+    //react
+    const [listReactionCurrent, setListReactionCurrent] = useState([]);
+
+    // cần chỉnh sửa......................
     const myReact =
         reacts &&
         reacts.length > 0 &&
-        reacts.find((ele) => ele.user.id === global.user.id);
+        reacts.find((ele) => ele.userId === global.user.id);
 
     const dateAt = new Date(createdAt);
+
+    const listReaction = ['👍', '❤️', '😆', '😮', '😭', '😡', '👎'];
+
+    const transferValueToText = (value) => {
+        if (value === 1) {
+            return 'LIKE';
+        }
+        if (value === 2) {
+            return 'HEART';
+        }
+        if (value === 3) {
+            return 'LAUGH';
+        }
+        if (value === 4) {
+            return 'WOW';
+        }
+        if (value === 5) {
+            return 'SAD';
+        }
+        if (value === 6) {
+            return 'ANGRY';
+        }
+        if (value === 7) {
+            return 'DISLIKE';
+        }
+    };
+
+    const transferTextToValue = (text) => {
+        if (text === 'LIKE') {
+            return 1;
+        }
+        if (text === 'HEART') {
+            return 2;
+        }
+        if (text === 'LAUGH') {
+            return 3;
+        }
+        if (text === 'WOW') {
+            return 4;
+        }
+        if (text === 'SAD') {
+            return 5;
+        }
+        if (text === 'ANGRY') {
+            return 6;
+        }
+        if (text === 'DISLIKE') {
+            return 7;
+        }
+    };
+
+    useEffect(() => {
+        setIsLeader(checkLeader(user.id, conversations, currentConversation));
+        //eslint-disable-next-line
+    }, [messages]);
+
+    useEffect(() => {
+        let temp = [];
+        if (reacts && reacts.length > 0) {
+            reacts.forEach((ele) => {
+                if (!temp.includes(ele.type)) {
+                    temp.push(ele.type);
+                }
+            });
+        }
+        setListReactionCurrent(temp);
+
+        //eslint-disable-next-line
+    }, [message]);
+
+    const transferIcon = (type) => {
+        return listReaction[parseInt(transferTextToValue(type)) - 1];
+    };
+
+    const handleClickLike = () => {
+        sendReaction('LIKE');
+    };
+    const handleClickReaction = (value) => {
+        const type = listReaction.findIndex((ele) => ele === value) + 1;
+        sendReaction(transferValueToText(type));
+    };
+
+    const sendReaction = async (type) => {
+        await messageApi.expressionReaction(id, type);
+    };
+
     return (
         <>
             {!isDeleted && type === 'NOTIFY' ? (
@@ -179,7 +276,24 @@ function UserMessage({
                                                                 replyMessage={
                                                                     replyMessage
                                                                 }
-                                                            ></TextMessage>
+                                                            >
+                                                                {!myReact && (
+                                                                    <ListReaction
+                                                                        isMyMessage={
+                                                                            isMyMessage
+                                                                        }
+                                                                        onClickLike={
+                                                                            handleClickLike
+                                                                        }
+                                                                        listReaction={
+                                                                            listReaction
+                                                                        }
+                                                                        onClickReaction={
+                                                                            handleClickReaction
+                                                                        }
+                                                                    />
+                                                                )}
+                                                            </TextMessage>
                                                         ) : type === 'IMAGE' ? (
                                                             <ImageMessage
                                                                 content={
@@ -191,7 +305,27 @@ function UserMessage({
                                                                     viewUsers.length >
                                                                         0
                                                                 }
-                                                            ></ImageMessage>
+                                                            >
+                                                                {type ===
+                                                                    'IMAGE' &&
+                                                                    !myReact && (
+                                                                        <ListReaction
+                                                                            type="media"
+                                                                            isMyMessage={
+                                                                                isMyMessage
+                                                                            }
+                                                                            onClickLike={
+                                                                                handleClickLike
+                                                                            }
+                                                                            listReaction={
+                                                                                listReaction
+                                                                            }
+                                                                            onClickReaction={
+                                                                                handleClickReaction
+                                                                            }
+                                                                        />
+                                                                    )}
+                                                            </ImageMessage>
                                                         ) : type === 'VIDEO' ? (
                                                             <VideoMessage
                                                                 content={
@@ -203,7 +337,25 @@ function UserMessage({
                                                                     viewUsers.length >
                                                                         0
                                                                 }
-                                                            ></VideoMessage>
+                                                            >
+                                                                {!myReact && (
+                                                                    <ListReaction
+                                                                        type="media"
+                                                                        isMyMessage={
+                                                                            isMyMessage
+                                                                        }
+                                                                        onClickLike={
+                                                                            handleClickLike
+                                                                        }
+                                                                        listReaction={
+                                                                            listReaction
+                                                                        }
+                                                                        onClickReaction={
+                                                                            handleClickReaction
+                                                                        }
+                                                                    />
+                                                                )}
+                                                            </VideoMessage>
                                                         ) : type ===
                                                           'STICKER' ? (
                                                             <StickerMessage
@@ -228,7 +380,25 @@ function UserMessage({
                                                                     viewUsers.length >
                                                                         0
                                                                 }
-                                                            ></FileMessage>
+                                                            >
+                                                                {!myReact && (
+                                                                    <ListReaction
+                                                                        type="media"
+                                                                        isMyMessage={
+                                                                            isMyMessage
+                                                                        }
+                                                                        onClickLike={
+                                                                            handleClickLike
+                                                                        }
+                                                                        listReaction={
+                                                                            listReaction
+                                                                        }
+                                                                        onClickReaction={
+                                                                            handleClickReaction
+                                                                        }
+                                                                    />
+                                                                )}
+                                                            </FileMessage>
                                                         ) : type === 'HTML' ? (
                                                             <HTMLMessage
                                                                 content={
@@ -245,6 +415,71 @@ function UserMessage({
                                                             <></>
                                                         )}
                                                     </>
+                                                )}
+                                            </div>
+
+                                            <div
+                                                className={`reacted-block ${
+                                                    type === 'IMAGE' ||
+                                                    type === 'VIDEO'
+                                                        ? 'media'
+                                                        : ''
+                                                }
+                                                ${
+                                                    isMyMessage
+                                                        ? 'left'
+                                                        : 'right'
+                                                }`}
+                                            >
+                                                {listReactionCurrent.length >
+                                                    0 &&
+                                                    !isDeleted && (
+                                                        <ListReactionOfUser
+                                                            listReactionCurrent={
+                                                                listReactionCurrent
+                                                            }
+                                                            reacts={reacts}
+                                                            isMyMessage={
+                                                                isMyMessage
+                                                            }
+                                                            onTransferIcon={
+                                                                transferIcon
+                                                            }
+                                                        />
+                                                    )}
+
+                                                {myReact && !isDeleted && (
+                                                    <div
+                                                        className={`your-react ${
+                                                            isMyMessage
+                                                                ? 'bg-white'
+                                                                : ''
+                                                        }`}
+                                                    >
+                                                        <span className="react-current">
+                                                            {myReact
+                                                                ? transferIcon(
+                                                                      myReact.type
+                                                                  )
+                                                                : ''}
+                                                        </span>
+
+                                                        <ListReaction
+                                                            isMyMessage={
+                                                                isMyMessage
+                                                            }
+                                                            onClickLike={
+                                                                handleClickLike
+                                                            }
+                                                            listReaction={
+                                                                listReaction
+                                                            }
+                                                            onClickReaction={
+                                                                handleClickReaction
+                                                            }
+                                                            isLikeButton={false}
+                                                        />
+                                                    </div>
                                                 )}
                                             </div>
                                         </div>

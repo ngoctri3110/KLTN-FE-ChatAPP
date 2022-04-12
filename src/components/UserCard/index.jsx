@@ -21,6 +21,7 @@ import {
 } from 'features/Friend/friendSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+    fetchChannels,
     fetchListFriends,
     fetchListMessages,
     getLastViewOfMembers,
@@ -80,9 +81,9 @@ function UserCard({ title, isVisible, user, onCancel }) {
             (item) => item.id === conversationId
         );
 
-        // if (tempConver && tempConver.type) {
-        //     dispatch(fetchChannels({ conversationId: conversationId }))
-        // }
+        if (tempConver && tempConver.type) {
+            dispatch(fetchChannels({ conversationId: conversationId }));
+        }
 
         dispatch(getLastViewOfMembers({ conversationId: conversationId }));
         dispatch(
@@ -90,7 +91,7 @@ function UserCard({ title, isVisible, user, onCancel }) {
         );
         dispatch(setCurrentConversation(conversationId));
 
-        navigate('/chat');
+        navigate('/chat', { replace: true });
         handleOnCancle();
     };
 

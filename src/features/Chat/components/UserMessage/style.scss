@@ -100,8 +100,129 @@
                             position: relative;
                         }
                     }
+                    .reacted-block.media {
+                        position: absolute;
+                        bottom: 0;
+                        transform: translateY(-50%);
+
+                        .list-user-react,
+                        .your-react {
+                            background: #fff;
+                        }
+                    }
+
+                    .reacted-block.right {
+                        right: 1.2rem;
+                    }
+                    .reacted-block.left {
+                        left: 1.2rem;
+                    }
+
+                    .reacted-block {
+                        margin-top: 1rem;
+                        display: flex;
+                        align-items: center;
+                        cursor: pointer;
+
+                        .list-user-react-icon {
+                            > div {
+                                display: flex;
+                                align-items: center;
+                            }
+                            position: relative;
+                        }
+
+                        .list-user-react {
+                            padding: 0.4rem 0.8rem;
+                            border: 0.05rem solid $grey-300;
+                            border-radius: 14px;
+
+                            .list-user-detail {
+                                position: absolute;
+                                background: $blue-1f4;
+                                color: $white-color;
+                                top: 0;
+
+                                left: 0;
+                                transform: translate(-40%, -150%);
+                                font-size: 13px;
+                                display: none;
+
+                                flex-direction: column;
+                                padding: 0.4rem 1rem;
+                                border-radius: 4px;
+                                white-space: nowrap;
+                                transition: 0.2s;
+                            }
+
+                            .list-user-detail::before {
+                                position: absolute;
+                                content: '';
+                                height: 10px;
+                                width: 10px;
+
+                                background: $blue-1f4;
+                                bottom: -4px;
+                                left: 50%;
+                                transform: translateX(-50%);
+
+                                transform: rotate(45deg);
+                            }
+                        }
+
+                        .your-react {
+                            margin-left: 0.6rem;
+                            padding: 0.3rem;
+                            border-radius: 50%;
+                            border: 0.05rem solid $grey-300;
+                            position: relative;
+                        }
+
+                        .list-user-react:hover .list-user-detail {
+                            display: flex;
+                        }
+                    }
+                    .reaction.reaction-reverse {
+                        right: initial;
+                        left: 10%;
+                    }
+                    .author-message {
+                        font-size: 1.3rem;
+                        color: $normal-text;
+                        padding-bottom: 0.4rem;
+                    }
+
+                    .time-send {
+                        font-size: 1.3rem;
+                        color: $thumbnail-text;
+                    }
                 }
             }
+        }
+
+        .message .sub-message:hover .interaction,
+        .message .sub-message:hover .reaction,
+        .message .sub-message:hover .reaction-reverse {
+            visibility: visible;
+        }
+
+        .message .sub-message .reaction-reverse:hover + .list_icon-reaction,
+        .message
+            .sub-message
+            .content-message
+            .reaction
+            .reaction-thumbnail:hover
+            .list_icon-reaction {
+            display: flex;
+        }
+
+        .message
+            .sub-message
+            .content-message
+            .reacted-block
+            .your-react:hover
+            .list_icon-reaction {
+            display: flex;
         }
     }
 

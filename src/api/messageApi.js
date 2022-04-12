@@ -40,5 +40,8 @@ const messageApi = {
             },
         });
     },
+    expressionReaction: (idMessage, type) => {
+        return axiosClient.post(`${API_URL}/reacts/${idMessage}/${type}`);
+    },
 };
 export default messageApi;

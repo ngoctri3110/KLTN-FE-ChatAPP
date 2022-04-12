@@ -53,6 +53,125 @@
                 background: $white-smoke;
                 flex-grow: 1;
                 position: relative;
+
+                .spinning-custom {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 1rem 0;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    z-index: 10000000;
+                }
+
+                #back-top-button.show {
+                    opacity: 1;
+                    visibility: visible;
+                }
+
+                #back-top-button.hide {
+                    opacity: 0;
+                    visibility: hidden;
+                }
+                #back-top-button:hover {
+                    color: #58aeff;
+                }
+
+                #back-top-button {
+                    position: absolute;
+                    bottom: 5%;
+                    right: 2%;
+                    height: 32px;
+
+                    min-width: 32px;
+                    border-radius: 50%;
+                    background: #fff;
+                    display: flex;
+
+                    align-items: center;
+                    justify-content: center;
+                    color: #adb6be;
+                    transition: color 0.2s;
+                    cursor: pointer;
+                }
+
+                #back-top-button.new-message {
+                    border-radius: 10px;
+                    font-size: 12px;
+                    padding: 0 1rem;
+                    color: #58aeff;
+
+                    animation-duration: 3s;
+                    animation-name: float-top-down;
+                    animation-iteration-count: infinite;
+                }
+
+                @keyframes float-top-down {
+                    0% {
+                        transform: translateY(0%);
+                    }
+                    50% {
+                        transform: translateY(-50%);
+                    }
+                    100% {
+                        transform: translateY(0%);
+                    }
+                }
+
+                .typing-message {
+                    position: absolute;
+                    left: 0;
+                    bottom: 0;
+                    font-size: 13px;
+
+                    padding: 0.2rem 0.4rem;
+                    background: #fff;
+                    border-radius: 0 6px 0 0;
+                    display: flex;
+
+                    flex-direction: row;
+
+                    .dynamic-dot {
+                        display: flex;
+                        flex-direction: row;
+
+                        transform: translateY(50%);
+                        margin-left: 0.2rem;
+                        transform: translateY(-25%);
+                        align-items: flex-end;
+                        .dot {
+                            height: 4px;
+                            width: 4px;
+                            border-radius: 50%;
+                            background-color: $grey-300;
+                            margin-left: 0.4rem;
+                            animation-iteration-count: infinite;
+                            animation-name: trans-color;
+                            animation-duration: 1.5s;
+                        }
+                        .dot:nth-child(1) {
+                            animation-delay: 0.5s;
+                        }
+                        .dot:nth-child(2) {
+                            animation-delay: 1s;
+                        }
+                        .dot:nth-child(3) {
+                            animation-delay: 1.5s;
+                        }
+                    }
+
+                    @keyframes trans-color {
+                        from {
+                            background-color: $grey-300;
+                        }
+                        to {
+                            background-color: $silver;
+                        }
+                    }
+                }
             }
 
             &--input {

@@ -8,11 +8,15 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import classifyUtils from 'utils/classifyUtils';
 import { useNavigate } from 'react-router-dom';
 import {
+    fetchChannels,
     fetchListMessages,
     getMembersConversation,
+    setConversations,
     setCurrentConversation,
+    setTypeOfConversation,
 } from 'features/Chat/slice/chatSlice';
 import './style.scss';
+import conversationApi from 'api/conversationApi';
 
 GroupCard.propTypes = {
     data: PropTypes.object,
@@ -29,6 +33,7 @@ function GroupCard({ data, onRemove }) {
     const { classifies } = useSelector((state) => state.chat);
     const [classify, setClassify] = useState(null);
     const navigate = useNavigate();
+    const { conversations } = useSelector((state) => state.chat);
 
     useEffect(() => {
         if (classifies.length > 0) {
@@ -59,6 +64,7 @@ function GroupCard({ data, onRemove }) {
     const handleOnClick = async () => {
         try {
             dispatch(fetchListMessages({ conversationId: data.id, size: 10 }));
+            dispatch(getMembersConversation({ conversationId: data.id }));
             dispatch(setCurrentConversation(data.id));
             navigate('/chat', { replace: true });
         } catch (error) {

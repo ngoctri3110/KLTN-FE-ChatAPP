@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-
-import './style.scss';
 import Scrollbars from 'react-custom-scrollbars';
 import { Spin } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +10,7 @@ import {
     fetchNextPageOfChannel,
     setRollUpPage,
 } from 'features/Chat/slice/chatSlice';
+import './style.scss';
 
 BodyChatContainer.propTypes = {
     scrollId: PropTypes.string,
@@ -74,7 +73,7 @@ function BodyChatContainer(
                     fetchNextPageOfChannel({
                         channelId: currentChannel,
                         page: currentPage,
-                        size: 20,
+                        size: 10,
                     })
                 );
             } else {
@@ -82,7 +81,7 @@ function BodyChatContainer(
                     fetchNextPageMessage({
                         conversationId: currentConversation,
                         page: currentPage,
-                        size: 20,
+                        size: 10,
                     })
                 );
             }
@@ -120,42 +119,6 @@ function BodyChatContainer(
         }
         //eslint-disable-next-line
     }, [onSCrollDown]);
-
-    const handleOnScrolling = ({ scrollTop, scrollHeight, top }) => {
-        tempPosition.current = top;
-        if (
-            scrollbars.current.getScrollHeight ===
-            scrollbars.current.getClientHeight()
-        ) {
-            onBackToBottom(false);
-            return;
-        }
-
-        if (scrollTop === 0) {
-            previousHeight.current = scrollHeight;
-            dispatch(setRollUpPage());
-        }
-
-        if (top < 0.85) {
-            if (onBackToBottom) {
-                onBackToBottom(true);
-            } else {
-                if (onBackToBottom) {
-                    onBackToBottom(false);
-                }
-            }
-        }
-    };
-    useEffect(() => {
-        if (scrollId) {
-            scrollbars.current.scrollToBottom();
-        }
-    }, [scrollId]);
-
-    const handleOnStop = (value) => {
-        setPosition(tempPosition.current);
-    };
-    const handleOpenModalShare = () => {};
 
     const renderMessages = (messages) => {
         const result = [];
@@ -249,6 +212,55 @@ function BodyChatContainer(
 
         return result;
     };
+
+    const handleOnScrolling = ({ scrollTop, scrollHeight, top }) => {
+        tempPosition.current = top;
+        if (
+            scrollbars.current.getScrollHeight() ===
+            scrollbars.current.getClientHeight()
+        ) {
+            onBackToBottom(false);
+            return;
+        }
+
+        if (scrollTop === 0) {
+            previousHeight.current = scrollHeight;
+            dispatch(setRollUpPage());
+        }
+
+        if (top < 0.85) {
+            if (onBackToBottom) {
+                onBackToBottom(true);
+            }
+        } else {
+            if (onBackToBottom) {
+                onBackToBottom(false);
+            }
+        }
+    };
+    useEffect(() => {
+        if (scrollId) {
+            scrollbars.current.scrollToBottom();
+        }
+    }, [scrollId]);
+    function sleep(time) {
+        return new Promise((resolve) => setTimeout(resolve, time));
+    }
+
+    useEffect(() => {
+        if (messages.length > 0) {
+            sleep(500).then(() => {
+                if (scrollbars.current) {
+                    scrollbars.current.scrollToBottom();
+                }
+            });
+        }
+    }, [currentConversation, currentChannel]);
+
+    const handleOnStop = () => {
+        setPosition(tempPosition.current);
+    };
+    const handleOpenModalShare = () => {};
 
     return (
         <Scrollbars

@@ -6,7 +6,6 @@ import friendApi from 'api/friendApi';
 import messageApi from 'api/messageApi';
 import pollApi from 'api/pollApi';
 import stickerApi from 'api/stickerApi';
-import dateUtils from 'utils/dateUtils';
 
 const KEY = 'chat';
 
@@ -204,7 +203,7 @@ const chatSlice = createSlice({
         memberInConversation: [],
         currentChannel: '',
         channels: [],
-        type: false,
+        type: '',
         stickers: [],
         polls: [],
         totalPagesPoll: 0,
@@ -291,7 +290,6 @@ const chatSlice = createSlice({
         },
         updateAvatarWhenUpdateMember: (state, action) => {
             const { conversationId, avatar, totalMembers } = action.payload;
-
             const index = state.conversations.findIndex(
                 (converEle) => converEle.id === conversationId
             );
@@ -299,13 +297,14 @@ const chatSlice = createSlice({
 
             if (
                 index > -1 &&
-                typeof state.conversations[index].avatar === 'object'
+                typeof state.conversations[index].avatar?.url === 'string'
             ) {
-                state.conversations[index].avatar = avatar;
+                state.conversations[index].avatar.url = avatar;
             }
         },
         addMessageInChannel: (state, action) => {
             const { conversationId, channelId, message } = action.payload;
+            console.log('channe', action.payload);
 
             const index = state.channels.findIndex(
                 (channel) => channel.id === channelId

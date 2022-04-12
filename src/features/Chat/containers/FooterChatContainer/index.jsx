@@ -79,7 +79,7 @@ function FooterChatContainer({
         }
     }, [currentConversation]);
 
-    const handleOnChageInput = (value) => {
+    const handleOnChangeInput = (value) => {
         if (mentionSelect.length > 0) {
             mentionSelect.forEach((ele, index) => {
                 const regex = new RegExp(`@${ele.name}`);
@@ -105,6 +105,16 @@ function FooterChatContainer({
 
         value.length > 0 ? setShowLike(false) : setShowLike(true);
         setValueText(value);
+
+        if (value.length > 0 && !currentChannel) {
+            socket.emit('ConversationUserTyping', currentConversation, user);
+        } else {
+            socket.emit(
+                'ConversationUserTypingFinish',
+                currentConversation,
+                user
+            );
+        }
     };
 
     const checkIsExistInSelect = (userMen) => {
@@ -204,14 +214,36 @@ function FooterChatContainer({
                 if (valueInput.trim().length > 0) {
                     sendMessage(valueInput, 'TEXT');
                     setValueText('');
+                    setShowLike(true);
+                    socket.emit(
+                        'ConversationUserTypingFinish',
+                        currentConversation,
+                        user
+                    );
                 }
 
                 event.preventDefault();
             }
         }
     };
-    const handleOnFocus = () => {};
-    const handleOnBlur = () => {};
+    const handleOnFocus = () => {
+        if (currentChannel) {
+            socket.emit(
+                'ConversationsChannelViewLast',
+                currentConversation,
+                currentChannel
+            );
+        } else {
+            socket.emit('ConversationsChannelViewLast', currentConversation);
+        }
+
+        setHightLight(true);
+    };
+    const handleOnBlur = () => {
+        setHightLight(false);
+
+        socket.emit('ConversationUserTypingFinish', currentConversation, user);
+    };
 
     const handleSelectMention = ({ object }, _) => {
         setMentionSelect([...mentionSelect, object]);
@@ -226,6 +258,12 @@ function FooterChatContainer({
                 sendMessage(valueText, 'TEXT');
             }
             setValueText('');
+            setShowLike(true);
+            socket.emit(
+                'ConversationUserTypingFinish',
+                currentConversation,
+                user
+            );
         }
     };
     const handleOnScroll = (id) => {
@@ -261,7 +299,7 @@ function FooterChatContainer({
                         }}
                         spellCheck={false}
                         value={valueText}
-                        onChange={handleOnChageInput}
+                        onChange={handleOnChangeInput}
                         onKeyPress={handleKeyPress}
                         onFocus={handleOnFocus}
                         onBlur={handleOnBlur}
@@ -307,12 +345,12 @@ function FooterChatContainer({
                     </Mentions>
                 </div>
                 <div className="addtion-interaction">
-                    <div className="like-emoji">
+                    <div className={`like-emoji ${isShowLike ? '' : 'hidden'}`}>
                         <div className="send-text-thumb">
                             <LikeOutlined />
                         </div>
                     </div>
-                    <div className="like-emoji">
+                    <div className={`like-emoji ${isShowLike ? 'hidden' : ''}`}>
                         <div
                             className="send-text-thumb"
                             onClick={handleSentMessage}

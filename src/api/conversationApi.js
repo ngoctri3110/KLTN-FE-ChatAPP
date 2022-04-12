@@ -13,7 +13,6 @@ const conversationApi = {
         });
     },
     createConversationIndividual: (userId) => {
-        console.log('createConversationIndividual', userId);
         return axiosClient.post(`${API_URL}/dual/${userId}`);
     },
     getConversationById: (id) => {

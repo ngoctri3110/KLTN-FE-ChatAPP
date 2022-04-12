@@ -28,3 +28,8 @@ export const sortGroup = (value, type) => {
 
     return tempGroup;
 };
+
+export const checkLeader = (idUser, listConver, idCurrentConver) => {
+    const conver = listConver.find((item) => item.id === idCurrentConver);
+    return conver.leaderId === idUser;
+};

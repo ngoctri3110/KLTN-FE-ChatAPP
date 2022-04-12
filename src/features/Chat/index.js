@@ -37,6 +37,7 @@ import renderWidthDrawer from 'utils/DrawerResponsive';
 import GroupNews from './components/GroupNews';
 import InfoContainer from './containers/InfoContainer';
 import { setJoinChatLayout } from 'app/globalSlice';
+import { DoubleLeftOutlined, DownOutlined } from '@ant-design/icons';
 
 Chat.propTypes = {
     socket: PropTypes.object,
@@ -102,12 +103,12 @@ function Chat({ socket, idNewMessage }) {
     //Get Clientwidth
 
     useEffect(() => {
-        refCurrentConversation.current = currentConversation;
-    }, [currentConversation]);
-
-    useEffect(() => {
         refConversations.current = conversations;
     }, [conversations]);
+
+    useEffect(() => {
+        refCurrentConversation.current = currentConversation;
+    }, [currentConversation]);
 
     useEffect(() => {
         refCurrentChannel.current = currentChannel;
@@ -118,6 +119,12 @@ function Chat({ socket, idNewMessage }) {
             dispatch(setTotalChannelNotify());
         }
     }, [currentConversation, channels, conversations]);
+
+    useEffect(() => {
+        setUsersTyping([]);
+        setReplyMessage(null);
+        setUserMention({});
+    }, [currentConversation]);
 
     const handleOnVisibleFilter = (value) => {
         if (value.trim().length > 0) {
@@ -174,6 +181,7 @@ function Chat({ socket, idNewMessage }) {
         }
         setIsShow(value);
     };
+
     const hanldeResetScrollButton = (value) => {
         setIsScroll(value);
     };
@@ -393,10 +401,37 @@ function Chat({ socket, idNewMessage }) {
                     );
                 }
             );
+            socket.on('ConversationTyping', (conversationId, user) => {
+                if (conversationId === refCurrentConversation.current) {
+                    const index = usersTyping.findIndex(
+                        (item) => item.id === user.id
+                    );
+
+                    if (usersTyping.length === 0 || index < 0) {
+                        setUsersTyping([...usersTyping, user]);
+                    }
+                }
+            });
+            socket.on('ConversationTypingFinish', (conversationId, user) => {
+                if (conversationId === refCurrentConversation.current) {
+                    const newUserTyping = usersTyping.filter(
+                        (item) => item.id !== user.id
+                    );
+                    setUsersTyping(newUserTyping);
+                }
+            });
+
+            socket.on('ConversationMemberAdd', (conversationId) => {
+                dispatch(fetchConversationById({ conversationId }));
+            });
         }
 
         // dispatch(setJoinChatLayout(true));
     }, []);
+
+    const hanldeOnClickScroll = () => {
+        setIsScroll(true);
+    };
     return (
         <Spin spinning={isLoading}>
             <div id="main-chat-wrapper">
@@ -477,8 +512,73 @@ function Chat({ socket, idNewMessage }) {
                                                     hanldeResetScrollButton
                                                 }
                                                 turnOnScrollButoon={isScroll}
+                                                onSCrollDown={idNewMessage}
                                                 onMention={handleOnMention}
                                             />
+
+                                            <div
+                                                id="back-top-button"
+                                                className={`${
+                                                    isShow ? 'show' : 'hide'
+                                                } ${
+                                                    hasMessage
+                                                        ? 'new-message'
+                                                        : ''
+                                                }`}
+                                                onClick={hanldeOnClickScroll}
+                                            >
+                                                {hasMessage ? (
+                                                    <div className="db-arrow-new-message">
+                                                        <span className="arrow">
+                                                            <DoubleLeftOutlined />
+                                                        </span>
+                                                        <span>
+                                                            &nbsp;{hasMessage}
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    <DownOutlined />
+                                                )}
+                                            </div>
+
+                                            {usersTyping.length > 0 &&
+                                                !refCurrentChannel.current && (
+                                                    <div className="typing-message">
+                                                        {usersTyping.map(
+                                                            (item, index) => (
+                                                                <span>
+                                                                    {index <
+                                                                        3 && (
+                                                                        <>
+                                                                            {index ===
+                                                                            usersTyping.length -
+                                                                                1
+                                                                                ? `${item.name} `
+                                                                                : `${item.name}, `}
+                                                                        </>
+                                                                    )}
+                                                                </span>
+                                                            )
+                                                        )}
+
+                                                        {usersTyping.length > 3
+                                                            ? `và ${
+                                                                  usersTyping.length -
+                                                                  3
+                                                              } người khác`
+                                                            : ''}
+
+                                                        <span>
+                                                            &nbsp;đang nhập
+                                                        </span>
+
+                                                        <div className="dynamic-dot">
+                                                            <div className="dot"></div>
+                                                            <div className="dot"></div>
+                                                            <div className="dot"></div>
+                                                        </div>
+                                                    </div>
+                                                )}
                                         </div>
                                         <div className="main_chat-body--input">
                                             <FooterChatContainer
@@ -495,6 +595,7 @@ function Chat({ socket, idNewMessage }) {
                                                 onOpenInfoBlock={() =>
                                                     setIsOpenInfo(true)
                                                 }
+                                                socket={socket}
                                             />
                                         </div>
                                     </div>

@@ -1,18 +1,21 @@
-import {
-    CaretDownOutlined,
-    FilterFilled,
-    FilterOutlined,
-    SwapOutlined,
-} from '@ant-design/icons';
+import { CaretDownOutlined, SwapOutlined } from '@ant-design/icons';
 import { Button, Col, Collapse, Dropdown, Menu, Row, Spin } from 'antd';
-import SearchContainer from 'features/Chat/containers/SearchContainer';
-import React, { useEffect, useRef, useState } from 'react';
+import conversationApi from 'api/conversationApi';
 import ICON_FRIEND from 'assets/images/icon/icon_friend.png';
 import ICON_GROUP from 'assets/images/icon/icon_group.png';
-import './style.scss';
-import HeaderFriend from './components/HeaderFriend';
+import { getValueFromKey } from 'constants/filterFriend';
+import FilterContainer from 'features/Chat/components/FilterContainer';
+import SearchContainer from 'features/Chat/containers/SearchContainer';
+import { useEffect, useRef, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useDispatch, useSelector } from 'react-redux';
+import { sortGroup } from 'utils/groupUtils';
+import HeaderFriend from './components/HeaderFriend';
+import ListFriend from './components/ListFriend';
+import ListGroup from './components/ListGroup';
+import ListMyRequestFriend from './components/ListMyRequestFriend';
+import ListRequestFriend from './components/ListRequestFriend';
+import ListSuggest from './components/ListSuggest';
 import {
     fetchFriends,
     fetchListGroup,
@@ -20,18 +23,8 @@ import {
     fetchListRequestFriend,
     fetchSuggestFriend,
 } from './friendSlice';
-import ListRequestFriend from './components/ListRequestFriend';
-import ListFriend from './components/ListFriend';
-import { fetchListFriends } from 'features/Chat/slice/chatSlice';
-import ListSuggest from './components/ListSuggest';
-import ListMyRequestFriend from './components/ListMyRequestFriend';
 import FRIEND_STYLE from './friendStyle';
-import { getValueFromKey } from 'constants/filterFriend';
-import ListGroup from './components/ListGroup';
-import { sortGroup } from 'utils/groupUtils';
-import FilterContainer from 'features/Chat/components/FilterContainer';
-import conversationApi from 'api/conversationApi';
-import searchApi from 'api/searchApi';
+import './style.scss';
 
 function Friend() {
     const { user } = useSelector((state) => state.global);

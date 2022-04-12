@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import InfoTitle from 'features/Chat/components/InfoTitle';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllMedia } from 'features/Chat/slice/mediaSlice';
-import Scrollbars from 'react-custom-scrollbars';
-import './style.scss';
-import InfoNameAndThumbnail from 'features/Chat/components/InfoNameAndThumbnail';
-import InfoMember from 'features/Chat/components/InfoMember';
 import Channel from 'features/Chat/components/Channel';
-import StorageMedia from 'features/Chat/components/StorageMedia';
-import StorageFile from 'features/Chat/components/StorageFile';
-import OtherSettings from 'features/Chat/components/OtherSettings';
 import InfoMediaSearch from 'features/Chat/components/InfoMediaSearch';
+import InfoMember from 'features/Chat/components/InfoMember';
 import InfoMembersGroup from 'features/Chat/components/InfoMembersGroup';
+import InfoNameAndThumbnail from 'features/Chat/components/InfoNameAndThumbnail';
+import InfoTitle from 'features/Chat/components/InfoTitle';
+import OtherSettings from 'features/Chat/components/OtherSettings';
+import StorageFile from 'features/Chat/components/StorageFile';
+import StorageMedia from 'features/Chat/components/StorageMedia';
+import { fetchAllMedia } from 'features/Chat/slice/mediaSlice';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import Scrollbars from 'react-custom-scrollbars';
+import { useDispatch, useSelector } from 'react-redux';
+import './style.scss';
 
 InfoContainer.propTypes = {
     onViewChannel: PropTypes.func,
@@ -31,16 +31,16 @@ function InfoContainer({ onViewChannel, socket }) {
 
     const {
         memberInConversation,
-        type,
         currentConversation,
         conversations,
         channels,
     } = useSelector((state) => state.chat);
     const { media } = useSelector((state) => state.media);
-
     useEffect(() => {
-        if (currentConversation)
+        if (currentConversation) {
             dispatch(fetchAllMedia({ conversationId: currentConversation }));
+        }
+
         //eslint-disable-next-line
     }, [currentConversation]);
 
@@ -94,7 +94,9 @@ function InfoContainer({ onViewChannel, socket }) {
                                         />
                                     </div>
 
-                                    {type === 'GROUP' && (
+                                    {conversations.find(
+                                        (ele) => ele.id === currentConversation
+                                    ).type === 'GROUP' && (
                                         <>
                                             <div className="info_member-wrapper">
                                                 <InfoMember
