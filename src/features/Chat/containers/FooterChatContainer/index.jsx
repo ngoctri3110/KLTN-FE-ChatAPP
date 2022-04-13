@@ -11,6 +11,7 @@ import PersonalIcon from 'features/Chat/components/PersonalIcon';
 import { useEffect } from 'react';
 import messageApi from 'api/messageApi';
 import './style.scss';
+import ReplyBlock from 'features/Chat/components/ReplyBlock/index.jsx';
 
 FooterChatContainer.propTypes = {
     onScrollWhenSentText: PropTypes.func,
@@ -62,6 +63,7 @@ function FooterChatContainer({
     const checkGroup = conversations.find(
         (ele) => ele.id === currentConversation
     );
+
     const [detailConver, setDetailConver] = useState({});
     const preMention = useRef();
 
@@ -187,6 +189,11 @@ function FooterChatContainer({
         if (currentChannel) {
             newMessage.channelId = currentChannel;
         }
+
+        if (replyMessage && Object.keys(replyMessage).length > 0) {
+            newMessage.replyMessageId = replyMessage.id;
+        }
+
         await messageApi
             .sendTextMessage(currentConversation, newMessage)
             .then((res) => {
@@ -285,6 +292,14 @@ function FooterChatContainer({
                     onOpenInfoBlock={onOpenInfoBlock}
                 />
             </div>
+
+            {replyMessage && Object.keys(replyMessage).length > 0 && (
+                <ReplyBlock
+                    replyMessage={replyMessage}
+                    onCloseReply={onCloseReply}
+                />
+            )}
+
             <div className="chat-editor">
                 <div className="main-editor">
                     <Mentions

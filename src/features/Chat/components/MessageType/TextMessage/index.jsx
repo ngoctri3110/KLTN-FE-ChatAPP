@@ -7,6 +7,7 @@ import CheckLink, {
 import parse from 'html-react-parser';
 import { LinkPreview } from '@dhaiwat10/react-link-preview';
 import './style.scss';
+import ReplyMessage from '../../ReplyMessage';
 
 TextMessage.propTypes = {
     content: PropTypes.string,
@@ -143,6 +144,10 @@ function TextMessage({
     };
     return (
         <div className="text-message-item">
+            {replyMessage && Object.keys(replyMessage).length > 0 && (
+                <ReplyMessage replyMessage={replyMessage} />
+            )}
+
             {renderMessageText(content)}
 
             <div className="time-and-last_view">

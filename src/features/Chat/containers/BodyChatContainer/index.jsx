@@ -30,15 +30,15 @@ BodyChatContainer.defaultProps = {
     onMention: null,
 };
 
-function BodyChatContainer(
+function BodyChatContainer({
     scrollId,
     onSCrollDown,
     onBackToBottom,
     onResetScrollButton,
     turnOnScrollButoon,
     onReply,
-    onMention
-) {
+    onMention,
+}) {
     const { user } = useSelector((state) => state.global);
 
     const {

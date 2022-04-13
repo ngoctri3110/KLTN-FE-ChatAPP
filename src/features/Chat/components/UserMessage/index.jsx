@@ -18,6 +18,15 @@ import { checkLeader } from 'utils/groupUtils';
 import messageApi from 'api/messageApi';
 import ListReaction from '../ListReaction';
 import ListReactionOfUser from '../ListReactionOfUser';
+import { Button, Dropdown, Menu } from 'antd';
+import { MdQuestionAnswer } from 'react-icons/md';
+import { BiDotsHorizontalRounded } from 'react-icons/bi';
+import MESSAGE_STYLE from 'constants/messageStyle';
+import {
+    DeleteOutlined,
+    PushpinOutlined,
+    UndoOutlined,
+} from '@ant-design/icons';
 
 UserMessage.propTypes = {
     message: PropTypes.object,
@@ -56,9 +65,10 @@ function UserMessage({
         isDeleted,
         reacts,
         tags,
-        replyMessage,
+        replyMessageId,
     } = message;
 
+    console.log('mess...', message);
     const { name, avatar } = user;
     const {
         messages,
@@ -72,6 +82,10 @@ function UserMessage({
 
     const [isLeader, setIsLeader] = useState(false);
     const dispatch = useDispatch();
+
+    const isGroup = conversations.find(
+        (ele) => ele.id === currentConversation
+    ).type;
 
     const setMarginTopAndBottom = (id) => {
         const index = messages.findIndex((message) => message.id === id);
@@ -181,6 +195,51 @@ function UserMessage({
         await messageApi.expressionReaction(id, type);
     };
 
+    const handleReplyMessage = () => {
+        if (onReply) {
+            onReply(message);
+        }
+        if (onMention) {
+            onMention(user);
+        }
+    };
+
+    const handleOnClick = () => {};
+    const menu = (
+        <Menu onClick={handleOnClick}>
+            {isGroup === 'GROUP' && !currentChannel && type !== 'STICKER' && (
+                <Menu.Item
+                    key="1"
+                    icon={<PushpinOutlined />}
+                    style={MESSAGE_STYLE.dropDownStyle}
+                    title="Ghim tin nhắn"
+                >
+                    Ghim tin nhắn
+                </Menu.Item>
+            )}
+
+            {isMyMessage && (
+                <Menu.Item
+                    key="2"
+                    icon={<UndoOutlined />}
+                    style={MESSAGE_STYLE.dropDownStyle}
+                    title="Thu hồi tin nhắn"
+                >
+                    Thu hồi tin nhắn
+                </Menu.Item>
+            )}
+            <Menu.Item
+                key="3"
+                icon={<DeleteOutlined />}
+                style={MESSAGE_STYLE.dropDownStyle}
+                danger
+                title="Chỉ xóa ở phía tôi"
+            >
+                Chỉ xóa ở phía tôi
+            </Menu.Item>
+        </Menu>
+    );
+
     return (
         <>
             {!isDeleted && type === 'NOTIFY' ? (
@@ -274,7 +333,7 @@ function UserMessage({
                                                                         0
                                                                 }
                                                                 replyMessage={
-                                                                    replyMessage
+                                                                    replyMessageId
                                                                 }
                                                             >
                                                                 {!myReact && (
@@ -465,6 +524,38 @@ function UserMessage({
                                                         </span>
                                                     </div>
                                                 )}
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            className={`interaction ${
+                                                isDeleted ? 'hidden' : ''
+                                            }`}
+                                        >
+                                            <div className="reply icon-interact">
+                                                <Button
+                                                    style={
+                                                        MESSAGE_STYLE.styleButton
+                                                    }
+                                                    onClick={handleReplyMessage}
+                                                >
+                                                    <MdQuestionAnswer />
+                                                </Button>
+                                            </div>
+
+                                            <div className="additional icon-interact">
+                                                <Dropdown
+                                                    overlay={menu}
+                                                    trigger={['click']}
+                                                >
+                                                    <Button
+                                                        style={
+                                                            MESSAGE_STYLE.styleButton
+                                                        }
+                                                    >
+                                                        <BiDotsHorizontalRounded />
+                                                    </Button>
+                                                </Dropdown>
                                             </div>
                                         </div>
                                     </div>

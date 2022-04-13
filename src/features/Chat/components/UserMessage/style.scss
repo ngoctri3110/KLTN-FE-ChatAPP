@@ -225,6 +225,41 @@
             .list_icon-reaction {
             display: flex;
         }
+
+        .interaction {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            background: $ghost-white;
+            margin: 0 1rem;
+
+            max-width: 25%;
+            border-radius: 4px;
+            box-shadow: 0 0.5px 0 0 rgba(0, 0, 0, 0.18);
+            flex-wrap: wrap;
+
+            visibility: hidden;
+            .ant-btn:hover,
+            .ant-btn:focus {
+                color: $blue-light !important;
+            }
+        }
+        .interaction.hidden {
+            display: none;
+        }
+
+        .icon-interact {
+            font-size: 1.7rem;
+            width: 3rem;
+            height: 3rem;
+            color: $normal-text;
+
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     }
 
     .last-view-avatar {

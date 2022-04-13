@@ -191,7 +191,6 @@ function Chat({ socket, idNewMessage }) {
     const handleScrollWhenSent = (value) => {
         setScrollId(value);
     };
-    const handleCloseReply = () => {};
 
     const handleOnRemoveMention = () => {
         setUserMention({});
@@ -215,7 +214,14 @@ function Chat({ socket, idNewMessage }) {
         setVisibleNews(true);
         setTabActiveNews(1);
     };
-
+    // Reply message ==============
+    const handleOnReply = (mes) => {
+        console.log('func mes', mes);
+        setReplyMessage(mes);
+    };
+    const handleCloseReply = () => {
+        setReplyMessage({});
+    };
     //Info Group====================
     const handleOnBack = () => {
         setVisibleNews(false);
@@ -536,6 +542,7 @@ function Chat({ socket, idNewMessage }) {
                                                 }
                                                 turnOnScrollButoon={isScroll}
                                                 onSCrollDown={idNewMessage}
+                                                onReply={handleOnReply}
                                                 onMention={handleOnMention}
                                             />
 
@@ -608,9 +615,7 @@ function Chat({ socket, idNewMessage }) {
                                                 onScrollWhenSentText={
                                                     handleScrollWhenSent
                                                 }
-                                                replyMessage={replyMessage}
                                                 onCloseReply={handleCloseReply}
-                                                userMention={userMention}
                                                 onRemoveMention={
                                                     handleOnRemoveMention
                                                 }
@@ -618,6 +623,8 @@ function Chat({ socket, idNewMessage }) {
                                                 onOpenInfoBlock={() =>
                                                     setIsOpenInfo(true)
                                                 }
+                                                userMention={userMention}
+                                                replyMessage={replyMessage}
                                                 socket={socket}
                                             />
                                         </div>
