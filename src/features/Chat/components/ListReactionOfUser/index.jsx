@@ -34,7 +34,7 @@ function ListReactionOfUser(props) {
                         {reacts.map((item, index) => {
                             if (index < 5) {
                                 return (
-                                    <span key={index}>{item.user.name}</span>
+                                    <span key={index}>{item.userId.name}</span>
                                 );
                             } else {
                                 return (

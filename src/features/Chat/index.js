@@ -21,6 +21,7 @@ import {
     isDeletedFromGroup,
     setCurrentChannel,
     setCurrentConversation,
+    setReactionMessage,
     setTotalChannelNotify,
     updateAvavarConver,
     updateChannel,
@@ -424,6 +425,28 @@ function Chat({ socket, idNewMessage }) {
             socket.on('ConversationMemberAdd', (conversationId) => {
                 dispatch(fetchConversationById({ conversationId }));
             });
+
+            socket.on(
+                'MessageReactAdd',
+                ({ conversationId, channelId, messageId, user, type }) => {
+                    if (
+                        refCurrentConversation.current === conversationId &&
+                        refCurrentChannel.current === channelId
+                    ) {
+                        dispatch(setReactionMessage({ messageId, user, type }));
+                    }
+
+                    if (
+                        !channelId &&
+                        refCurrentConversation.current === conversationId
+                    ) {
+                        dispatch(setReactionMessage({ messageId, user, type }));
+                    }
+                }
+            );
+
+            //test data response reaction
+            // socket.on('MessageReactAdd', (...data) => console.log(data));
         }
 
         // dispatch(setJoinChatLayout(true));

@@ -92,7 +92,7 @@ function UserMessage({
     const myReact =
         reacts &&
         reacts.length > 0 &&
-        reacts.find((ele) => ele.userId === global.user.id);
+        reacts.find((ele) => ele.userId.id === global.user.id);
 
     const dateAt = new Date(createdAt);
 
@@ -463,22 +463,6 @@ function UserMessage({
                                                                   )
                                                                 : ''}
                                                         </span>
-
-                                                        <ListReaction
-                                                            isMyMessage={
-                                                                isMyMessage
-                                                            }
-                                                            onClickLike={
-                                                                handleClickLike
-                                                            }
-                                                            listReaction={
-                                                                listReaction
-                                                            }
-                                                            onClickReaction={
-                                                                handleClickReaction
-                                                            }
-                                                            isLikeButton={false}
-                                                        />
                                                     </div>
                                                 )}
                                             </div>

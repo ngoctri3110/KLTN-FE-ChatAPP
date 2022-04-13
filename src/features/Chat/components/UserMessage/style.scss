@@ -99,6 +99,7 @@
                         .message-video-wrapper {
                             position: relative;
                         }
+                        word-break: break-all;
                     }
                     .reacted-block.media {
                         position: absolute;
@@ -239,7 +240,6 @@
         font-size: 1.3rem;
         color: $thumbnail-text;
         padding-left: 1rem;
-        margin-bottom: 0.5rem;
     }
 }
 .last-view-avatar.center {

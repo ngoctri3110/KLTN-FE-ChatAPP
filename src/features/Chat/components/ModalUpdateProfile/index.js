@@ -206,7 +206,7 @@ function ModalUpdateProfile({ isVisible, onCancel }) {
                                                 name="username"
                                                 component={InputFieldNotTitle}
                                                 type="text"
-                                                disabled="true"
+                                                disabled={true}
                                             ></FastField>
                                         </Col>
 

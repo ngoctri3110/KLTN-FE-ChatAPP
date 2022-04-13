@@ -272,7 +272,10 @@ const chatSlice = createSlice({
             const searchConver = state.conversations[indexConver];
 
             searchConver.numberUnread = searchConver.numberUnread + 1;
-
+            searchConver.lastMessage = {
+                ...message,
+                createdAt: message.createdAt,
+            };
             // xóa conversation đó ra khỏi conversations hiện tại
             const conversationTempt = state.conversations.filter(
                 (conversationEle) => conversationEle.id !== conversationId
@@ -304,7 +307,6 @@ const chatSlice = createSlice({
         },
         addMessageInChannel: (state, action) => {
             const { conversationId, channelId, message } = action.payload;
-            console.log('channe', action.payload);
 
             const index = state.channels.findIndex(
                 (channel) => channel.id === channelId
@@ -465,6 +467,30 @@ const chatSlice = createSlice({
                         managerIds: tempManagerIds,
                     };
                 }
+            }
+        },
+        setReactionMessage: (state, action) => {
+            const { messageId, user, type } = action.payload;
+            const index = state.messages.findIndex(
+                (item) => item.id === messageId
+            );
+
+            const currentMessage = state.messages.find(
+                (item) => item.id === messageId
+            );
+
+            const checkIsExist = currentMessage.reacts.findIndex(
+                (react) => react.userId.id === user.id
+            );
+
+            if (checkIsExist >= 0) {
+                state.messages[index].reacts[checkIsExist] = {
+                    ...state.messages[index].reacts[checkIsExist],
+                    type,
+                };
+            } else {
+                let reacts = [...currentMessage.reacts, { userId: user, type }];
+                state.messages[index].reacts = reacts;
             }
         },
     },
@@ -643,6 +669,7 @@ export const {
     updateAvavarConver,
     addManagers,
     deleteManager,
+    setReactionMessage,
 } = actions;
 
 export default reducer;
