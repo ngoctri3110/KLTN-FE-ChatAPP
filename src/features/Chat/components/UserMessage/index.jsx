@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import PersonalIcon from '../PersonalIcon';
 import { useState } from 'react';
 import TextMessage from '../MessageType/TextMessage';
-import './style.scss';
 import ImageMessage from '../MessageType/ImageMessage';
 import VideoMessage from '../MessageType/VideoMessage';
 import StickerMessage from '../MessageType/StickerMessage';
@@ -18,7 +17,7 @@ import { checkLeader } from 'utils/groupUtils';
 import messageApi from 'api/messageApi';
 import ListReaction from '../ListReaction';
 import ListReactionOfUser from '../ListReactionOfUser';
-import { Button, Dropdown, Menu } from 'antd';
+import { Button, Dropdown, Menu, message as mesageNotify } from 'antd';
 import { MdQuestionAnswer } from 'react-icons/md';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
 import MESSAGE_STYLE from 'constants/messageStyle';
@@ -27,6 +26,12 @@ import {
     PushpinOutlined,
     UndoOutlined,
 } from '@ant-design/icons';
+import './style.scss';
+
+import {
+    deleteMessageClient,
+    fetchPinMessages,
+} from 'features/Chat/slice/chatSlice';
 
 UserMessage.propTypes = {
     message: PropTypes.object,
@@ -68,7 +73,6 @@ function UserMessage({
         replyMessageId,
     } = message;
 
-    console.log('mess...', message);
     const { name, avatar } = user;
     const {
         messages,
@@ -81,6 +85,8 @@ function UserMessage({
     const global = useSelector((state) => state.global);
 
     const [isLeader, setIsLeader] = useState(false);
+    const [isVisbleModal, setVisibleModal] = useState(false);
+
     const dispatch = useDispatch();
 
     const isGroup = conversations.find(
@@ -204,7 +210,36 @@ function UserMessage({
         }
     };
 
-    const handleOnClick = () => {};
+    const handleOnClick = async ({ key }) => {
+        console.log('Keymenu', key);
+        if (key === '1') {
+            if (pinMessages.length === 3) {
+                setVisibleModal(true);
+            } else {
+                try {
+                    await pinMessages.pinMessages(id);
+                    dispatch(
+                        fetchPinMessages({
+                            conversationId: currentConversation,
+                        })
+                    );
+                    mesageNotify.success('Ghim tin nhắn thành công');
+                } catch (error) {
+                    mesageNotify.error('Ghim tin nhắn thất bại');
+                }
+            }
+        }
+        if (key === '2') {
+            console.log('undoMessage', id);
+
+            await messageApi.undoMessage(id);
+        }
+        if (key === '3') {
+            console.log('xoa tin nhan', id);
+            await messageApi.deleteMessageClientSide(id);
+            dispatch(deleteMessageClient(id));
+        }
+    };
     const menu = (
         <Menu onClick={handleOnClick}>
             {isGroup === 'GROUP' && !currentChannel && type !== 'STICKER' && (
@@ -233,7 +268,7 @@ function UserMessage({
                 icon={<DeleteOutlined />}
                 style={MESSAGE_STYLE.dropDownStyle}
                 danger
-                title="Chỉ xóa ở phía tôi"
+                title="Xóa chỉ ở phía tôi"
             >
                 Chỉ xóa ở phía tôi
             </Menu.Item>
@@ -314,10 +349,27 @@ function UserMessage({
                                             </span>
                                             <div className="content-message-description">
                                                 {isDeleted ? (
-                                                    <span className="undo-message">
+                                                    <>
                                                         {' '}
-                                                        Tin nhắn đã được thu hồi
-                                                    </span>
+                                                        <span className="undo-message">
+                                                            {' '}
+                                                            Tin nhắn đã được thu
+                                                            hồi
+                                                        </span>
+                                                        <div className="time-and-last_view">
+                                                            <div className="time-send">
+                                                                <span>
+                                                                    {`0${dateAt.getHours()}`.slice(
+                                                                        -2
+                                                                    )}
+                                                                    :
+                                                                    {`0${dateAt.getMinutes()}`.slice(
+                                                                        -2
+                                                                    )}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </>
                                                 ) : (
                                                     <>
                                                         {type === 'TEXT' ? (
@@ -532,7 +584,7 @@ function UserMessage({
                                                 isDeleted ? 'hidden' : ''
                                             }`}
                                         >
-                                            <div className="reply icon-interact">
+                                            <div className="icon-interact">
                                                 <Button
                                                     style={
                                                         MESSAGE_STYLE.styleButton

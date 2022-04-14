@@ -1,9 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { message } from 'antd';
 import channelApi from 'api/channelApi';
 import classifyApi from 'api/ClassifyApi';
 import conversationApi from 'api/conversationApi';
 import friendApi from 'api/friendApi';
 import messageApi from 'api/messageApi';
+import pinMessageApi from 'api/pinMessageApi';
 import pollApi from 'api/pollApi';
 import stickerApi from 'api/stickerApi';
 
@@ -186,6 +188,16 @@ export const fetchPolls = createAsyncThunk(
         return data;
     }
 );
+// ============ PIN MESSAGE ==============
+
+export const fetchPinMessages = createAsyncThunk(
+    `${KEY}/fetchPinMessages`,
+    async (params, thunkApi) => {
+        const { conversationId } = params;
+        const pinMessages = await pinMessageApi.getPinMessages(conversationId);
+        return pinMessages;
+    }
+);
 
 const chatSlice = createSlice({
     name: KEY,
@@ -208,6 +220,7 @@ const chatSlice = createSlice({
         polls: [],
         totalPagesPoll: 0,
         totalChannelNotify: 0,
+        pinMessages: [],
     },
     reducers: {
         setLoading: (state, action) => {
@@ -493,6 +506,43 @@ const chatSlice = createSlice({
                 state.messages[index].reacts = reacts;
             }
         },
+        //deleteMessage
+        deleteMessageClient: (state, action) => {
+            const idMessage = action.payload;
+            const newMessages = state.messages.filter(
+                (message) => message.id !== idMessage
+            );
+            state.messages = newMessages;
+        },
+        setUndoMessage: (state, action) => {
+            const { messageId, conversationId } = action.payload;
+            console.log('undo mess', action.payload);
+
+            const oldMessage = state.messages.find(
+                (message) => message.id === messageId
+            );
+
+            const { id, user, createdAt } = oldMessage;
+            const index = state.messages.findIndex(
+                (message) => message.id === messageId
+            );
+
+            const newMessage = {
+                id,
+                user,
+                createdAt,
+                isDeleted: 'true',
+            };
+
+            state.messages[index] = newMessage;
+
+            if (conversationId) {
+                const indexConver = state.conversations.findIndex(
+                    (conver) => conver.id === conversationId
+                );
+                state.conversations[indexConver].lastMessage.isDeleted = true;
+            }
+        },
     },
     extraReducers: {
         // conversation
@@ -640,6 +690,10 @@ const chatSlice = createSlice({
             state.polls = action.payload.data;
             state.totalPagesPoll = action.payload.totalPages;
         },
+        // PinMessage
+        [fetchPinMessages.fulfilled]: (state, action) => {
+            state.pinMessages = action.payload.reverse();
+        },
     },
 });
 
@@ -670,6 +724,8 @@ export const {
     addManagers,
     deleteManager,
     setReactionMessage,
+    deleteMessageClient,
+    setUndoMessage,
 } = actions;
 
 export default reducer;

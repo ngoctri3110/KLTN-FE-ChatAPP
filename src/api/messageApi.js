@@ -43,5 +43,11 @@ const messageApi = {
     expressionReaction: (idMessage, type) => {
         return axiosClient.post(`${API_URL}/reacts/${idMessage}/${type}`);
     },
+    undoMessage: (messageId) => {
+        return axiosClient.delete(`${API_URL}/unsend/${messageId}`);
+    },
+    deleteMessageClientSide: (messageId) => {
+        return axiosClient.delete(`${API_URL}/unsend/${messageId}/just-me`);
+    },
 };
 export default messageApi;

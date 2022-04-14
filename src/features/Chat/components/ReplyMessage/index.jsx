@@ -10,8 +10,6 @@ const ReplyMessage = ({ replyMessage }) => {
     const fileExtension =
         replyMessage.type === 'FILE' && fileHelpers.getFileExtension(fileName);
 
-    const [visible, setVisible] = useState(false);
-
     const handleOpenModal = () => {};
     return (
         <>

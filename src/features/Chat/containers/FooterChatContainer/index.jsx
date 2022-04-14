@@ -281,6 +281,11 @@ function FooterChatContainer({
 
     const handleClickTextFormat = () => {};
 
+    const handleOnCloseReply = () => {
+        if (onCloseReply) {
+            onCloseReply();
+        }
+    };
     return (
         <div id="main-footer-chat">
             <div className="navigation">
@@ -296,7 +301,7 @@ function FooterChatContainer({
             {replyMessage && Object.keys(replyMessage).length > 0 && (
                 <ReplyBlock
                     replyMessage={replyMessage}
-                    onCloseReply={onCloseReply}
+                    onCloseReply={handleOnCloseReply}
                 />
             )}
 

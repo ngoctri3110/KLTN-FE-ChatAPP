@@ -23,6 +23,7 @@ import {
     setCurrentConversation,
     setReactionMessage,
     setTotalChannelNotify,
+    setUndoMessage,
     updateAvavarConver,
     updateChannel,
     updateInfoChannel,
@@ -451,8 +452,23 @@ function Chat({ socket, idNewMessage }) {
                 }
             );
 
-            //test data response reaction
-            // socket.on('MessageReactAdd', (...data) => console.log(data));
+            socket.on(
+                'MessageDelete',
+                ({ conversationId, channelId, messageId }) => {
+                    if (
+                        refCurrentConversation.current === conversationId &&
+                        refCurrentChannel.current === channelId
+                    ) {
+                        dispatch(setUndoMessage({ messageId }));
+                    }
+                    if (
+                        !channelId &&
+                        refCurrentConversation.current === conversationId
+                    ) {
+                        dispatch(setUndoMessage({ messageId, conversationId }));
+                    }
+                }
+            );
         }
 
         // dispatch(setJoinChatLayout(true));
@@ -615,7 +631,6 @@ function Chat({ socket, idNewMessage }) {
                                                 onScrollWhenSentText={
                                                     handleScrollWhenSent
                                                 }
-                                                onCloseReply={handleCloseReply}
                                                 onRemoveMention={
                                                     handleOnRemoveMention
                                                 }
@@ -625,6 +640,7 @@ function Chat({ socket, idNewMessage }) {
                                                 }
                                                 userMention={userMention}
                                                 replyMessage={replyMessage}
+                                                onCloseReply={handleCloseReply}
                                                 socket={socket}
                                             />
                                         </div>
