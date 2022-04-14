@@ -516,8 +516,6 @@ const chatSlice = createSlice({
         },
         setUndoMessage: (state, action) => {
             const { messageId, conversationId } = action.payload;
-            console.log('undo mess', action.payload);
-
             const oldMessage = state.messages.find(
                 (message) => message.id === messageId
             );

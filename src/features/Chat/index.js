@@ -17,6 +17,7 @@ import {
     fetchConversationById,
     fetchListFriends,
     fetchListMessages,
+    fetchPinMessages,
     getLastViewOfMembers,
     isDeletedFromGroup,
     setCurrentChannel,
@@ -40,6 +41,8 @@ import GroupNews from './components/GroupNews';
 import InfoContainer from './containers/InfoContainer';
 import { setJoinChatLayout } from 'app/globalSlice';
 import { DoubleLeftOutlined, DownOutlined } from '@ant-design/icons';
+import DrawerPinMessage from './components/DrawerPinMessage';
+import SummedPinMessage from './components/SummedPinMessage';
 
 Chat.propTypes = {
     socket: PropTypes.object,
@@ -61,12 +64,13 @@ function Chat({ socket, idNewMessage }) {
         currentConversation,
         currentChannel,
         channels,
+        pinMessages,
     } = useSelector((state) => state.chat);
     const { isJoinChatLayout, isJoinFriendLayout, user } = useSelector(
         (state) => state.global
     );
     //=========================================
-
+    console.log('pinMessages chat', pinMessages);
     const location = useLocation();
     const [isOpenInfo, setIsOpenInfo] = useState(true);
     const [openDrawerInfo, setOpenDrawerInfo] = useState(false);
@@ -84,6 +88,7 @@ function Chat({ socket, idNewMessage }) {
     const [usersTyping, setUsersTyping] = useState([]);
     const [visibleNews, setVisibleNews] = useState(false);
     const [tabActiveInNews, setTabActiveNews] = useState(0);
+    const [isOpenDrawerPin, setIsOpenDrawerPin] = useState(false);
 
     // filter search=====================================
     const [visibleFilter, setVisbleFilter] = useState(false);
@@ -175,6 +180,18 @@ function Chat({ socket, idNewMessage }) {
         //eslint-disable-next-line
     }, []);
 
+    //fetch pinMessages
+    useEffect(() => {
+        if (
+            currentConversation &&
+            conversations.find((conver) => conver.id === currentConversation)
+                .type === 'GROUP'
+        ) {
+            dispatch(fetchPinMessages({ conversationId: currentConversation }));
+        }
+        //eslint-disable-next-line
+    }, [currentConversation]);
+
     const handleBackToBottom = (value, message) => {
         if (message) {
             setHasMessage(message);
@@ -217,7 +234,6 @@ function Chat({ socket, idNewMessage }) {
     };
     // Reply message ==============
     const handleOnReply = (mes) => {
-        console.log('func mes', mes);
         setReplyMessage(mes);
     };
     const handleCloseReply = () => {
@@ -236,14 +252,15 @@ function Chat({ socket, idNewMessage }) {
         setVisibleNews(true);
         setTabActiveNews(2);
     };
+    // Pin message====
+    const handleViewNews = () => {
+        setVisibleNews(true);
+        setTabActiveNews(0);
+    };
     //Socket
     useEffect(() => {
         console.log('isJoinChatLayout', isJoinChatLayout);
         if (!isJoinChatLayout) {
-            socket.on('ConversationGroupCreate', (conversationId) => {
-                dispatch(fetchConversationById({ conversationId }));
-            });
-
             socket.on('ConversationDelete', (conversationId) => {
                 console.log('conversationId', conversationId);
 
@@ -561,6 +578,64 @@ function Chat({ socket, idNewMessage }) {
                                                 onReply={handleOnReply}
                                                 onMention={handleOnMention}
                                             />
+
+                                            {pinMessages.length > 1 &&
+                                                conversations.find(
+                                                    (conver) =>
+                                                        conver.id ===
+                                                        currentConversation
+                                                ).type === 'GROUP' &&
+                                                !currentChannel && (
+                                                    <div className="pin-message">
+                                                        <DrawerPinMessage
+                                                            isOpen={
+                                                                isOpenDrawerPin
+                                                            }
+                                                            onClose={() =>
+                                                                setIsOpenDrawerPin(
+                                                                    false
+                                                                )
+                                                            }
+                                                            message={
+                                                                pinMessages
+                                                            }
+                                                        />
+                                                    </div>
+                                                )}
+
+                                            {pinMessages.length > 0 &&
+                                                conversations.find(
+                                                    (conver) =>
+                                                        conver.id ===
+                                                        currentConversation
+                                                ).type === 'GROUP' &&
+                                                !currentChannel && (
+                                                    <div className="summed-pin-message">
+                                                        <SummedPinMessage
+                                                            isHover={false}
+                                                            isItem={
+                                                                pinMessages.length >
+                                                                1
+                                                                    ? false
+                                                                    : true
+                                                            }
+                                                            message={
+                                                                pinMessages[0]
+                                                            }
+                                                            quantity={
+                                                                pinMessages.length
+                                                            }
+                                                            onOpenDrawer={() =>
+                                                                setIsOpenDrawerPin(
+                                                                    true
+                                                                )
+                                                            }
+                                                            onViewNews={
+                                                                handleViewNews
+                                                            }
+                                                        />
+                                                    </div>
+                                                )}
 
                                             <div
                                                 id="back-top-button"

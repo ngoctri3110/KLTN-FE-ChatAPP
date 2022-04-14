@@ -1,9 +1,9 @@
 import axiosClient from './axiosClient';
 
-const API_URL = '/message/polls';
+const API_URL = '/message/pin';
 
 const pinMessageApi = {
-    getPinMessage: (conversationId) => {
+    getPinMessages: (conversationId) => {
         return axiosClient.get(`${API_URL}/${conversationId}`);
     },
     pinMessage: (messageId) => {

@@ -130,7 +130,7 @@ function ShortMessage({ message, type }) {
                         )}
 
                     {message.type === 'NOTIFY' &&
-                        message.content === 'PIN_MESSAGE' && (
+                        message.content === 'Đã ghim 1 tin nhắn' && (
                             <span>
                                 {renderName()}
                                 <PushpinOutlined />

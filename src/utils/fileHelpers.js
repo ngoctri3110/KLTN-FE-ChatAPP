@@ -1,9 +1,12 @@
 const fileHelpers = {
     getFileName: (url) => {
         const splitArrayTempt = url.split('/');
-        const splitArrayName = splitArrayTempt[3].split('-');
+
+        const splitArrayName = splitArrayTempt[4].split('-');
+
         if (splitArrayName.length === 3) {
-            return splitArrayName[2];
+            let newSplitArrayName = splitArrayName[2].replace(/%20/g, ' ');
+            return newSplitArrayName;
         } else {
             let temp = '';
             for (let index = 2; index < splitArrayName.length; index++) {

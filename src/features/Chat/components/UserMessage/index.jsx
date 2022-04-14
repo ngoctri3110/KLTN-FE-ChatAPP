@@ -32,6 +32,7 @@ import {
     deleteMessageClient,
     fetchPinMessages,
 } from 'features/Chat/slice/chatSlice';
+import pinMessageApi from 'api/pinMessageApi';
 
 UserMessage.propTypes = {
     message: PropTypes.object,
@@ -217,7 +218,7 @@ function UserMessage({
                 setVisibleModal(true);
             } else {
                 try {
-                    await pinMessages.pinMessages(id);
+                    await pinMessageApi.pinMessage(id);
                     dispatch(
                         fetchPinMessages({
                             conversationId: currentConversation,
@@ -230,12 +231,9 @@ function UserMessage({
             }
         }
         if (key === '2') {
-            console.log('undoMessage', id);
-
             await messageApi.undoMessage(id);
         }
         if (key === '3') {
-            console.log('xoa tin nhan', id);
             await messageApi.deleteMessageClientSide(id);
             dispatch(deleteMessageClient(id));
         }
@@ -270,7 +268,7 @@ function UserMessage({
                 danger
                 title="Xóa chỉ ở phía tôi"
             >
-                Chỉ xóa ở phía tôi
+                Xóa chỉ ở phía tôi
             </Menu.Item>
         </Menu>
     );

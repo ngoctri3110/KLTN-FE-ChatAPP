@@ -48,7 +48,7 @@ function NotifyMessage({ message }) {
         if (text === 'Đã là bạn bè') {
             return 6;
         }
-        if (text === 'PIN_MESSAGE') {
+        if (text === 'Đã ghim 1 tin nhắn') {
             return 7;
         }
         if (text === 'NOT_PIN_MESSAGE') {
