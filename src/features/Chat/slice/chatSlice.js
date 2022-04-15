@@ -541,6 +541,19 @@ const chatSlice = createSlice({
                 state.conversations[indexConver].lastMessage.isDeleted = true;
             }
         },
+        updateTimeForConver: (state, action) => {
+            const { id, isOnline, lastLogin } = action.payload;
+            const index = state.conversations.findIndex(
+                (conver) => conver.id === id
+            );
+
+            const newConver = {
+                ...state.conversations[index],
+                isOnline,
+                lastLogin,
+            };
+            state.conversations[index] = newConver;
+        },
     },
     extraReducers: {
         // conversation
@@ -724,6 +737,7 @@ export const {
     setReactionMessage,
     deleteMessageClient,
     setUndoMessage,
+    updateTimeForConver,
 } = actions;
 
 export default reducer;

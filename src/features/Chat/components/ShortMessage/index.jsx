@@ -74,7 +74,7 @@ function ShortMessage({ message, type }) {
                         <span>
                             {renderName()}
                             <PlaySquareOutlined />
-                            &nbsp;đã gửi một Video
+                            &nbsp;đã gửi một video
                         </span>
                     )}
 
@@ -139,11 +139,11 @@ function ShortMessage({ message, type }) {
                         )}
 
                     {message.type === 'NOTIFY' &&
-                        message.content === 'NOT_PIN_MESSAGE' && (
+                        message.content === 'Gỡ ghim 1 tin nhắn' && (
                             <span>
                                 {renderName()}
                                 <PushpinOutlined />
-                                &nbsp;đã ghim bỏ ghim một tin nhắn
+                                &nbsp;đã bỏ ghim một tin nhắn
                             </span>
                         )}
 
@@ -174,7 +174,7 @@ function ShortMessage({ message, type }) {
                             </span>
                         )}
                     {message.type === 'NOTIFY' &&
-                        message.content === 'Tham gia từ link' && (
+                        message.content === 'Đã vào nhóm từ link' && (
                             <span>{renderName()} đã tham gia nhóm </span>
                         )}
                     {message.type === 'STICKER' && (

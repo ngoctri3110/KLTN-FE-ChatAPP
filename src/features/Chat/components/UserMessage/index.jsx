@@ -212,7 +212,6 @@ function UserMessage({
     };
 
     const handleOnClick = async ({ key }) => {
-        console.log('Keymenu', key);
         if (key === '1') {
             if (pinMessages.length === 3) {
                 setVisibleModal(true);

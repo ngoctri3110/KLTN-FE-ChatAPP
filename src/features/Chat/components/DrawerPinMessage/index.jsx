@@ -40,7 +40,7 @@ function DrawerPinMessage({ isOpen, onClose, message }) {
                     onClose={handleOnCloseDrawer}
                     getContainer={false}
                     placement="top"
-                    style={{ position: 'absolute' }}
+                    style={{ position: 'absolute', overflow: 'hidden' }}
                     closable={false}
                     bodyStyle={DrawerPinMessageStyle.WRAPPER_STYLE}
                 >
@@ -68,7 +68,7 @@ function DrawerPinMessage({ isOpen, onClose, message }) {
                     </div>
 
                     <div className="drawer-footer" onClick={handlViewNews}>
-                        <CaretDownOutlined />
+                        <CaretDownOutlined rotate={180} />
                     </div>
                 </Drawer>
             </div>

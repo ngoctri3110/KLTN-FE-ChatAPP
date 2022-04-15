@@ -51,13 +51,13 @@ function NotifyMessage({ message }) {
         if (text === 'Đã ghim 1 tin nhắn') {
             return 7;
         }
-        if (text === 'NOT_PIN_MESSAGE') {
+        if (text === 'Gỡ ghim 1 tin nhắn') {
             return 8;
         }
         if (text.startsWith('Đã đổi tên nhóm thành: ')) {
             return 9;
         }
-        if (text === 'Tham gia từ link') {
+        if (text === 'Đã vào nhóm từ link') {
             return 10;
         }
 
@@ -236,7 +236,7 @@ function NotifyMessage({ message }) {
                             <span className="user-name-strong">
                                 {isMyActive}
                             </span>
-                            &nbsp; đã tham gia nhóm
+                            &nbsp;đã tham gia nhóm
                         </div>
                     </div>
                 )}

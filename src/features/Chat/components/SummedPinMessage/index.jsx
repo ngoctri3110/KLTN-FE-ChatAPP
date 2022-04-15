@@ -38,7 +38,6 @@ function SummedPinMessage({
     quantity,
     isHover,
 }) {
-    console.log('summed mess', message);
     const { currentConversation } = useSelector((state) => state.chat);
 
     const [visible, setVisible] = useState(false);
@@ -81,7 +80,7 @@ function SummedPinMessage({
     };
     const BUTTON_LIST = {
         fontSize: '1.3rem',
-        borderRadius: '10px',
+        borderRadius: '6px',
         padding: '0.2rem 1rem',
         height: 'unset',
     };

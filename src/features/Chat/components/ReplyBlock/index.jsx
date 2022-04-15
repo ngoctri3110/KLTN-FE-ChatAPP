@@ -78,9 +78,9 @@ function ReplyBlock({ replyMessage, onCloseReply }) {
                     ) : replyMessage.type === 'VIDEO' ? (
                         <span>[Video]</span>
                     ) : replyMessage.type === 'STICKER' ? (
-                        <span>[File] {fileName}</span>
-                    ) : replyMessage.type === 'FILE' ? (
                         <span>[Stikcer]</span>
+                    ) : replyMessage.type === 'FILE' ? (
+                        <span>[File] {fileName}</span>
                     ) : replyMessage.type === 'HTML' ? (
                         <span>[Văn bản]</span>
                     ) : (

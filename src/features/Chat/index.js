@@ -1,4 +1,11 @@
-import { Col, Row, Spin, Drawer, notification } from 'antd';
+import {
+    Col,
+    Row,
+    Spin,
+    Drawer,
+    notification,
+    message as messageNotify,
+} from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -19,6 +26,7 @@ import {
     fetchListMessages,
     fetchPinMessages,
     getLastViewOfMembers,
+    getMembersConversation,
     isDeletedFromGroup,
     setCurrentChannel,
     setCurrentConversation,
@@ -31,18 +39,19 @@ import {
     updateMemberInConver,
     updateMessageViewLast,
     updateNameOfConver,
+    updateTimeForConver,
 } from './slice/chatSlice';
 import { useLocation } from 'react-router-dom';
 import useWindowSize from 'hooks/useWindowSize';
 import BodyChatContainer from './containers/BodyChatContainer';
-import './style.scss';
 import renderWidthDrawer from 'utils/DrawerResponsive';
 import GroupNews from './components/GroupNews';
 import InfoContainer from './containers/InfoContainer';
-import { setJoinChatLayout } from 'app/globalSlice';
 import { DoubleLeftOutlined, DownOutlined } from '@ant-design/icons';
 import DrawerPinMessage from './components/DrawerPinMessage';
 import SummedPinMessage from './components/SummedPinMessage';
+import './style.scss';
+import ModalJoinGroupFromLink from 'components/ModalJoinGroupFromLink';
 
 Chat.propTypes = {
     socket: PropTypes.object,
@@ -70,7 +79,6 @@ function Chat({ socket, idNewMessage }) {
         (state) => state.global
     );
     //=========================================
-    console.log('pinMessages chat', pinMessages);
     const location = useLocation();
     const [isOpenInfo, setIsOpenInfo] = useState(true);
     const [openDrawerInfo, setOpenDrawerInfo] = useState(false);
@@ -89,6 +97,8 @@ function Chat({ socket, idNewMessage }) {
     const [visibleNews, setVisibleNews] = useState(false);
     const [tabActiveInNews, setTabActiveNews] = useState(0);
     const [isOpenDrawerPin, setIsOpenDrawerPin] = useState(false);
+    const [infoGroup, setInfoGroup] = useState({});
+    const [isVisibleModalJoinGroup, setIsVisibleJoinGroup] = useState(false);
 
     // filter search=====================================
     const [visibleFilter, setVisbleFilter] = useState(false);
@@ -204,6 +214,9 @@ function Chat({ socket, idNewMessage }) {
     const hanldeResetScrollButton = (value) => {
         setIsScroll(value);
     };
+    const hanldeOnClickScroll = () => {
+        setIsScroll(true);
+    };
     const handleOnFilterClassfiy = () => {};
 
     const handleScrollWhenSent = (value) => {
@@ -257,13 +270,91 @@ function Chat({ socket, idNewMessage }) {
         setVisibleNews(true);
         setTabActiveNews(0);
     };
+    //===================================
+    const emitUserOnline = (currentConver) => {
+        if (currentConver) {
+            const conver = conversations.find(
+                (conver) => conver.id === currentConver
+            );
+
+            if (conver.type === 'DUAL') {
+                const userId = conver.members[0].id;
+                socket.emit(
+                    'UserGetStatus',
+                    userId,
+                    ({ isOnline, lastLogin }) => {
+                        dispatch(
+                            updateTimeForConver({
+                                id: currentConver,
+                                isOnline,
+                                lastLogin,
+                            })
+                        );
+                    }
+                );
+            }
+        }
+    };
+
+    useEffect(() => {
+        emitUserOnline(currentConversation);
+        //eslint-disable-next-line
+    }, [currentConversation]);
+
+    useEffect(() => {
+        const intervalCall = setInterval(() => {
+            emitUserOnline(currentConversation);
+        }, 90000);
+
+        return () => {
+            clearInterval(intervalCall);
+        };
+        //eslint-disable-next-line
+    }, [currentConversation]);
+
+    //===================
+    useEffect(() => {
+        const openModalJoinFromLink = async () => {
+            if (location.state && location.state.conversationId) {
+                const listConver =
+                    await conversationApi.fetchListConversations();
+
+                const tempId = location.state.conversationId;
+
+                if (
+                    listConver.findIndex((conver) => conver.id === tempId) < 0
+                ) {
+                    try {
+                        const infoGroup =
+                            await conversationApi.getSortInfoGroup(tempId);
+                        setInfoGroup(infoGroup);
+                        setIsVisibleJoinGroup(true);
+                    } catch (error) {
+                        messageNotify.warning(
+                            'Trưởng nhóm đã tắt tính năng tham gia nhóm bằng liên kết'
+                        );
+                    }
+                } else {
+                    dispatch(
+                        fetchListMessages({ conversationId: tempId, size: 10 })
+                    );
+                    dispatch(
+                        getMembersConversation({ conversationId: tempId })
+                    );
+
+                    dispatch(getLastViewOfMembers({ conversationId: tempId }));
+                }
+            }
+        };
+        openModalJoinFromLink();
+        //eslint-disable-next-line
+    }, []);
+
     //Socket
     useEffect(() => {
         console.log('isJoinChatLayout', isJoinChatLayout);
         if (!isJoinChatLayout) {
             socket.on('ConversationDelete', (conversationId) => {
-                console.log('conversationId', conversationId);
-
                 const conver = refConversations.current.find(
                     (ele) => ele.id === conversationId
                 );
@@ -285,7 +376,6 @@ function Chat({ socket, idNewMessage }) {
                 dispatch(deleteConversation(conversationId));
             });
             socket.on('ConsersationRemoveYou', (conversationId) => {
-                console.log('conversationId', conversationId);
                 const conversation = refConversations.current.find(
                     (ele) => ele.id === conversationId
                 );
@@ -311,7 +401,7 @@ function Chat({ socket, idNewMessage }) {
             socket.on(
                 'MessageViewLast',
                 ({ conversationId, userId, lastView, channelId }) => {
-                    if (userId != user.id) {
+                    if (userId !== user.id) {
                         dispatch(
                             updateMessageViewLast({
                                 conversationId,
@@ -333,7 +423,7 @@ function Chat({ socket, idNewMessage }) {
 
             socket.on('ConversationMemberUpdate', async (conversationId) => {
                 if (conversationId === refCurrentConversation.current) {
-                    await dispatch(getLastViewOfMembers({ conversationId }));
+                    dispatch(getLastViewOfMembers({ conversationId }));
                     const newMember =
                         await conversationApi.getMemberInConversation(
                             refCurrentConversation.current
@@ -486,16 +576,35 @@ function Chat({ socket, idNewMessage }) {
                     }
                 }
             );
+
+            socket.on('MessagePinAdd', (conversationId) => {
+                if (conversationId === refCurrentConversation.current) {
+                    dispatch(fetchPinMessages({ conversationId }));
+                }
+            });
+            socket.on('MessagePinDelete', (conversationId) => {
+                if (conversationId === refCurrentConversation.current) {
+                    dispatch(fetchPinMessages({ conversationId }));
+                }
+            });
         }
 
         // dispatch(setJoinChatLayout(true));
     }, []);
 
-    const hanldeOnClickScroll = () => {
-        setIsScroll(true);
+    const handleCancelModalJoinGroup = () => {
+        setIsVisibleJoinGroup(false);
     };
+
     return (
         <Spin spinning={isLoading}>
+            {Object.keys(infoGroup).length > 0 && (
+                <ModalJoinGroupFromLink
+                    isVisible={isVisibleModalJoinGroup}
+                    info={infoGroup}
+                    onCancel={handleCancelModalJoinGroup}
+                />
+            )}
             <div id="main-chat-wrapper">
                 <Row gutter={[0, 0]}>
                     <Col

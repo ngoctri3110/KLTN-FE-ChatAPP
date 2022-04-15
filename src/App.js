@@ -1,4 +1,5 @@
 import { fetchUserProfile } from 'app/globalSlice';
+import JoinFromLink from 'components/JoinFromLink';
 import ProtectedRoute from 'components/ProtectedRoute';
 import Account from 'features/Account';
 
@@ -30,6 +31,10 @@ function App() {
         <div className="App">
             <Routes>
                 <Route path="/*" element={<Account />} />
+                <Route
+                    path="/tl-link/:conversationId"
+                    element={<JoinFromLink />}
+                />
                 <Route
                     path="chat/*"
                     element={

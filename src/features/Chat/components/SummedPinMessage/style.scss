@@ -43,6 +43,8 @@
         margin-left: 1rem;
     }
     &_title {
+        display: flex;
+        align-content: flex-start;
         font-weight: 500;
         font-size: 1.3rem;
     }

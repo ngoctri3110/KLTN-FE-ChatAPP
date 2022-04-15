@@ -59,7 +59,7 @@ function InfoMember({ viewMemberClick, quantity }) {
     };
     const handleCopyLink = () => {
         navigator.clipboard.writeText(
-            `${process.env.REACT_APP_URL}/g-link/${currentConversation}`
+            `${process.env.REACT_APP_URL}/tl-link/${currentConversation}`
         );
         message.info('Đã sao chép link');
     };
@@ -129,7 +129,7 @@ function InfoMember({ viewMemberClick, quantity }) {
                         </div>
 
                         <div className="info_member-interact_link-join">
-                            {`${process.env.REACT_APP_URL}/g-link/${currentConversation}`}
+                            {`${process.env.REACT_APP_URL}/tl-link/${currentConversation}`}
                         </div>
                     </div>
 
