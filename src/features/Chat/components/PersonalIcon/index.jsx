@@ -66,7 +66,7 @@ function PersonalIcon(props) {
                                 padding: '0.24rem',
                                 borderRadius: '50%',
                                 color: 'yellow',
-                                fontSize: '1.2rem',
+                                fontSize: '1.3rem',
                             }}
                         />
                     ) : isManager ? (
@@ -77,7 +77,7 @@ function PersonalIcon(props) {
                                 padding: '0.24rem',
                                 borderRadius: '50%',
                                 color: 'silver',
-                                fontSize: '1.2rem',
+                                fontSize: '1.3rem',
                             }}
                         />
                     ) : (

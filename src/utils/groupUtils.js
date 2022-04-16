@@ -33,3 +33,9 @@ export const checkLeader = (idUser, listConver, idCurrentConver) => {
     const conver = listConver.find((item) => item.id === idCurrentConver);
     return conver.leaderId === idUser;
 };
+
+export const checkManager = (idUser, listConver, idCurrentConver) => {
+    const conver = listConver.find((item) => item.id === idCurrentConver);
+    const manager = conver.managerIds.find((manager) => manager === idUser);
+    return manager;
+};

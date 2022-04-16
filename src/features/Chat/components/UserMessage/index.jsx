@@ -1,38 +1,38 @@
-import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 
-import { useDispatch, useSelector } from 'react-redux';
-import PersonalIcon from '../PersonalIcon';
-import { useState } from 'react';
-import TextMessage from '../MessageType/TextMessage';
-import ImageMessage from '../MessageType/ImageMessage';
-import VideoMessage from '../MessageType/VideoMessage';
-import StickerMessage from '../MessageType/StickerMessage';
-import FileMessage from '../MessageType/FileMessage';
-import HTMLMessage from '../MessageType/HTMLMessage';
-import LastView from '../LastView';
-import NotifyMessage from '../MessageType/NotifyMessage';
-import PollMessage from '../MessageType/PollMessage';
-import { checkLeader } from 'utils/groupUtils';
-import messageApi from 'api/messageApi';
-import ListReaction from '../ListReaction';
-import ListReactionOfUser from '../ListReactionOfUser';
-import { Button, Dropdown, Menu, message as mesageNotify } from 'antd';
-import { MdQuestionAnswer } from 'react-icons/md';
-import { BiDotsHorizontalRounded } from 'react-icons/bi';
-import MESSAGE_STYLE from 'constants/messageStyle';
 import {
     DeleteOutlined,
     PushpinOutlined,
     UndoOutlined,
 } from '@ant-design/icons';
+import { Button, Dropdown, Menu, message as mesageNotify } from 'antd';
+import messageApi from 'api/messageApi';
+import MESSAGE_STYLE from 'constants/messageStyle';
+import { useState } from 'react';
+import { BiDotsHorizontalRounded } from 'react-icons/bi';
+import { MdQuestionAnswer } from 'react-icons/md';
+import { useDispatch, useSelector } from 'react-redux';
+import { checkLeader, checkManager } from 'utils/groupUtils';
+import LastView from '../LastView';
+import ListReaction from '../ListReaction';
+import ListReactionOfUser from '../ListReactionOfUser';
+import FileMessage from '../MessageType/FileMessage';
+import HTMLMessage from '../MessageType/HTMLMessage';
+import ImageMessage from '../MessageType/ImageMessage';
+import NotifyMessage from '../MessageType/NotifyMessage';
+import PollMessage from '../MessageType/PollMessage';
+import StickerMessage from '../MessageType/StickerMessage';
+import TextMessage from '../MessageType/TextMessage';
+import VideoMessage from '../MessageType/VideoMessage';
+import PersonalIcon from '../PersonalIcon';
 import './style.scss';
 
+import pinMessageApi from 'api/pinMessageApi';
 import {
     deleteMessageClient,
     fetchPinMessages,
 } from 'features/Chat/slice/chatSlice';
-import pinMessageApi from 'api/pinMessageApi';
 
 UserMessage.propTypes = {
     message: PropTypes.object,
@@ -86,6 +86,7 @@ function UserMessage({
     const global = useSelector((state) => state.global);
 
     const [isLeader, setIsLeader] = useState(false);
+    const [isManager, setIsManager] = useState(false);
     const [isVisbleModal, setVisibleModal] = useState(false);
 
     const dispatch = useDispatch();
@@ -169,6 +170,7 @@ function UserMessage({
 
     useEffect(() => {
         setIsLeader(checkLeader(user.id, conversations, currentConversation));
+        setIsManager(checkManager(user.id, conversations, currentConversation));
         //eslint-disable-next-line
     }, [messages]);
 
@@ -304,6 +306,7 @@ function UserMessage({
                             >
                                 <PersonalIcon
                                     isHost={isLeader}
+                                    isManager={isManager}
                                     demention={40}
                                     avatar={avatar?.url}
                                     name={name}

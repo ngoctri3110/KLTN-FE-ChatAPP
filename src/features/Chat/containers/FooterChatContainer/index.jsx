@@ -273,6 +273,9 @@ function FooterChatContainer({
             );
         }
     };
+    const handleSentLike = () => {
+        sendMessage('👍', 'TEXT');
+    };
     const handleOnScroll = (id) => {
         if (onScrollWhenSentText) {
             onScrollWhenSentText(id);
@@ -366,7 +369,10 @@ function FooterChatContainer({
                 </div>
                 <div className="addtion-interaction">
                     <div className={`like-emoji ${isShowLike ? '' : 'hidden'}`}>
-                        <div className="send-text-thumb">
+                        <div
+                            className="send-text-thumb"
+                            onClick={handleSentLike}
+                        >
                             <LikeOutlined />
                         </div>
                     </div>
