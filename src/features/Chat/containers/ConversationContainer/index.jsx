@@ -44,15 +44,12 @@ function ConversationContainer({ valueClassify }) {
     const converFilter = [...conversations].filter((ele) => {
         if (checkConverInClassify(ele.id)) return true;
     });
-    const handleConversationClick = async (conversationId) => {
-        // dispatch(setCurrentConversation(conversationId));
 
+    const handleConversationClick = async (conversationId) => {
         dispatch(setCurrentChannel(''));
         dispatch(getLastViewOfMembers({ conversationId }));
         dispatch(fetchListMessages({ conversationId, size: 10 }));
-
         dispatch(getMembersConversation({ conversationId }));
-        dispatch(setTypeOfConversation(conversationId));
         dispatch(fetchChannels({ conversationId }));
     };
 

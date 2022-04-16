@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-
 import PropTypes from 'prop-types';
-import './style.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { CaretDownOutlined, NumberOutlined } from '@ant-design/icons';
 import ChannelItem from '../ChannelItem';
@@ -11,17 +9,19 @@ import {
     getLastViewOfMembers,
     setCurrentChannel,
 } from 'features/Chat/slice/chatSlice';
+import './style.scss';
+
 import channelApi from 'api/channelApi';
 
 Channel.propTypes = {
     onViewChannel: PropTypes.func,
-    data: PropTypes.array,
+    channels: PropTypes.array,
     onOpenInfoBlock: PropTypes.func,
 };
 
 Channel.defaultProps = {
     onViewChannel: null,
-    data: [],
+    channels: [],
     onOpenInfoBlock: null,
 };
 const styleIconDrop = {
@@ -32,7 +32,7 @@ const styleInteract = {
     maxHeight: '0px',
 };
 
-function Channel({ onViewChannel, data, onOpenInfoBlock }) {
+function Channel({ onViewChannel, channels, onOpenInfoBlock }) {
     const {
         currentConversation,
         currentChannel,
@@ -149,14 +149,14 @@ function Channel({ onViewChannel, data, onOpenInfoBlock }) {
                     )}
                 </div>
 
-                {data.map((ele, index) => {
+                {channels.map((channel, index) => {
                     if (index < 3) {
                         return (
                             <ChannelItem
                                 key={index}
-                                data={ele}
+                                channel={channel}
                                 isActive={
-                                    currentChannel === ele.id ? true : false
+                                    currentChannel === channel.id ? true : false
                                 }
                             />
                         );

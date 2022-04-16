@@ -244,6 +244,7 @@ const chatSlice = createSlice({
             if (conversation) {
                 state.type = conversation.type;
             }
+            console.log('state.type', state.type);
         },
         updatePoll: (state, action) => {
             state.polls = action.payload;
@@ -399,8 +400,20 @@ const chatSlice = createSlice({
         },
         updateMemberInConver: (state, action) => {
             const { conversationId, newMember } = action.payload;
-            state.memberInConversation = newMember;
+            // state.memberInConversation = newMember;
+            const tempMembers = newMember;
+            const temp = [];
 
+            tempMembers.forEach((member) => {
+                state.friends.forEach((friend) => {
+                    if (member.id === friend.id) {
+                        member = { ...member, isFriend: true };
+                        return;
+                    }
+                });
+                temp.push(member);
+            });
+            state.memberInConversation = temp;
             const index = state.conversations.findIndex(
                 (ele) => ele.id === conversationId
             );
@@ -661,10 +674,12 @@ const chatSlice = createSlice({
             const channelIndex = state.channels.findIndex(
                 (channel) => channel.id === channelId
             );
+
             state.channels[channelIndex] = {
                 ...state.channels[channelIndex],
                 numberUnread: 0,
             };
+
             state.currentChannel = channelId;
 
             state.messages = messages.data;

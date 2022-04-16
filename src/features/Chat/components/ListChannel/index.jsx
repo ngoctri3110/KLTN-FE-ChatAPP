@@ -8,7 +8,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ChannelItem from '../ChannelItem';
 
-const ListChannel = ({ data }) => {
+const ListChannel = ({ channels }) => {
     const { currentChannel, currentConversation, conversations } = useSelector(
         (state) => state.chat
     );
@@ -35,21 +35,22 @@ const ListChannel = ({ data }) => {
                 <div className="channel-interact-item-text">
                     <span>Kênh chung</span>
                 </div>
-                {conversations.find((ele) => ele.id === currentConversation)
-                    .numberUnread > 0 && (
+                {conversations.find(
+                    (conver) => conver.id === currentConversation
+                ).numberUnread > 0 && (
                     <div className="notify-item">
                         {
                             conversations.find(
-                                (ele) => ele.id === currentConversation
+                                (conver) => conver.id === currentConversation
                             ).numberUnread
                         }
                     </div>
                 )}
             </div>
-            {data.map((ele, index) => (
+            {channels.map((channel, index) => (
                 <ChannelItem
-                    data={ele}
-                    isActive={currentChannel === ele.id ? true : false}
+                    channel={channel}
+                    isActive={currentChannel === channel.id ? true : false}
                 />
             ))}
         </div>

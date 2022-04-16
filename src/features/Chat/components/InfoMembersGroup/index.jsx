@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import './style.scss';
@@ -30,9 +30,12 @@ function InfoMembersGroup({ onBack, members }) {
     const { currentConversation, conversations } = useSelector(
         (state) => state.chat
     );
+
     const converDataCurrent = conversations.find(
         (ele) => ele.id === currentConversation
     );
+    console.log('membersinConversation', members);
+    console.log('converDataCurrent', converDataCurrent);
     const { leaderId, managerIds } = converDataCurrent;
     const [isVisible, setIsVisible] = useState(false);
     const [isVisibleUserCard, setIsVisibleUserCard] = useState(false);
@@ -175,6 +178,27 @@ function InfoMembersGroup({ onBack, members }) {
             )}
         </Menu>
     );
+
+    const buttonMenu = (member) => (
+        <div className="info_members-item-interact">
+            <Dropdown overlay={() => menu(member)} trigger={['click']}>
+                <Button
+                    type="text"
+                    icon={
+                        <MoreOutlined
+                            rotate={90}
+                            style={{
+                                fontSize: '20px',
+                            }}
+                        />
+                    }
+                    style={{
+                        background: 'eeeff2',
+                    }}
+                />
+            </Dropdown>
+        </div>
+    );
     return (
         <div id="info_members-group">
             <div className="info_members-group-title">
@@ -246,33 +270,12 @@ function InfoMembersGroup({ onBack, members }) {
                                             ele.id === user.id && 'hidden'
                                         }`}
                                     >
-                                        {!ele.isFriend ? (
+                                        {ele.isFriend ? (
+                                            <>{buttonMenu(ele)}</>
+                                        ) : (
                                             <div className="info_members-content-item-interact">
-                                                <div className="info_members-item-interact">
-                                                    <Dropdown
-                                                        overlay={() =>
-                                                            menu(ele)
-                                                        }
-                                                        trigger={['click']}
-                                                    >
-                                                        <Button
-                                                            type="text"
-                                                            icon={
-                                                                <MoreOutlined
-                                                                    rotate={90}
-                                                                    style={{
-                                                                        fontSize:
-                                                                            '20px',
-                                                                    }}
-                                                                />
-                                                            }
-                                                            style={{
-                                                                background:
-                                                                    'eeeff2',
-                                                            }}
-                                                        />
-                                                    </Dropdown>
-                                                </div>
+                                                <>{buttonMenu(ele)}</>
+
                                                 <Button
                                                     type="primary"
                                                     onClick={() =>
@@ -281,30 +284,6 @@ function InfoMembersGroup({ onBack, members }) {
                                                 >
                                                     Kết bạn
                                                 </Button>
-                                            </div>
-                                        ) : (
-                                            <div className="info_members-item-interact">
-                                                <Dropdown
-                                                    overlay={() => menu(ele)}
-                                                    trigger={['click']}
-                                                >
-                                                    <Button
-                                                        type="text"
-                                                        icon={
-                                                            <MoreOutlined
-                                                                rotate={90}
-                                                                style={{
-                                                                    fontSize:
-                                                                        '20px',
-                                                                }}
-                                                            />
-                                                        }
-                                                        style={{
-                                                            background:
-                                                                'eeeff2',
-                                                        }}
-                                                    />
-                                                </Dropdown>
                                             </div>
                                         )}
                                     </div>

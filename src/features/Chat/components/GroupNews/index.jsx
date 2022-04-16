@@ -74,7 +74,7 @@ function GroupNews({ onBack, tabActive, onChange }) {
                                 }
                                 key="2"
                             >
-                                <ListChannel data={channels} />
+                                <ListChannel channels={channels} />
                             </TabPane>
                         </Tabs>
                     </div>

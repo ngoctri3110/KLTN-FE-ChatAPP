@@ -15,15 +15,15 @@ import {
 
 ChannelItem.propTypes = {
     isActive: PropTypes.bool,
-    data: PropTypes.object,
+    channel: PropTypes.object,
 };
 
 ChannelItem.defaultProps = {
     isActive: false,
-    data: {},
+    channel: {},
 };
 
-function ChannelItem({ isActive, data }) {
+function ChannelItem({ isActive, channel }) {
     const { conversations } = useSelector((state) => state.chat);
     const { user } = useSelector((state) => state.global);
 
@@ -48,7 +48,7 @@ function ChannelItem({ isActive, data }) {
             content: 'Bạn có thực sự muốn xóa Channel',
             async onOk() {
                 try {
-                    await channelApi.deleteChannel(data.id);
+                    await channelApi.deleteChannel(channel.id);
                     message.success('Xóa channel thành công');
                 } catch (error) {
                     message.error('Xóa channel thất bại');
@@ -72,14 +72,15 @@ function ChannelItem({ isActive, data }) {
             )}
         </Menu>
     );
+
     const handleViewChannel = () => {
-        dispatch(setCurrentChannel(data.id));
-        dispatch(fetchMessageInChannel({ channelId: data.id, size: 10 }));
-        dispatch(getLastViewChannel({ channelId: data.id }));
+        dispatch(setCurrentChannel(channel.id));
+        dispatch(fetchMessageInChannel({ channelId: channel.id, size: 10 }));
+        dispatch(getLastViewChannel({ channelId: channel.id }));
     };
     const handleOnOk = async (nameNew, descriptionNew) => {
         try {
-            await channelApi.renameChannel(data.id, nameNew, descriptionNew);
+            await channelApi.renameChannel(channel.id, nameNew, descriptionNew);
             setVisible(false);
             message.success('Đổi tên channel thành công');
         } catch (error) {
@@ -98,15 +99,17 @@ function ChannelItem({ isActive, data }) {
                     </div>
 
                     <div className="channel-item-text">
-                        <span>{data.name}</span>
+                        <span>{channel.name}</span>
                     </div>
 
                     <div className="channel-item-descrip">
-                        <span>{data.description}</span>
+                        <span>{channel.description}</span>
                     </div>
 
-                    {data.numberUnread > 0 && (
-                        <div className="notify-amount">{data.numberUnread}</div>
+                    {channel.numberUnread > 0 && (
+                        <div className="notify-amount">
+                            {channel.numberUnread}
+                        </div>
                     )}
                 </div>
             </Dropdown>
@@ -115,8 +118,8 @@ function ChannelItem({ isActive, data }) {
                 visible={visible}
                 onCancel={() => setVisible(false)}
                 onOk={handleOnOk}
-                nameValue={data.name}
-                descriptionValue={data.description}
+                nameValue={channel.name}
+                descriptionValue={channel.description}
             />
         </>
     );

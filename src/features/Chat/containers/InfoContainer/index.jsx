@@ -36,6 +36,7 @@ function InfoContainer({ onViewChannel, socket }) {
         channels,
     } = useSelector((state) => state.chat);
     const { media } = useSelector((state) => state.media);
+
     useEffect(() => {
         if (currentConversation) {
             dispatch(fetchAllMedia({ conversationId: currentConversation }));
@@ -114,7 +115,7 @@ function InfoContainer({ onViewChannel, socket }) {
                                                     onViewChannel={
                                                         onViewChannel
                                                     }
-                                                    data={channels}
+                                                    channels={channels}
                                                 />
                                             </div>
                                         </>

@@ -5,7 +5,7 @@ import {
 } from '@ant-design/icons';
 import { message, Modal } from 'antd';
 import conversationApi from 'api/conversationApi';
-import { leaveGroup } from 'features/Chat/slice/chatSlice';
+import { fetchListMessages, leaveGroup } from 'features/Chat/slice/chatSlice';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './style.scss';
@@ -20,7 +20,7 @@ const styleInteract = {
 
 const OtherSettings = ({ socket }) => {
     const { user } = useSelector((state) => state.global);
-    const { currentConversation, conversations } = useSelector(
+    const { currentConversation, currentChannel, conversations } = useSelector(
         (state) => state.chat
     );
     const [isDrop, setIsDrop] = useState(false);
@@ -97,6 +97,11 @@ const OtherSettings = ({ socket }) => {
             onOk: async () => {
                 try {
                     await conversationApi.deleteAllMessage(currentConversation);
+                    dispatch(
+                        fetchListMessages({
+                            conversationId: currentConversation,
+                        })
+                    );
                     message.success('Xóa thành công');
                 } catch (error) {
                     message.error('Đã có lỗi xảy ra');
@@ -104,6 +109,46 @@ const OtherSettings = ({ socket }) => {
             },
         });
     }
+    const deleteChatHistory = (
+        <div
+            className="info_setting-interact-item danger"
+            onClick={confirmDeleteMessage}
+        >
+            <div className="info_setting-interact-item-icon">
+                <DeleteOutlined />
+            </div>
+
+            <div className="info_setting-interact-item-text">
+                <span>Xóa lịch sử trò chuyện</span>
+            </div>
+        </div>
+    );
+
+    const deleteGroup = (
+        <div
+            className="info_setting-interact-item danger"
+            onClick={confirmDeleteGroup}
+        >
+            <div className="info_setting-interact-item-icon">
+                <DeleteOutlined />
+            </div>
+
+            <div className="info_setting-interact-item-text">
+                <span>Giải tán nhóm</span>
+            </div>
+        </div>
+    );
+    const leaveGroup = (
+        <div className="info_setting-interact-item danger" onClick={confirm}>
+            <div className="info_setting-interact-item-icon">
+                <ExportOutlined />
+            </div>
+
+            <div className="info_setting-interact-item-text">
+                <span>Rời nhóm</span>
+            </div>
+        </div>
+    );
     return (
         <div className="info_setting">
             <div className="info_setting-header" onClick={handleOnClick}>
@@ -124,73 +169,24 @@ const OtherSettings = ({ socket }) => {
             >
                 {typeConver ? (
                     findLeader ? (
-                        <>
-                            <div
-                                className="info_setting-interact-item danger"
-                                onClick={confirmDeleteMessage}
-                            >
-                                <div className="info_setting-interact-item-icon">
-                                    <DeleteOutlined />
-                                </div>
-
-                                <div className="info_setting-interact-item-text">
-                                    <span>Xóa lịch sử trò chuyện</span>
-                                </div>
-                            </div>
-                            <div
-                                className="info_setting-interact-item danger"
-                                onClick={confirmDeleteGroup}
-                            >
-                                <div className="info_setting-interact-item-icon">
-                                    <DeleteOutlined />
-                                </div>
-
-                                <div className="info_setting-interact-item-text">
-                                    <span>Giải tán nhóm</span>
-                                </div>
-                            </div>
-                        </>
+                        currentChannel ? (
+                            <>{deleteGroup}</>
+                        ) : (
+                            <>
+                                {deleteChatHistory}
+                                {deleteGroup}
+                            </>
+                        )
+                    ) : currentChannel ? (
+                        <>{leaveGroup}</>
                     ) : (
                         <>
-                            <div
-                                className="info_setting-interact-item danger"
-                                onClick={confirmDeleteMessage}
-                            >
-                                <div className="info_setting-interact-item-icon">
-                                    <DeleteOutlined />
-                                </div>
-
-                                <div className="info_setting-interact-item-text">
-                                    <span>Xóa lịch sử trò chuyện</span>
-                                </div>
-                            </div>
-                            <div
-                                className="info_setting-interact-item danger"
-                                onClick={confirm}
-                            >
-                                <div className="info_setting-interact-item-icon">
-                                    <ExportOutlined />
-                                </div>
-
-                                <div className="info_setting-interact-item-text">
-                                    <span>Rời nhóm</span>
-                                </div>
-                            </div>
+                            {deleteChatHistory}
+                            {leaveGroup}
                         </>
                     )
                 ) : (
-                    <div
-                        className="info_setting-interact-item danger"
-                        onClick={confirmDeleteMessage}
-                    >
-                        <div className="info_setting-interact-item-icon">
-                            <DeleteOutlined />
-                        </div>
-
-                        <div className="info_setting-interact-item-text">
-                            <span>Xóa lịch sử trò chuyện</span>
-                        </div>
-                    </div>
+                    <>{deleteChatHistory}</>
                 )}
             </div>
         </div>
