@@ -5,6 +5,7 @@ import { TagFilled } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { fetchListClassify } from 'features/Chat/slice/chatSlice';
 import classifyApi from 'api/ClassifyApi';
+import ModalClassify from 'features/Chat/components/ModalClassify';
 
 SubMenuClassify.propTypes = {
     data: PropTypes.array,
@@ -51,7 +52,11 @@ function SubMenuClassify({ data, idConver }) {
                 </span>
             </Menu.Item>
 
-            {/* visible == true => open modal phan loai */}
+            <ModalClassify
+                isVisible={visible}
+                onCancel={() => setVisible(false)}
+                onOpen={() => setVisible(true)}
+            />
         </SubMenu>
     );
 }
