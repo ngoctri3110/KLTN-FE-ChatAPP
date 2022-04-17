@@ -57,7 +57,7 @@ const ChatLayout = () => {
                 type: 'GROUP',
             })
         );
-        // dispatch(fetchListClassify());
+        dispatch(fetchListClassify());
         dispatch(fetchListConversations({}));
         dispatch(fetchAllSticker());
         dispatch(setTabActive(1));

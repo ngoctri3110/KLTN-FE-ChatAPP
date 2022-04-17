@@ -6,11 +6,32 @@ const classifyApi = {
     getClassifies: () => {
         return axiosClient.get(`${API_URL}`);
     },
-    addClassifyForConversation: (id, conversationId) => {
-        return axiosClient.post(`${API_URL}/conversations`, {
-            id,
-            conversationId,
+
+    addClassify: (name, color) => {
+        return axiosClient.post(`${API_URL}`, {
+            name,
+            color,
         });
+    },
+    updateClassify: (id, name, color) => {
+        return axiosClient.put(`${API_URL}`, {
+            id,
+            name,
+            color,
+        });
+    },
+    deleteClassify: (idClassify) => {
+        return axiosClient.delete(`${API_URL}/${idClassify}`);
+    },
+    addClassifyForConversation: (idClassify, idConversation) => {
+        return axiosClient.post(
+            `${API_URL}/conversations${idClassify}/${idConversation}`
+        );
+    },
+    deleteClassifyFromConversation: (idClassify, idConversation) => {
+        return axiosClient.delete(
+            `${API_URL}/conversations/${idClassify}/${idConversation}`
+        );
     },
 };
 

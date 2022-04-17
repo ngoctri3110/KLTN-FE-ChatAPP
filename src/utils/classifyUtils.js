@@ -1,7 +1,8 @@
 const classifyUtils = {
     getClassifyOfObject: (idConver, classifies) => {
+        console.log('classifies', classifies);
         return classifies.find((ele) =>
-            ele.conversationIds.find((id) => id === idConver)
+            ele.conversations.find((id) => id === idConver)
         );
     },
 };

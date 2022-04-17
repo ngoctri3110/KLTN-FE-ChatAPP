@@ -26,15 +26,15 @@ function ConversationSingle({ conversation, onClick }) {
     const { conversations, classifies } = useSelector((state) => state.chat);
     const [classify, setClassify] = useState(null);
 
-    useEffect(() => {
-        if (classifies.length > 0) {
-            const temp = classifyUtils.getClassifyOfObject(id, classifies);
-            if (temp) {
-                setClassify(temp);
-            }
-        }
-        // eslint-disable-next-line
-    }, [conversation, conversations, classifies]);
+    // useEffect(() => {
+    //     if (classifies.length > 0) {
+    //         const temp = classifyUtils.getClassifyOfObject(id, classifies);
+    //         if (temp) {
+    //             setClassify(temp);
+    //         }
+    //     }
+    //     // eslint-disable-next-line
+    // }, [conversation, conversations, classifies]);
     // console.log('members', members);
 
     const handleClick = () => {
@@ -62,7 +62,7 @@ function ConversationSingle({ conversation, onClick }) {
                                 <span className="tag-classify">
                                     <TagFilled
                                         style={{
-                                            color: `${classify.color?.code}`,
+                                            color: `${classify.color}`,
                                         }}
                                     />
                                 </span>

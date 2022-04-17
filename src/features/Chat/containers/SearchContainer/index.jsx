@@ -21,6 +21,7 @@ import {
     createGroup,
     fetchListConversations,
 } from 'features/Chat/slice/chatSlice';
+import ModalClassify from 'features/Chat/components/ModalClassify';
 // const { TabPane } = Tabs;
 
 SearchContainer.propTypes = {
@@ -130,13 +131,29 @@ function SearchContainer({
         }, 100);
     };
 
-    //Handle User Card
+    // Handle User Card
     const handleCancelModalUserCard = () => {
         setVisbleUserCard(false);
         setIsShowModalAddFriend(false);
     };
-    const handleOnChangeClassify = () => {};
-    const handleCreateClasify = () => {};
+    // Classify====================
+    const handleOnChangeClassify = (e) => {
+        const value = e.target.value;
+        console.log('value', value);
+        if (onFilterClasify) {
+            onFilterClasify(value);
+        }
+    };
+    const handleCreateClasify = () => {
+        setIsShowModalClasify(true);
+    };
+
+    const handleOpenModalClassify = () => {
+        setIsShowModalClasify(true);
+    };
+    const handleCancelClassifyModal = () => {
+        setIsShowModalClasify(false);
+    };
     return (
         <div id="search-wrapper">
             <div className="search-main">
@@ -246,6 +263,12 @@ function SearchContainer({
                 isVisible={isModalCreateGroupVisible}
                 onCancel={handleCancelModalCreatGroup}
                 onOk={handleOklModalCreatGroup}
+            />
+
+            <ModalClassify
+                isVisible={isShowModalClasify}
+                onCancel={handleCancelClassifyModal}
+                onOpen={handleOpenModalClassify}
             />
         </div>
     );
