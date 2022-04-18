@@ -26,17 +26,20 @@ function ConversationSingle({ conversation, onClick }) {
     const { conversations, classifies } = useSelector((state) => state.chat);
     const [classify, setClassify] = useState(null);
 
-    // useEffect(() => {
-    //     if (classifies.length > 0) {
-    //         const temp = classifyUtils.getClassifyOfObject(id, classifies);
-    //         if (temp) {
-    //             setClassify(temp);
-    //         }
-    //     }
-    //     // eslint-disable-next-line
-    // }, [conversation, conversations, classifies]);
-    // console.log('members', members);
+    console.log('classifies', classifies);
+    console.log('classify', classify);
 
+    useEffect(() => {
+        if (classifies.length > 0) {
+            const temp = classifyUtils.getClassifyOfObject(id, classifies);
+            if (temp) {
+                setClassify(temp);
+            } else {
+                setClassify(null);
+            }
+        }
+        // eslint-disable-next-line
+    }, [conversation, conversations, classifies]);
     const handleClick = () => {
         if (onClick) onClick(id);
     };
@@ -58,14 +61,17 @@ function ConversationSingle({ conversation, onClick }) {
                     <div className="middle-side-box">
                         <span className="name-box">{name}</span>
                         <div className="lastest-message">
-                            {classify && (
+                            {classify ? (
                                 <span className="tag-classify">
                                     <TagFilled
                                         style={{
                                             color: `${classify.color}`,
                                         }}
+                                        rotate={45}
                                     />
                                 </span>
+                            ) : (
+                                <></>
                             )}
 
                             <ShortMessage message={lastMessage} type={type} />

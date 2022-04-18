@@ -23,12 +23,16 @@ const classifyApi = {
     deleteClassify: (idClassify) => {
         return axiosClient.delete(`${API_URL}/${idClassify}`);
     },
+    getConversationByClassify: (idClassify) => {
+        return axiosClient.get(`${API_URL}/conversations/${idClassify}`);
+    },
     addClassifyForConversation: (idClassify, idConversation) => {
         return axiosClient.post(
-            `${API_URL}/conversations${idClassify}/${idConversation}`
+            `${API_URL}/conversations/${idClassify}/${idConversation}`
         );
     },
     deleteClassifyFromConversation: (idClassify, idConversation) => {
+        console.log({ idClassify, idConversation });
         return axiosClient.delete(
             `${API_URL}/conversations/${idClassify}/${idConversation}`
         );

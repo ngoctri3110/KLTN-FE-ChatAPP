@@ -17,6 +17,10 @@ import {
 } from 'features/Chat/slice/chatSlice';
 import './style.scss';
 import conversationApi from 'api/conversationApi';
+import classifyApi from 'api/ClassifyApi';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { useRef } from 'react';
 
 ConversationContainer.propTypes = {
     valueClassify: PropTypes.string.isRequired,
@@ -33,17 +37,19 @@ function ConversationContainer({ valueClassify }) {
     const tempClassify =
         classifies.find((ele) => ele.id === valueClassify) || 0;
 
-    const checkConverInClassify = (idMember) => {
+    const checkConverInClassify = (idConver) => {
         if (tempClassify === 0) return true;
         const index = tempClassify.conversationIds.findIndex(
-            (ele) => ele === idMember
+            (ele) => ele === idConver
         );
+
         return index > -1;
     };
-
     const converFilter = [...conversations].filter((ele) => {
         if (checkConverInClassify(ele.id)) return true;
     });
+
+    console.log('converFilter', converFilter);
 
     const handleConversationClick = async (conversationId) => {
         dispatch(setCurrentChannel(''));

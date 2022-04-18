@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Divider, Menu } from 'antd';
-import { TagFilled } from '@ant-design/icons';
+import { CheckOutlined, TagFilled, TagOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { fetchListClassify } from 'features/Chat/slice/chatSlice';
 import classifyApi from 'api/ClassifyApi';
 import ModalClassify from 'features/Chat/components/ModalClassify';
+import classifyUtils from 'utils/classifyUtils';
+import './style.scss';
 
 SubMenuClassify.propTypes = {
     data: PropTypes.array,
@@ -19,32 +21,83 @@ function SubMenuClassify({ data, idConver }) {
     const { SubMenu } = Menu;
     const [visible, setVisible] = useState(false);
     const dispatch = useDispatch();
+    const refClassify = useRef();
 
+    useEffect(() => {
+        if (data.length > 0) {
+            const temp = classifyUtils.getClassifyOfObject(idConver, data);
+            if (temp) {
+                refClassify.current = temp;
+            } else {
+                refClassify.current = null;
+            }
+        }
+        // eslint-disable-next-line
+    }, [data, idConver]);
     const handleClickClassify = async (id) => {
-        await classifyApi.addClassifyForConversation(id, idConver);
-        dispatch(fetchListClassify());
+        if (refClassify.current && refClassify.current.id === id) {
+            await classifyApi.deleteClassifyFromConversation(id, idConver);
+            dispatch(fetchListClassify());
+        } else {
+            await classifyApi.addClassifyForConversation(id, idConver);
+            dispatch(fetchListClassify());
+        }
     };
     return (
         <SubMenu
             title={<span className="menu-item--highlight">Phân loại</span>}
             key="sub-1"
         >
-            {data.lenth > 0 &&
+            {data.length > 0 &&
                 data.map((ele) => (
                     <Menu.Item
+                        className="sub-menu-classify-menu"
                         key={ele.id}
                         icon={
-                            <TagFilled style={{ color: `${ele.color.code}` }} />
+                            <div className="sub-menu-classify-menu-icon">
+                                <div
+                                    className={`sub-menu-classify-menu-icon-check ${
+                                        refClassify.current &&
+                                        refClassify.current.id === ele.id
+                                            ? 'show'
+                                            : 'hidden'
+                                    }`}
+                                >
+                                    <CheckOutlined />
+                                </div>
+
+                                <TagFilled
+                                    className="sub-menu-classify-menu-icon-tag"
+                                    style={{
+                                        color: `${ele.color}`,
+                                        fontSize: '18px',
+                                    }}
+                                    rotate={45}
+                                />
+                            </div>
                         }
-                        onClick={() => handleClickClassify(ele._id)}
+                        onClick={() => handleClickClassify(ele.id)}
                     >
-                        {ele.name}
+                        <div className="sub-menu-classify-menu-name">
+                            {ele.name}
+                        </div>
                     </Menu.Item>
                 ))}
-            <Divider style={{ margin: '1rem 2rem' }} />
+            <Divider
+                orientationMargin="100px"
+                style={{ margin: '1rem 0 0 1rem' }}
+            />
             <Menu.Item
                 key="0"
-                icon={<TagFilled />}
+                icon={
+                    <TagOutlined
+                        style={{
+                            fontSize: '18px',
+                            marginLeft: '2rem',
+                        }}
+                        rotate={45}
+                    />
+                }
                 onClick={() => setVisible(true)}
             >
                 <span className="menu-item--highlight">

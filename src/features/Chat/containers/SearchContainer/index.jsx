@@ -139,7 +139,6 @@ function SearchContainer({
     // Classify====================
     const handleOnChangeClassify = (e) => {
         const value = e.target.value;
-        console.log('value', value);
         if (onFilterClasify) {
             onFilterClasify(value);
         }

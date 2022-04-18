@@ -217,7 +217,9 @@ function Chat({ socket, idNewMessage }) {
     const hanldeOnClickScroll = () => {
         setIsScroll(true);
     };
-    const handleOnFilterClassfiy = () => {};
+    const handleOnFilterClassfiy = (value) => {
+        setValueClassify(value);
+    };
 
     const handleScrollWhenSent = (value) => {
         setScrollId(value);

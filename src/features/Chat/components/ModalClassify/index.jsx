@@ -4,6 +4,7 @@ import {
     InfoCircleFilled,
     LeftOutlined,
     PlusOutlined,
+    TagFilled,
     TagTwoTone,
 } from '@ant-design/icons';
 import { Button, Input, message, Modal, Popover } from 'antd';
@@ -185,10 +186,12 @@ function ModalClassify({ isVisible, onCancel, onOpen }) {
                             <div className="modal-classify-item" key={index}>
                                 <div className="modal-classify-item--left">
                                     <div className="classify-item-tag">
-                                        <TagTwoTone
-                                            twoToneColor={classify.color}
+                                        <TagFilled
+                                            style={{
+                                                color: `${classify.color}`,
+                                                fontSize: '24px',
+                                            }}
                                             rotate={45}
-                                            style={{ fontSize: '24px' }}
                                         />
                                     </div>
                                     <div className="classify-item-name">
@@ -216,7 +219,7 @@ function ModalClassify({ isVisible, onCancel, onOpen }) {
                                     </div>
                                 </div>
                                 <div className="modal-classify-item-amount">
-                                    {classify.countConversations}
+                                    {classify.conversationIds.length}
                                 </div>
                             </div>
                         ))}
@@ -279,10 +282,12 @@ function ModalClassify({ isVisible, onCancel, onOpen }) {
                                         <Button
                                             type="text"
                                             icon={
-                                                <TagTwoTone
-                                                    twoToneColor={color}
+                                                <TagFilled
+                                                    style={{
+                                                        color: `${color}`,
+                                                        fontSize: '24px',
+                                                    }}
                                                     rotate={45}
-                                                    style={{ fontSize: '24px' }}
                                                 />
                                             }
                                         />
