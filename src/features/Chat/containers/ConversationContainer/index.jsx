@@ -1,26 +1,18 @@
-// import ConversationSingle from 'features/Chat/components/ConversationSingle';
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
-import { Dropdown, Menu, message, Modal } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
-import ConversationSingle from 'features/Chat/components/ConversationSingle';
+import { Dropdown, Menu, message, Modal } from 'antd';
+import conversationApi from 'api/conversationApi';
 import SubMenuClassify from 'components/SubMenuClassify';
+import ConversationSingle from 'features/Chat/components/ConversationSingle';
 import {
     fetchChannels,
     fetchListMessages,
     getLastViewOfMembers,
     getMembersConversation,
     setCurrentChannel,
-    setCurrentConversation,
-    setTypeOfConversation,
 } from 'features/Chat/slice/chatSlice';
+import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 import './style.scss';
-import conversationApi from 'api/conversationApi';
-import classifyApi from 'api/ClassifyApi';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { useRef } from 'react';
 
 ConversationContainer.propTypes = {
     valueClassify: PropTypes.string.isRequired,
@@ -48,8 +40,6 @@ function ConversationContainer({ valueClassify }) {
     const converFilter = [...conversations].filter((ele) => {
         if (checkConverInClassify(ele.id)) return true;
     });
-
-    console.log('converFilter', converFilter);
 
     const handleConversationClick = async (conversationId) => {
         dispatch(setCurrentChannel(''));
@@ -119,6 +109,11 @@ function ConversationContainer({ valueClassify }) {
                                                 {user.id ===
                                                     conversationEle.leaderId && (
                                                     <Menu.Item
+                                                        onClick={() =>
+                                                            confirm(
+                                                                conversationEle.id
+                                                            )
+                                                        }
                                                         danger
                                                         key="1"
                                                         icon={<DeleteFilled />}

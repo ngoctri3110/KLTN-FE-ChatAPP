@@ -87,7 +87,7 @@ function UserMessage({
 
     const [isLeader, setIsLeader] = useState(false);
     const [isManager, setIsManager] = useState(false);
-    const [isVisbleModal, setVisibleModal] = useState(false);
+    const [isVisibleModal, setVisibleModal] = useState(false);
 
     const dispatch = useDispatch();
 

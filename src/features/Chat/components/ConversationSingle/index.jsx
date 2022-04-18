@@ -25,10 +25,6 @@ function ConversationSingle({ conversation, onClick }) {
     const { type, createdAt } = lastMessage;
     const { conversations, classifies } = useSelector((state) => state.chat);
     const [classify, setClassify] = useState(null);
-
-    console.log('classifies', classifies);
-    console.log('classify', classify);
-
     useEffect(() => {
         if (classifies.length > 0) {
             const temp = classifyUtils.getClassifyOfObject(id, classifies);
