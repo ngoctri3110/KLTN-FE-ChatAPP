@@ -64,9 +64,9 @@
             .sub-message {
                 display: flex;
                 flex-direction: row;
-                margin: 0.5rem;
                 align-items: center;
                 position: relative;
+                margin: 0.5rem;
 
                 .content-message.my-message-bg {
                     background: $blue-700;
@@ -79,9 +79,10 @@
                 .content-message {
                     background: $white-color;
                     max-width: 75%;
+                    min-width: 12%;
                     display: flex;
                     flex-direction: column;
-                    padding: 1.4rem 1.4rem;
+                    padding: 1rem 1.4rem;
                     position: relative;
 
                     white-space: pre;
@@ -120,7 +121,7 @@
                     }
 
                     .reacted-block {
-                        margin-top: 1rem;
+                        margin-top: 0.2rem;
                         display: flex;
                         align-items: center;
                         cursor: pointer;

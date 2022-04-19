@@ -567,6 +567,23 @@ const chatSlice = createSlice({
             };
             state.conversations[index] = newConver;
         },
+        updatePollMessage: (state, action) => {
+            const { pollMessage } = action.payload;
+
+            const index = state.messages.findIndex(
+                (message) => message.id === pollMessage.id
+            );
+            if (index > -1) {
+                state.messages[index] = pollMessage;
+            }
+        },
+        setTotalUnread: (state, action) => {
+            let tempCount = 0;
+            state.conversations.forEach((conver, index) => {
+                if (conver.numberUnread > 0) tempCount += 1;
+            });
+            state.toTalUnread = tempCount;
+        },
     },
     extraReducers: {
         // conversation
@@ -753,6 +770,8 @@ export const {
     deleteMessageClient,
     setUndoMessage,
     updateTimeForConver,
+    updatePollMessage,
+    setTotalUnread,
 } = actions;
 
 export default reducer;

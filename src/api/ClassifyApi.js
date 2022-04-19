@@ -32,7 +32,6 @@ const classifyApi = {
         );
     },
     deleteClassifyFromConversation: (idClassify, idConversation) => {
-        console.log({ idClassify, idConversation });
         return axiosClient.delete(
             `${API_URL}/conversations/${idClassify}/${idConversation}`
         );

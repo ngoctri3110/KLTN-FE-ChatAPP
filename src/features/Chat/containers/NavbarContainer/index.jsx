@@ -12,11 +12,12 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import NavbarStyle from './NavbarStyle';
 import PropTypes from 'prop-types';
 
-import { useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 import ModalUpdateProfile from 'features/Chat/components/ModalUpdateProfile';
 import ModalChangePassword from 'components/ModalChangePassword';
 import './style.scss';
+import { setTotalUnread } from 'features/Chat/slice/chatSlice';
 
 NavbarContainer.propTypes = {
     onSaveCodeRevoke: PropTypes.func,
@@ -27,7 +28,12 @@ NavbarContainer.defaultProps = {
 };
 function NavbarContainer({ onSaveCodeRevoke }) {
     const { user } = useSelector((state) => state.global);
+    const { conversations, toTalUnread } = useSelector((state) => state.chat);
+    const { amountNotify } = useSelector((state) => state.friend);
+
     const location = useLocation();
+    const dispatch = useDispatch();
+
     //model
     const [isModalUpdateProfileVisible, setIsModalUpdateProfileVisible] =
         useState(false);
@@ -43,6 +49,11 @@ function NavbarContainer({ onSaveCodeRevoke }) {
         }
         return false;
     };
+
+    useEffect(() => {
+        dispatch(setTotalUnread());
+    }, [conversations]);
+
     // --- Hangle update profile
     const handleUpdateProfile = () => {
         setIsModalUpdateProfileVisible(true);
@@ -129,7 +140,7 @@ function NavbarContainer({ onSaveCodeRevoke }) {
                         >
                             <div className="sidebar_nav_item--icon">
                                 <Badge
-                                // count={toTalUnread > 0 ? toTalUnread : 0}
+                                    count={toTalUnread > 0 ? toTalUnread : 0}
                                 >
                                     <MessageTwoTone />
                                 </Badge>
@@ -144,7 +155,7 @@ function NavbarContainer({ onSaveCodeRevoke }) {
                             }`}
                         >
                             <div className="sidebar_nav_item--icon">
-                                <Badge count={2}>
+                                <Badge count={amountNotify}>
                                     <ContactsTwoTone />
                                 </Badge>
                             </div>

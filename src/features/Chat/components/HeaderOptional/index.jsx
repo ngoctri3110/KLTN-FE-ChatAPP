@@ -2,28 +2,28 @@ import {
     ExclamationCircleOutlined,
     LeftOutlined,
     NumberOutlined,
-    RollbackOutlined,
-    SplitCellsOutlined,
     UsergroupAddOutlined,
     UserOutlined,
 } from '@ant-design/icons';
-import React, { useRef, useState } from 'react';
-import PropTypes from 'prop-types';
-import ConversationAvatar from '../ConversationAvatar';
-import useWindowSize from 'hooks/useWindowSize';
-import { useSelector } from 'react-redux';
-import dateUtils from 'utils/dateUtils';
+import { Tooltip } from 'antd';
+import conversationApi from 'api/conversationApi';
 import {
     createGroup,
     fetchListMessages,
     getLastViewOfMembers,
     setCurrentChannel,
+    setCurrentConversation,
 } from 'features/Chat/slice/chatSlice';
-import { useDispatch } from 'react-redux';
-import './style.scss';
-import { message, Tooltip } from 'antd';
+import useWindowSize from 'hooks/useWindowSize';
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import dateUtils from 'utils/dateUtils';
+import ConversationAvatar from '../ConversationAvatar';
 import ModalAddMember from '../ModalAddMember';
-import conversationApi from 'api/conversationApi';
+import { RiArrowGoBackFill } from 'react-icons/ri';
+import './style.scss';
+import { BiArrowBack } from 'react-icons/bi';
 
 HeaderOptional.propTypes = {
     avatar: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
@@ -33,6 +33,7 @@ HeaderOptional.propTypes = {
     typeConver: PropTypes.string.isRequired,
     isLogin: PropTypes.bool,
     lastLogin: PropTypes.object,
+    isOpenInfo: PropTypes.bool,
     onPopUpInfo: PropTypes.func,
     onOpenDrawer: PropTypes.func,
 };
@@ -55,6 +56,7 @@ function HeaderOptional(props) {
         typeConver,
         isLogin,
         lastLogin,
+        isOpenInfo,
         onPopUpInfo,
         onOpenDrawer,
     } = props;
@@ -87,7 +89,9 @@ function HeaderOptional(props) {
         }
     };
 
-    const handleBackToListConver = () => {};
+    const handleBackToListConver = () => {
+        dispatch(setCurrentConversation(''));
+    };
     const handleViewGeneralChannel = () => {
         dispatch(setCurrentChannel(''));
         dispatch(
@@ -226,7 +230,7 @@ function HeaderOptional(props) {
                             className="icon-header back-channel"
                             onClick={handleViewGeneralChannel}
                         >
-                            <RollbackOutlined />
+                            <BiArrowBack />
                         </div>
                     ) : (
                         <>
@@ -239,19 +243,25 @@ function HeaderOptional(props) {
                         </>
                     )}
 
-                    <div className="icon-header pop-up-layout">
+                    <div
+                        className={`icon-header pop-up-layout ${
+                            isOpenInfo ? 'show' : ''
+                        }`}
+                        onClick={handlePopUpInfo}
+                    >
                         <Tooltip
                             title="Thông tin về cuộc trò chuyện"
                             placement={'bottomRight'}
                         >
-                            <ExclamationCircleOutlined
-                                onClick={handlePopUpInfo}
-                            />
+                            <ExclamationCircleOutlined />
                         </Tooltip>
                     </div>
 
-                    <div className="icon-header pop-up-responsive">
-                        <ExclamationCircleOutlined onClick={handleOpenDrawer} />
+                    <div
+                        className="icon-header pop-up-responsive"
+                        onClick={handleOpenDrawer}
+                    >
+                        <ExclamationCircleOutlined />
                     </div>
                 </div>
             </div>

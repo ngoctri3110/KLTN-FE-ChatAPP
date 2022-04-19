@@ -39,6 +39,7 @@ import {
     updateMemberInConver,
     updateMessageViewLast,
     updateNameOfConver,
+    updatePollMessage,
     updateTimeForConver,
 } from './slice/chatSlice';
 import { useLocation } from 'react-router-dom';
@@ -589,6 +590,24 @@ function Chat({ socket, idNewMessage }) {
                     dispatch(fetchPinMessages({ conversationId }));
                 }
             });
+            socket.on('PollChooseUpdate', (conversationId, pollMessage) => {
+                if (refCurrentConversation.current === conversationId) {
+                    dispatch(
+                        updatePollMessage({
+                            pollMessage,
+                        })
+                    );
+                }
+            });
+            socket.on('PollOptionUpdate', (conversationId, pollMessage) => {
+                if (refCurrentConversation.current === conversationId) {
+                    dispatch(
+                        updatePollMessage({
+                            pollMessage,
+                        })
+                    );
+                }
+            });
         }
 
         // dispatch(setJoinChatLayout(true));
@@ -666,6 +685,7 @@ function Chat({ socket, idNewMessage }) {
                                 <div className="main_chat">
                                     <div className="main_chat-header">
                                         <HeaderChatContainer
+                                            isOpenInfo={isOpenInfo}
                                             onPopUpInfo={() =>
                                                 setIsOpenInfo(!isOpenInfo)
                                             }

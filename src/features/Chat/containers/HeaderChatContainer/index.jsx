@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import './style.scss';
 
 HeaderChatContainer.propTypes = {
+    isOpenInfo: PropTypes.bool,
     onPopUpInfo: PropTypes.func,
     onOpenDrawer: PropTypes.func,
 };
@@ -13,7 +14,7 @@ HeaderChatContainer.defaultProps = {
     onPopUpInfo: null,
     onOpenDrawer: null,
 };
-function HeaderChatContainer({ onPopUpInfo, onOpenDrawer }) {
+function HeaderChatContainer({ isOpenInfo, onPopUpInfo, onOpenDrawer }) {
     const [detailConver, setDetailConver] = useState({});
     const { currentConversation, conversations } = useSelector(
         (state) => state.chat
@@ -42,6 +43,7 @@ function HeaderChatContainer({ onPopUpInfo, onOpenDrawer }) {
                 lastLogin={detailConver?.lastLogin}
                 onPopUpInfo={onPopUpInfo}
                 onOpenDrawer={onOpenDrawer}
+                isOpenInfo={isOpenInfo}
             />
         </div>
     );

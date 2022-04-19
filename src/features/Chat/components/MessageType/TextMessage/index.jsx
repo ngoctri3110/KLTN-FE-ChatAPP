@@ -8,6 +8,7 @@ import parse from 'html-react-parser';
 import { LinkPreview } from '@dhaiwat10/react-link-preview';
 import ReplyMessage from '../../ReplyMessage';
 import './style.scss';
+import { useSelector } from 'react-redux';
 
 TextMessage.propTypes = {
     content: PropTypes.string,
@@ -37,7 +38,7 @@ function TextMessage({
         let tempContent = contentMes;
 
         if (tagUser.length > 0) {
-            tags.forEach((ele) => {
+            tagUser.forEach((ele) => {
                 tempContent = tempContent.replace(
                     `@${ele.name}`,
                     `<span id='mtc-${ele.id}' className="tag-user">@${ele.name}</span>`
@@ -46,6 +47,7 @@ function TextMessage({
         }
         return parse(tempContent);
     };
+
     const renderMessageText = (contentMes) => {
         if (!matchesLink) {
             return (

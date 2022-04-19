@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
-
 import {
     DeleteOutlined,
     PushpinOutlined,
@@ -110,7 +109,6 @@ function UserMessage({
     //react
     const [listReactionCurrent, setListReactionCurrent] = useState([]);
 
-    // cần chỉnh sửa......................
     const myReact =
         reacts &&
         reacts.length > 0 &&

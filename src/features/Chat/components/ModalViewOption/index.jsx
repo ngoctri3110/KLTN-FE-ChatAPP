@@ -169,9 +169,8 @@ function ModalViewOption({ isModalVisible, onCancel, data, onShowDetail }) {
 
         let newOptions = tempOptions.map((ele) => {
             let tempUserIds = ele.userIds.filter((ele) => {
-                return ele !== user.id;
+                return ele !== user;
             });
-
             return {
                 ...ele,
                 userIds: tempUserIds,
@@ -185,7 +184,8 @@ function ModalViewOption({ isModalVisible, onCancel, data, onShowDetail }) {
                     ...optionsEle,
                     userIds: [...optionsEle.userIds],
                 };
-                tempOptionSearch.userIds.push(user.id);
+                tempOptionSearch.userIds.push(user);
+
                 return tempOptionSearch;
             }
             return optionsEle;
@@ -193,6 +193,7 @@ function ModalViewOption({ isModalVisible, onCancel, data, onShowDetail }) {
 
         setInfoPoll({ ...infoPoll, options });
     };
+    console.log('infoPoll', infoPoll);
 
     const countingPercent = (amountVote) => {
         const result = (amountVote / getNumberJoinPoll().length) * 100;

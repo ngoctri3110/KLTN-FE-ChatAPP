@@ -70,6 +70,7 @@ function FooterChatContainer({
     const getTypeConversation = conversations.find(
         (ele) => ele.id === currentConversation
     ).type;
+
     useEffect(() => {
         if (currentConversation) {
             const tempConver = conversations.find(
@@ -179,7 +180,7 @@ function FooterChatContainer({
     }, [userMention]);
 
     async function sendMessage(value, type) {
-        const listMentionId = mentionList.map((ele) => ele.id);
+        const listMentionId = mentionSelect.map((ele) => ele.id);
 
         const newMessage = {
             content: value,
@@ -334,8 +335,8 @@ function FooterChatContainer({
                                 if (ele.id !== user.id) {
                                     return (
                                         <Option
-                                            value={ele.name}
                                             key={index}
+                                            value={ele.name}
                                             object={ele}
                                         >
                                             <div
