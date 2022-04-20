@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Button, Col, Divider, Row, Tag, Typography } from 'antd';
+import React, { useCallback, useState } from 'react';
+import { Button, Col, Divider, message, Row, Tag, Typography } from 'antd';
 import { FastField, Form, Formik } from 'formik';
 import UserNameField from 'customfield/UserNameField';
 import PasswordField from 'customfield/PasswordField';
@@ -10,7 +10,19 @@ import loginApi from 'api/loginAPI';
 import { fetchUserProfile, setLogin } from 'app/globalSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { setLoadingAccount } from 'features/Account/accountSlice';
-import { CloseCircleOutlined } from '@ant-design/icons';
+import {
+    CloseCircleOutlined,
+    FacebookOutlined,
+    GoogleOutlined,
+    PhoneOutlined,
+} from '@ant-design/icons';
+import {
+    FacebookAuthProvider,
+    GoogleAuthProvider,
+    signInWithPopup,
+} from 'firebase/auth';
+import auth from 'utils/FirebaseApp';
+import firebaseApi from 'api/firebaseApi';
 
 const { Text, Title } = Typography;
 
@@ -33,9 +45,7 @@ function LoginPage(props) {
             localStorage.setItem('token', token);
             localStorage.setItem('refreshToken', refreshToken);
             dispatch(setLogin(true));
-            const { isAdmin } = unwrapResult(
-                await dispatch(fetchUserProfile())
-            );
+            const { isAdmin } = unwrapResult(dispatch(fetchUserProfile()));
             if (isAdmin) navigate('/admin');
             else navigate('/chat', { replace: true });
         } catch (error) {
@@ -44,6 +54,61 @@ function LoginPage(props) {
         }
         dispatch(setLoadingAccount(false));
     };
+    const handleLogin = async (username, accessToken) => {
+        try {
+            dispatch(setLoadingAccount(true));
+            await firebaseApi.signInToken(username, accessToken).then((res) => {
+                localStorage.setItem('token', res.data.token);
+                localStorage.setItem('refreshToken', res.data.refreshToken);
+                dispatch(setLogin(true));
+                const { isAdmin } = unwrapResult(dispatch(fetchUserProfile()));
+                if (isAdmin) navigate('/admin');
+                else navigate('/chat', { replace: true });
+            });
+        } catch (error) {}
+    };
+
+    const signInFacebook = async () => {
+        const provider = new FacebookAuthProvider();
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                const credential =
+                    FacebookAuthProvider.credentialFromResult(result);
+                const user = result.user;
+                // Send token here
+                handleLogin(credential.accessToken, user.accessToken);
+                console.log('user', user);
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                const email = error.email;
+                const credential =
+                    FacebookAuthProvider.credentialFromError(error);
+                console.log(errorCode, errorMessage, email, credential);
+            });
+    };
+    const signInGoogle = () => {
+        const provider = new GoogleAuthProvider();
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                const user = result.user;
+                // Send token here
+                handleLogin(user.email, user.accessToken);
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                const email = error.email;
+                const credential =
+                    GoogleAuthProvider.credentialFromError(error);
+                console.log(errorCode, errorMessage, email, credential);
+            });
+    };
+    const handleOnClick = useCallback(
+        () => navigate('/phone-login', { replace: true }),
+        [navigate]
+    );
     return (
         <div className="account-common-page">
             <div className="account-wrapper">
@@ -122,6 +187,47 @@ function LoginPage(props) {
                         </Formik>
                     </div>
                     <Divider>Hoặc</Divider>
+                    <div className="form-account">
+                        <Row gutter={[0, 8]}>
+                            <Col span={24}>
+                                <div className="button-login-fb">
+                                    <Button
+                                        block
+                                        type="primary"
+                                        icon={<PhoneOutlined />}
+                                        onClick={handleOnClick}
+                                    >
+                                        Đăng nhập với số điện thoại
+                                    </Button>
+                                </div>
+                            </Col>
+                            <Col span={24}>
+                                <div className="button-login-fb">
+                                    <Button
+                                        block
+                                        type="primary"
+                                        icon={<FacebookOutlined />}
+                                        onClick={signInFacebook}
+                                    >
+                                        Đăng nhập với Facebook
+                                    </Button>
+                                </div>
+                            </Col>
+                            <Col span={24}>
+                                <div className="button-login-gg">
+                                    <Button
+                                        block
+                                        type="primary"
+                                        icon={<GoogleOutlined />}
+                                        onClick={signInGoogle}
+                                    >
+                                        Đăng nhập với Google
+                                    </Button>
+                                </div>
+                            </Col>
+                        </Row>
+                    </div>
+
                     <div className="addtional-link">
                         <Link to="/forgot">Quên mật khẩu?</Link>
                         <Text>
