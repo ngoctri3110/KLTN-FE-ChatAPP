@@ -259,7 +259,9 @@ function RegistryPage(props) {
                                                     type="primary"
                                                     block
                                                 >
-                                                    Đăng ký
+                                                    {isSubmit
+                                                        ? 'Xác thực'
+                                                        : 'Đăng ký'}
                                                 </Button>
                                             </Col>
                                         </Row>
