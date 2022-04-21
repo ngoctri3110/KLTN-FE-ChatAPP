@@ -53,7 +53,7 @@ function ModalViewOption({ isModalVisible, onCancel, data, onShowDetail }) {
         let tempValue = [];
         infoPoll.options.forEach((option) => {
             option.userIds.forEach((userId) => {
-                if (userId === user.id) {
+                if (userId.id === user.id) {
                     tempValue.push(option.name);
                 }
             });
@@ -64,7 +64,7 @@ function ModalViewOption({ isModalVisible, onCancel, data, onShowDetail }) {
     useEffect(() => {
         if (isModalVisible) {
             preValue.current = getDefaultValues();
-            setCheckList(getDefaultValues);
+            setCheckList(getDefaultValues());
         } else {
             form.resetFields();
         }
@@ -169,7 +169,7 @@ function ModalViewOption({ isModalVisible, onCancel, data, onShowDetail }) {
 
         let newOptions = tempOptions.map((ele) => {
             let tempUserIds = ele.userIds.filter((ele) => {
-                return ele !== user;
+                return ele.id !== user.id;
             });
             return {
                 ...ele,
@@ -190,10 +190,10 @@ function ModalViewOption({ isModalVisible, onCancel, data, onShowDetail }) {
             }
             return optionsEle;
         });
+        console.log('options', options);
 
         setInfoPoll({ ...infoPoll, options });
     };
-    console.log('infoPoll', infoPoll);
 
     const countingPercent = (amountVote) => {
         const result = (amountVote / getNumberJoinPoll().length) * 100;

@@ -15,7 +15,7 @@ function Account(props) {
     const { isLoadingAccount } = useSelector((state) => state.account);
 
     if (user) {
-        if (user.isAdmin) navigate('/admin');
+        if (user.role === 'ADMIN') navigate('/admin');
         else navigate('/chat');
     }
     return (

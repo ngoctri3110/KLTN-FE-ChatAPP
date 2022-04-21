@@ -93,11 +93,9 @@ const PhoneLogin = () => {
                 .confirmPhoneNumber(phoneNumber, otpValue)
                 .then((res) => {
                     dispatch(setLogin(true));
-                    const { isAdmin } = unwrapResult(
-                        dispatch(fetchUserProfile())
-                    );
-                    if (isAdmin) navigate('/admin');
-                    else navigate('/chat', { replace: true });
+                    const { role } = unwrapResult(dispatch(fetchUserProfile()));
+                    if (role === 'USER') navigate('/chat', { replace: true });
+                    else navigate('/admin', { replace: true });
                 });
         } catch (error) {}
     };

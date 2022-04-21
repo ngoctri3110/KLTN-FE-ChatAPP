@@ -45,9 +45,9 @@ function LoginPage(props) {
             localStorage.setItem('token', token);
             localStorage.setItem('refreshToken', refreshToken);
             dispatch(setLogin(true));
-            const { isAdmin } = unwrapResult(dispatch(fetchUserProfile()));
-            if (isAdmin) navigate('/admin');
-            else navigate('/chat', { replace: true });
+            const { role } = unwrapResult(await dispatch(fetchUserProfile()));
+            if (role === 'USER') navigate('/chat', { replace: true });
+            else navigate('/admin', { replace: true });
         } catch (error) {
             setError(true);
             // console.log(error);
@@ -61,9 +61,9 @@ function LoginPage(props) {
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('refreshToken', res.data.refreshToken);
                 dispatch(setLogin(true));
-                const { isAdmin } = unwrapResult(dispatch(fetchUserProfile()));
-                if (isAdmin) navigate('/admin');
-                else navigate('/chat', { replace: true });
+                const { role } = unwrapResult(dispatch(fetchUserProfile()));
+                if (role === 'USER') navigate('/chat', { replace: true });
+                else navigate('/admin', { replace: true });
             });
         } catch (error) {}
     };

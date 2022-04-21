@@ -63,7 +63,7 @@ const DateOfBirthField = ({ field }) => {
         const yearValid = new Date().getFullYear() - 10;
 
         for (let i = 1940; i <= yearValid; i++) {
-            result.push(<Option value={i}>{i}</Option>);
+            result.unshift(<Option value={i}>{i}</Option>);
         }
         return result;
     };

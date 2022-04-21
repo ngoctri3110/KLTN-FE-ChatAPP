@@ -1,7 +1,9 @@
 import { fetchUserProfile } from 'app/globalSlice';
+import AdminProtectedRoute from 'components/AdminProtectedRoute';
 import JoinFromLink from 'components/JoinFromLink';
 import ProtectedRoute from 'components/ProtectedRoute';
 import Account from 'features/Account';
+import Admin from 'features/Admin';
 
 import ChatLayout from 'layout/ChatLayout';
 import { useEffect, useState } from 'react';
@@ -11,12 +13,13 @@ function App() {
     const [isFetch, setIsFetch] = useState(false);
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.global);
+    console.log('user', user);
 
     useEffect(() => {
         const fetchProfile = async () => {
             const token = localStorage.getItem('token');
 
-            if (token) await dispatch(fetchUserProfile());
+            if (token) dispatch(fetchUserProfile());
 
             setIsFetch(true);
         };
@@ -38,9 +41,22 @@ function App() {
                 <Route
                     path="chat/*"
                     element={
-                        <ProtectedRoute isAllowed={user && !user.isAdmin}>
+                        <ProtectedRoute
+                            isAllowed={user && user.role === 'USER'}
+                        >
                             <ChatLayout />
                         </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="admin/*"
+                    element={
+                        <AdminProtectedRoute
+                            isAllowed={user && user.role === 'ADMIN'}
+                        >
+                            <Admin />
+                        </AdminProtectedRoute>
                     }
                 />
             </Routes>
