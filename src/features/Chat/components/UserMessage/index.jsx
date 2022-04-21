@@ -32,6 +32,7 @@ import {
     deleteMessageClient,
     fetchPinMessages,
 } from 'features/Chat/slice/chatSlice';
+import ModalChangePinMessage from '../ModalChangePinMessage';
 
 UserMessage.propTypes = {
     message: PropTypes.object,
@@ -624,6 +625,13 @@ function UserMessage({
                     </div>
                 </>
             )}
+
+            <ModalChangePinMessage
+                visible={isVisibleModal}
+                message={pinMessages}
+                messageId={id}
+                onCloseModal={() => setVisibleModal(false)}
+            />
         </>
     );
 }

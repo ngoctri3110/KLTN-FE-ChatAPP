@@ -53,6 +53,7 @@ import DrawerPinMessage from './components/DrawerPinMessage';
 import SummedPinMessage from './components/SummedPinMessage';
 import './style.scss';
 import ModalJoinGroupFromLink from 'components/ModalJoinGroupFromLink';
+import { setJoinChatLayout } from 'app/globalSlice';
 
 Chat.propTypes = {
     socket: PropTypes.object,
@@ -466,7 +467,7 @@ function Chat({ socket, idNewMessage }) {
                 'ChannelDelete',
                 async ({ conversationId, channelId }) => {
                     const actionAfterDelete = async () => {
-                        await dispatch(setCurrentChannel(''));
+                        dispatch(setCurrentChannel(''));
                         dispatch(
                             fetchListMessages({
                                 conversationId: refCurrentConversation.current,
@@ -610,7 +611,7 @@ function Chat({ socket, idNewMessage }) {
             });
         }
 
-        // dispatch(setJoinChatLayout(true));
+        dispatch(setJoinChatLayout(true));
     }, []);
 
     const handleCancelModalJoinGroup = () => {
