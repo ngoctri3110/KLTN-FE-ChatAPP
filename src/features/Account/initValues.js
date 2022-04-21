@@ -96,7 +96,7 @@ export const forgotValues = {
 
 export const loginPhoneNumber = {
     initial: {
-        phoneNumber: '+84',
+        phoneNumber: '',
         otpValue: '',
     },
     validationSchemaPhone: Yup.object().shape({
@@ -104,7 +104,7 @@ export const loginPhoneNumber = {
             .trim()
             .required('Số điện thoại không được bỏ trống')
             .min(10, 'Số điện thoại gồm 10 số')
-            .max(12, 'Số điện thoại gồm 10 số'),
+            .max(10, 'Số điện thoại gồm 10 số'),
     }),
     validationSchemaPhoneWithOTP: Yup.object().shape({
         phoneNumber: Yup.string()

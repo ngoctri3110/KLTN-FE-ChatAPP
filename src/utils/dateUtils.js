@@ -34,7 +34,7 @@ const dateUtils = {
         const minute = Math.floor(numberMiliseconds / MINUTE_MILISECONDS);
         if (minute > 0) return `0${minute}`.slice(-2) + ` phút`;
 
-        return 'Vài giây';
+        return 'vài giây';
     },
 
     transferDateString: (day, month, year) => {

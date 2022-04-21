@@ -20,14 +20,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import auth from 'utils/FirebaseApp';
 const { Text, Title } = Typography;
 
-const RESEND_OTP_TIME_LIMIT = 60;
 const PhoneLogin = () => {
     const [isSubmit, setIsSubmit] = useState(false);
-    const [counter, setCounter] = useState(0);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    let resendOTPTimerInterval;
     const generateRecaptcha = () => {
         window.recaptchaVerifier = new RecaptchaVerifier(
             'recaptcha-container',
@@ -47,72 +44,47 @@ const PhoneLogin = () => {
         };
         notification.info(args);
     };
-    console.log('isSubmit', isSubmit);
+    const convertPhoneNumber = (phoneNumber) => {
+        let convert;
+        convert = phoneNumber.replace('0', '+84');
+        return convert;
+    };
 
     const handleSignInPhoneNumber = (values) => {
         const { phoneNumber, otpValue } = values;
-        console.log('phoneNumber', phoneNumber);
-        console.log('otpValue', otpValue);
-        console.log('isSubmit', isSubmit);
-        // dispatch(setLoading(true));
+        const newNumber = convertPhoneNumber(phoneNumber);
+
+        dispatch(setLoading(true));
         if (isSubmit) {
-            console.log('submit otp');
-            // try {
-            //     window.confirmationResult
-            //         .confirm(otpValue)
-            //         .then((result) => {
-            //             console.log(
-            //                 'result.user.accessToken',
-            //                 result.user.accessToken
-            //             );
-            //             handleConfirmOTP(phoneNumber, result.user.accessToken);
-            //         })
-            //         .catch((error) => {
-            //             console.log(error);
-            //         });
-            // } catch (error) {
-            //     console.log(error);
-            // }
+            try {
+                window.confirmationResult
+                    .confirm(otpValue)
+                    .then((result) => {
+                        handleConfirmOTP(phoneNumber, result.user.accessToken);
+                    })
+                    .catch((error) => {
+                        message.error(
+                            'Mã OTP đã hết hạn. vui lòng đăng nhập lại'
+                        );
+                    });
+            } catch (error) {
+                message.error('Mã OTP đã hết hạn. vui lòng đăng nhập lại');
+            }
         } else {
-            console.log('nhận');
-            // generateRecaptcha();
-            // let appVerifier = window.recaptchaVerifier;
-            // signInWithPhoneNumber(auth, phoneNumber, appVerifier)
-            //     .then((confirmationResult) => {
-            //         setIsSubmit(true);
-            //         openNotification();
-            //         setCounter(RESEND_OTP_TIME_LIMIT);
-            //         startResendOTPTimer();
-            //         window.confirmationResult = confirmationResult;
-            //     })
-            //     .catch((error) => {
-            //         console.log(error);
-            //     });
-            setIsSubmit(true);
+            generateRecaptcha();
+            let appVerifier = window.recaptchaVerifier;
+            signInWithPhoneNumber(auth, newNumber, appVerifier)
+                .then((confirmationResult) => {
+                    setIsSubmit(true);
+                    openNotification();
+                    window.confirmationResult = confirmationResult;
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         }
 
-        // dispatch(setLoading(false));
-    };
-    //useEffect khi counter thay đổi
-    useEffect(() => {
-        startResendOTPTimer();
-        return () => {
-            if (resendOTPTimerInterval) {
-                clearInterval(resendOTPTimerInterval);
-            }
-        };
-    }, [counter]);
-    const startResendOTPTimer = () => {
-        if (resendOTPTimerInterval) {
-            clearInterval(resendOTPTimerInterval);
-        }
-        resendOTPTimerInterval = setInterval(() => {
-            if (counter <= 0) {
-                clearInterval(resendOTPTimerInterval);
-            } else {
-                setCounter(counter - 1);
-            }
-        }, 1000);
+        dispatch(setLoading(false));
     };
 
     const handleConfirmOTP = async (phoneNumber, otpValue) => {
@@ -120,8 +92,6 @@ const PhoneLogin = () => {
             await firebaseApi
                 .confirmPhoneNumber(phoneNumber, otpValue)
                 .then((res) => {
-                    localStorage.setItem('token', res.data.token);
-                    localStorage.setItem('refreshToken', res.data.refreshToken);
                     dispatch(setLogin(true));
                     const { isAdmin } = unwrapResult(
                         dispatch(fetchUserProfile())
@@ -129,15 +99,8 @@ const PhoneLogin = () => {
                     if (isAdmin) navigate('/admin');
                     else navigate('/chat', { replace: true });
                 });
-        } catch (error) {
-            message.error('OTP không hợp lệ');
-        }
+        } catch (error) {}
     };
-    const handleResendOTP = () => {};
-    const handleconfirmOTP = (otpValue) => {
-        console.log('otpValue', otpValue);
-    };
-
     return (
         <div className="account-common-page">
             <div className="account-wrapper">
@@ -180,48 +143,6 @@ const PhoneLogin = () => {
                                                             inputCol={24}
                                                         />
                                                     </Col>
-
-                                                    <Col span={24}>
-                                                        <Button
-                                                            onClick={() =>
-                                                                handleResendOTP(
-                                                                    formikProps
-                                                                        .values
-                                                                        .username
-                                                                )
-                                                            }
-                                                            type="primary"
-                                                            block
-                                                            disabled={
-                                                                counter > 0
-                                                                    ? true
-                                                                    : false
-                                                            }
-                                                        >
-                                                            Gửi lại OTP{' '}
-                                                            {`${
-                                                                counter > 0
-                                                                    ? `sau ${counter}`
-                                                                    : ''
-                                                            }`}
-                                                        </Button>
-                                                    </Col>
-                                                    <Col span={24}>
-                                                        <Button
-                                                            onClick={() =>
-                                                                handleconfirmOTP(
-                                                                    formikProps
-                                                                        .values
-                                                                        .otpValue
-                                                                )
-                                                            }
-                                                            htmlType="submit"
-                                                            type="primary"
-                                                            block
-                                                        >
-                                                            Xác thực
-                                                        </Button>
-                                                    </Col>
                                                 </>
                                             ) : (
                                                 <>
@@ -231,7 +152,7 @@ const PhoneLogin = () => {
                                                             component={
                                                                 InputField
                                                             }
-                                                            type="phone"
+                                                            type="text"
                                                             title="Số điện thoại "
                                                             placeholder="Ví dụ: 0123456789"
                                                             maxLength={50}
@@ -239,29 +160,28 @@ const PhoneLogin = () => {
                                                             inputCol={24}
                                                         />
                                                     </Col>
-
-                                                    <Col span={24}>
-                                                        <Button
-                                                            htmlType="submit"
-                                                            type="primary"
-                                                            block
-                                                        >
-                                                            Đăng ký
-                                                        </Button>
-                                                    </Col>
                                                 </>
                                             )}
                                             {isSubmit ? (
                                                 <></>
                                             ) : (
                                                 <>
-                                                    <div className="card bg-light">
-                                                        <div className="card-body d-flex justify-content-center">
-                                                            <div id="recaptcha-container"></div>
-                                                        </div>
-                                                    </div>
+                                                    <Col>
+                                                        <div id="recaptcha-container"></div>
+                                                    </Col>
                                                 </>
                                             )}
+                                            <Col span={24}>
+                                                <Button
+                                                    htmlType="submit"
+                                                    type="primary"
+                                                    block
+                                                >
+                                                    {isSubmit
+                                                        ? 'Xác thực'
+                                                        : 'Đăng nhập'}
+                                                </Button>
+                                            </Col>
                                         </Row>
                                     </Form>
                                 );
