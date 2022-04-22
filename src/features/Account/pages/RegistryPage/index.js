@@ -62,7 +62,13 @@ function RegistryPage(props) {
             await loginApi
                 .fetchUser(username)
                 .then((value) => {
-                    message.error('Email hoặc số điện thoại đã được đăng ký');
+                    if (value.isActived === false) {
+                        setIsSubmit(true);
+                    } else {
+                        message.error(
+                            'Email hoặc số điện thoại đã được đăng ký'
+                        );
+                    }
                 })
                 .catch(async () => {
                     try {

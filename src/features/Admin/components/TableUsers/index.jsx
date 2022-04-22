@@ -80,9 +80,9 @@ function TableUsers({ usersPage, onUpdateStatus }) {
                     arrow
                 >
                     {isDeleted ? (
-                        <Tag color="red">Khóa tài khoản</Tag>
+                        <Tag color="red">Đã bị khóa</Tag>
                     ) : (
-                        <Tag color="blue">Bỏ khóa tài khoản</Tag>
+                        <Tag color="blue">Đang hoạt động</Tag>
                     )}
                 </Dropdown>
             ),

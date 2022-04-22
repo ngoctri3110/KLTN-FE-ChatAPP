@@ -3,7 +3,8 @@ import { Content } from 'antd/lib/layout/layout';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import SiderBar from './components/SiderBar';
-import StickerGroupPage from './pages/StickerGroupPage';
+import EmojiPage from './pages/EmojiPage';
+import StickerPage from './pages/StickerPage';
 import UserPage from './pages/UserPage';
 import './style.scss';
 
@@ -35,7 +36,11 @@ const Admin = () => {
                                 <Route path="/" element={<UserPage />} />
                                 <Route
                                     path="/stickers"
-                                    element={<StickerGroupPage />}
+                                    element={<StickerPage />}
+                                />
+                                <Route
+                                    path="/stickers/:id"
+                                    element={<EmojiPage />}
                                 />
                             </Routes>
                         </div>
