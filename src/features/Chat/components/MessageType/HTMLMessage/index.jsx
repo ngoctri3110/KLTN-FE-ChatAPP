@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { parse } from 'query-string';
+import parse from 'html-react-parser';
 
 HTMLMessage.propTypes = {
     content: PropTypes.string.isRequired,
