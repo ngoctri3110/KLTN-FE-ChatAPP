@@ -14,7 +14,7 @@ HTMLMessage.defaultProps = {
 function HTMLMessage({ content, children, isSeen, dateAt }) {
     return (
         <div>
-            {parse(content)}
+            <div style={{ marginLeft: '1rem' }}>{parse(content)}</div>
             <div className="time-and-last_view">
                 <div className="time-send">
                     <span>
