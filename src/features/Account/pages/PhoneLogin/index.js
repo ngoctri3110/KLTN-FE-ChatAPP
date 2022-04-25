@@ -92,6 +92,8 @@ const PhoneLogin = () => {
             await firebaseApi
                 .confirmPhoneNumber(phoneNumber, otpValue)
                 .then((res) => {
+                    localStorage.setItem('token', res.data.token);
+                    localStorage.setItem('refreshToken', res.data.refreshToken);
                     dispatch(setLogin(true));
                     const { role } = unwrapResult(dispatch(fetchUserProfile()));
                     if (role === 'USER') navigate('/chat', { replace: true });
